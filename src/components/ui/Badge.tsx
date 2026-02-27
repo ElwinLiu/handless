@@ -19,7 +19,7 @@ const Badge: React.FC<BadgeProps> = ({
 
   return (
     <span
-      className={`inline-flex items-center px-3 py-1 text-xs font-medium ${variantClasses[variant]} ${className}`}
+      className={`inline-flex items-center px-1.5 py-0.5 text-xs font-medium ${variantClasses[variant]} ${className}`}
       style={{ borderRadius: "var(--radius)" }}
     >
       {children}
