@@ -179,6 +179,7 @@ function App() {
         />
         {/* Scrollable content area */}
         <div className="flex-1 flex flex-col overflow-hidden">
+          <div data-tauri-drag-region className="w-full h-10 shrink-0" />
           <div className="flex-1 overflow-y-auto">
             <div className="flex flex-col items-center p-4 gap-4">
               <AccessibilityPermissions />

@@ -100,8 +100,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <div className="flex flex-col w-40 h-full border-e border-muted/20 items-center px-2">
-      <h1 className="m-4 text-xl font-bold text-text">{t("appName")}</h1>
-      <div className="flex flex-col w-full items-center gap-1 pt-2 border-t border-muted/20">
+      <div data-tauri-drag-region className="w-full h-10 shrink-0" />
+      <div className="flex flex-col w-full items-center gap-1">
         {availableSections.map((section) => {
           const Icon = section.icon;
           const isActive = activeSection === section.id;
