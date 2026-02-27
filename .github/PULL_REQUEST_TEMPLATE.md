@@ -1,15 +1,9 @@
 ## Before Submitting This PR
 
-<!--
-HANDY IS UNDERGOING A FEATURE FREEZE. IF YOU ARE SUBMITTING A PR WHICH IS A NEW FEATURE THAT THE COMMUNITY HAS NOT ASKED FOR: PREPARE TO BE REJECTED. IF THE COMMUNITY HAS ASKED FOR IT, OR YOU HAVE EXPLICITLY GATEHRED SUPPORT IT MAY STILL BE CONSIDERED.
-
-BUG FIXES ARE THE TOP PRIORITY. THERE ARE 60+ ISSUES TO FIX.
--->
-
 **Please confirm you have done the following:**
 
-- [ ] I have searched [existing issues](https://github.com/cjpais/Handy/issues) and [pull requests](https://github.com/cjpais/Handy/pulls) (including closed ones) to ensure this isn't a duplicate
-- [ ] I have read [CONTRIBUTING.md](https://github.com/cjpais/Handy/blob/main/CONTRIBUTING.md)
+- [ ] I have searched [existing issues](https://github.com/elwin/handless/issues) and [pull requests](https://github.com/elwin/handless/pulls) (including closed ones) to ensure this isn't a duplicate
+- [ ] I have read [CONTRIBUTING.md](https://github.com/elwin/handless/blob/main/CONTRIBUTING.md)
 
 **If this is a feature or change that was previously closed/rejected:**
 
@@ -45,7 +39,7 @@ For features: Link to a discussion where community members have expressed intere
 For bug fixes: Link to the issue where others have confirmed the bug.
 
 If you haven't gathered feedback yet, consider starting a discussion first:
-https://github.com/cjpais/Handy/discussions
+https://github.com/elwin/handless/discussions
 
 It is not explicitly required to gather feedback, but it certainly helps your PR get merged.
 -->

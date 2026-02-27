@@ -2440,7 +2440,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "handy"
+name = "handless"
 version = "0.7.8"
 dependencies = [
  "anyhow",

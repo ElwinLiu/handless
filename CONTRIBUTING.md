@@ -1,17 +1,17 @@
-# Contributing to Handy
+# Contributing to Handless
 
-Thank you for your interest in contributing to Handy! This guide will help you get started with contributing to this open source speech-to-text application.
+Thank you for your interest in contributing to Handless! This guide will help you get started with contributing to this open source speech-to-text application.
 
-## 📖 Philosophy
+## Philosophy
 
-Handy aims to be the most forkable speech-to-text app. The goal is to create both a useful tool and a foundation for others to build upon—a well-patterned, simple codebase that serves the community. We prioritize:
+Handless aims to be the most forkable speech-to-text app. The goal is to create both a useful tool and a foundation for others to build upon -- a well-patterned, simple codebase that serves the community. We prioritize:
 
 - **Simplicity**: Clear, maintainable code over clever solutions
 - **Extensibility**: Make it easy for others to fork and customize
 - **Privacy**: Keep everything local and offline
 - **Accessibility**: Free tooling that belongs in everyone's hands
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -28,14 +28,14 @@ Before you begin, ensure you have the following installed:
 2. **Clone your fork**:
 
    ```bash
-   git clone git@github.com:YOUR_USERNAME/Handy.git
-   cd Handy
+   git clone git@github.com:YOUR_USERNAME/handless.git
+   cd handless
    ```
 
 3. **Add upstream remote**:
 
    ```bash
-   git remote add upstream git@github.com:cjpais/Handy.git
+   git remote add upstream git@github.com:elwin/handless.git
    ```
 
 4. **Install dependencies**:
@@ -62,7 +62,7 @@ For detailed platform-specific setup instructions, see [BUILD.md](BUILD.md).
 
 ### Understanding the Codebase
 
-Handy follows a clean architecture pattern:
+Handless follows a clean architecture pattern:
 
 **Backend (Rust - `src-tauri/src/`):**
 
@@ -82,12 +82,12 @@ Handy follows a clean architecture pattern:
 
 For more details, see the Architecture section in [README.md](README.md) or [AGENTS.md](AGENTS.md).
 
-## 🐛 Reporting Bugs
+## Reporting Bugs
 
 ### Before Submitting a Bug Report
 
-1. **Search existing issues** at [github.com/cjpais/Handy/issues](https://github.com/cjpais/Handy/issues)
-2. **Check discussions** at [github.com/cjpais/Handy/discussions](https://github.com/cjpais/Handy/discussions)
+1. **Search existing issues** at [github.com/elwin/handless/issues](https://github.com/elwin/handless/issues)
+2. **Check discussions** at [github.com/elwin/handless/discussions](https://github.com/elwin/handless/discussions)
 3. **Try the latest release** to see if the issue has been fixed
 4. **Enable debug mode** (`Cmd/Ctrl+Shift+D`) to gather diagnostic information
 
@@ -113,48 +113,45 @@ When creating a bug report, please include:
 
 Use the [Bug Report template](.github/ISSUE_TEMPLATE/bug_report.md) when creating an issue.
 
-## 💡 Suggesting Features
+## Suggesting Features
 
 We use GitHub Discussions for feature requests rather than issues. This keeps issues focused on bugs and actionable tasks while allowing more open-ended conversations about features.
 
 ### Before Suggesting a Feature
 
-1. **Search existing discussions** at [github.com/cjpais/Handy/discussions](https://github.com/cjpais/Handy/discussions)
-2. **Check common feature requests**:
-   - [Post-processing / Editing Transcripts](https://github.com/cjpais/Handy/discussions/168)
-   - [Keyboard Shortcuts / Hotkeys](https://github.com/cjpais/Handy/discussions/211)
+1. **Search existing discussions** at [github.com/elwin/handless/discussions](https://github.com/elwin/handless/discussions)
 
 ### Submitting a Feature Request
 
-1. Go to [Discussions](https://github.com/cjpais/Handy/discussions)
+1. Go to [Discussions](https://github.com/elwin/handless/discussions)
 2. Click "New discussion"
 3. Choose the appropriate category (Ideas, Feature Requests, etc.)
 4. Describe your feature idea including:
    - The problem you're trying to solve
    - Your proposed solution
    - Any alternatives you've considered
-   - How it fits with Handy's philosophy
+   - How it fits with Handless's philosophy
 
-## 🔧 Making Code Contributions
+## Making Code Contributions
 
 ### Before You Start
 
 **This is critical:** Before writing any code, please do the following:
 
 1. **Search existing issues and PRs** - Check both open AND closed issues and pull requests. Someone may have already addressed this, or there may be a reason it was closed.
-   - [Open issues](https://github.com/cjpais/Handy/issues)
-   - [Closed issues](https://github.com/cjpais/Handy/issues?q=is%3Aissue+is%3Aclosed)
-   - [Open PRs](https://github.com/cjpais/Handy/pulls)
-   - [Closed PRs](https://github.com/cjpais/Handy/pulls?q=is%3Apr+is%3Aclosed)
+   - [Open issues](https://github.com/elwin/handless/issues)
+   - [Closed issues](https://github.com/elwin/handless/issues?q=is%3Aissue+is%3Aclosed)
+   - [Open PRs](https://github.com/elwin/handless/pulls)
+   - [Closed PRs](https://github.com/elwin/handless/pulls?q=is%3Apr+is%3Aclosed)
 
 2. **If something was previously closed** - If you want to revisit a closed issue or PR, you need to:
    - Provide a strong argument for why it should be reconsidered
-   - Gather community feedback first via [Discussions](https://github.com/cjpais/Handy/discussions)
+   - Gather community feedback first via [Discussions](https://github.com/elwin/handless/discussions)
    - Link to that discussion in your PR
 
-3. **Get community feedback for features** - PRs with demonstrated community interest are **much more likely to be merged**. Start a discussion, get feedback, and link to it in your PR. This helps ensure Handy stays focused and useful for the most people without becoming bloated.
+3. **Get community feedback for features** - PRs with demonstrated community interest are **much more likely to be merged**. Start a discussion, get feedback, and link to it in your PR. This helps ensure Handless stays focused and useful for the most people without becoming bloated.
 
-Community feedback is essential to keeping Handy the best it can be for everyone. It helps prioritize what matters most and prevents feature creep.
+Community feedback is essential to keeping Handless the best it can be for everyone. It helps prioritize what matters most and prevents feature creep.
 
 ### Development Workflow
 
@@ -209,7 +206,7 @@ Community feedback is essential to keeping Handy the best it can be for everyone
    ```
 
 7. **Create a Pull Request**:
-   - Go to the [Handy repository](https://github.com/cjpais/Handy)
+   - Go to the [Handless repository](https://github.com/elwin/handless)
    - Click "New Pull Request"
    - Select your fork and branch
    - Fill out the PR template completely, including:
@@ -220,7 +217,7 @@ Community feedback is essential to keeping Handy the best it can be for everyone
      - Screenshots/videos if applicable
      - Breaking changes (if any)
 
-   **Remember:** PRs with community support are prioritized. If you haven't already, start a [discussion](https://github.com/cjpais/Handy/discussions) to gather feedback before or alongside your PR. It is not explicitly required to gather feedback, but it certainly helps your PR get merged faster.
+   **Remember:** PRs with community support are prioritized. If you haven't already, start a [discussion](https://github.com/elwin/handless/discussions) to gather feedback before or alongside your PR. It is not explicitly required to gather feedback, but it certainly helps your PR get merged faster.
 
 ### AI Assistance Disclosure
 
@@ -275,7 +272,7 @@ bun run tauri build
 
 Test the production build to ensure it works as expected.
 
-## 📝 Documentation Contributions
+## Documentation Contributions
 
 Documentation improvements are highly valued! You can contribute by:
 
@@ -283,9 +280,8 @@ Documentation improvements are highly valued! You can contribute by:
 - Adding code comments and doc comments
 - Creating tutorials or guides
 - Improving error messages
-- Updating the project website content
 
-## 🤝 Community Guidelines
+## Community Guidelines
 
 - **Be respectful and inclusive** - We welcome contributors of all skill levels
 - **Be patient** - This is maintained by a small team, responses may take time
@@ -293,7 +289,7 @@ Documentation improvements are highly valued! You can contribute by:
 - **Be collaborative** - Help others and share knowledge
 - **Search first** - Check existing issues/discussions before creating new ones
 
-## 🎯 Good First Issues
+## Good First Issues
 
 Look for issues labeled `good first issue` or `help wanted` if you're new to the project. These are typically:
 
@@ -301,16 +297,14 @@ Look for issues labeled `good first issue` or `help wanted` if you're new to the
 - Good for learning the codebase
 - Mentor support available
 
-## 📞 Getting Help
+## Getting Help
 
-- **Discord**: Join our [Discord community](https://discord.com/invite/WVBeWsNXK4)
-- **Discussions**: Ask questions in [GitHub Discussions](https://github.com/cjpais/Handy/discussions)
-- **Email**: Reach out at [contact@handy.computer](mailto:contact@handy.computer)
+- **Discussions**: Ask questions in [GitHub Discussions](https://github.com/elwin/handless/discussions)
 
-## 📜 License
+## License
 
-By contributing to Handy, you agree that your contributions will be licensed under the MIT License. See [LICENSE](LICENSE) for details.
+By contributing to Handless, you agree that your contributions will be licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
 ---
 
-**Thank you for contributing to Handy!** Your efforts help make speech-to-text technology more accessible, private, and extensible for everyone.
+**Thank you for contributing to Handless!** Your efforts help make speech-to-text technology more accessible, private, and extensible for everyone.

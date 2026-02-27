@@ -41,7 +41,7 @@ curl -o src-tauri/resources/models/silero_vad_v4.onnx https://blob.handy.compute
 
 ## Architecture Overview
 
-Handy is a cross-platform desktop speech-to-text application built with Tauri (Rust backend + React/TypeScript frontend).
+Handless is a cross-platform desktop speech-to-text application built with Tauri (Rust backend + React/TypeScript frontend).
 
 ### Core Components
 

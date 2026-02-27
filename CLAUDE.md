@@ -34,7 +34,7 @@ curl -o src-tauri/resources/models/silero_vad_v4.onnx https://blob.handy.compute
 
 ## Architecture Overview
 
-Handy is a cross-platform desktop speech-to-text app built with Tauri 2.x (Rust backend + React/TypeScript frontend).
+Handless is a cross-platform desktop speech-to-text app built with Tauri 2.x (Rust backend + React/TypeScript frontend).
 
 ### Backend Structure (src-tauri/src/)
 
@@ -66,11 +66,11 @@ Handy is a cross-platform desktop speech-to-text app built with Tauri 2.x (Rust 
 
 **Manager Pattern:** Core functionality organized into managers (Audio, Model, Transcription) initialized at startup and managed via Tauri state.
 
-**Command-Event Architecture:** Frontend → Backend via Tauri commands; Backend → Frontend via events.
+**Command-Event Architecture:** Frontend -> Backend via Tauri commands; Backend -> Frontend via events.
 
-**Pipeline Processing:** Audio → VAD → Whisper/Parakeet → Text output → Clipboard/Paste
+**Pipeline Processing:** Audio -> VAD -> Whisper/Parakeet -> Text output -> Clipboard/Paste
 
-**State Flow:** Zustand → Tauri Command → Rust State → Persistence (tauri-plugin-store)
+**State Flow:** Zustand -> Tauri Command -> Rust State -> Persistence (tauri-plugin-store)
 
 ## Internationalization (i18n)
 
@@ -107,7 +107,7 @@ src/i18n/
 - Strict TypeScript, avoid `any` types
 - Functional components with hooks
 - Tailwind CSS for styling
-- Path aliases: `@/` → `./src/`
+- Path aliases: `@/` -> `./src/`
 
 ## Commit Guidelines
 
@@ -121,7 +121,7 @@ Use conventional commits:
 
 ## CLI Parameters
 
-Handy supports command-line parameters on all platforms for integration with scripts, window managers, and autostart configurations.
+Handless supports command-line parameters on all platforms for integration with scripts, window managers, and autostart configurations.
 
 **Implementation files:**
 
@@ -143,7 +143,7 @@ Handy supports command-line parameters on all platforms for integration with scr
 
 **Key design decisions:**
 
-- CLI flags are runtime-only overrides — they do NOT modify persisted settings
+- CLI flags are runtime-only overrides -- they do NOT modify persisted settings
 - Remote control flags (`--toggle-transcription`, `--toggle-post-process`, `--cancel`) work by launching a second instance that sends its args to the running instance via `tauri_plugin_single_instance`, then exits
 - `send_transcription_input()` in `signal_handle.rs` is shared between signal handlers and CLI to avoid code duplication
 - `CliArgs` is stored in Tauri managed state (`.manage()`) so it's accessible in `on_window_event` and other handlers
