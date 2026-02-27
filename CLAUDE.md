@@ -1,15 +1,8 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
 ## Development Commands
 
-**Prerequisites:** [Rust](https://rustup.rs/) (latest stable), [Bun](https://bun.sh/)
-
 ```bash
-# Install dependencies
-bun install
-
 # Run in development mode
 bun run tauri dev
 # If cmake error on macOS:
@@ -108,16 +101,6 @@ src/i18n/
 - Functional components with hooks
 - Tailwind CSS for styling
 - Path aliases: `@/` -> `./src/`
-
-## Commit Guidelines
-
-Use conventional commits:
-
-- `feat:` new features
-- `fix:` bug fixes
-- `docs:` documentation
-- `refactor:` code refactoring
-- `chore:` maintenance
 
 ## CLI Parameters
 
