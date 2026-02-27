@@ -214,7 +214,7 @@ export const ModelsSettings: React.FC = () => {
       {filteredModels.length > 0 ? (
         <div className="space-y-4">
           {/* Downloaded Models Section — header always visible so filter stays accessible */}
-          <div className="space-y-3">
+          <div className="space-y-2">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-medium text-text/60">
                 {t("settings.models.yourModels")}
@@ -316,6 +316,7 @@ export const ModelsSettings: React.FC = () => {
               <ModelCard
                 key={model.id}
                 model={model}
+                compact
                 status={getModelStatus(model.id)}
                 onSelect={handleModelSelect}
                 onDownload={handleModelDownload}
@@ -330,7 +331,7 @@ export const ModelsSettings: React.FC = () => {
 
           {/* Available Models Section */}
           {availableModels.length > 0 && (
-            <div className="space-y-3">
+            <div className="space-y-2">
               <h2 className="text-sm font-medium text-text/60">
                 {t("settings.models.availableModels")}
               </h2>
@@ -338,6 +339,7 @@ export const ModelsSettings: React.FC = () => {
                 <ModelCard
                   key={model.id}
                   model={model}
+                  compact
                   status={getModelStatus(model.id)}
                   onSelect={handleModelSelect}
                   onDownload={handleModelDownload}

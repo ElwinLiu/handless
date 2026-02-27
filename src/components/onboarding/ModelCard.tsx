@@ -44,6 +44,7 @@ interface ModelCardProps {
   variant?: "default" | "featured";
   status?: ModelCardStatus;
   disabled?: boolean;
+  compact?: boolean;
   className?: string;
   onSelect: (modelId: string) => void;
   onDownload?: (modelId: string) => void;
@@ -59,6 +60,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
   variant = "default",
   status = "downloadable",
   disabled = false,
+  compact = false,
   className = "",
   onSelect,
   onDownload,
@@ -77,8 +79,9 @@ const ModelCard: React.FC<ModelCardProps> = ({
   const displayName = getTranslatedModelName(model, t);
   const displayDescription = getTranslatedModelDescription(model, t);
 
-  const baseClasses =
-    "flex flex-col rounded px-4 py-3 gap-2 text-left transition-all duration-200";
+  const baseClasses = compact
+    ? "flex flex-col rounded px-3 py-2 gap-1 text-left transition-all duration-200"
+    : "flex flex-col rounded px-4 py-3 gap-2 text-left transition-all duration-200";
 
   const getVariantClasses = () => {
     if (status === "active") {
@@ -154,7 +157,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
               </Badge>
             )}
           </div>
-          <p className="text-text/60 text-sm leading-relaxed">
+          <p className={`text-text/60 text-sm ${compact ? "leading-snug" : "leading-relaxed"}`}>
             {displayDescription}
           </p>
         </div>
@@ -188,35 +191,39 @@ const ModelCard: React.FC<ModelCardProps> = ({
         )}
       </div>
 
-      <hr className="w-full border-muted/20" />
+      {!compact && <hr className="w-full border-muted/20" />}
 
       {/* Bottom row: tags + action buttons (full width) */}
-      <div className="flex items-center gap-3 w-full -mb-0.5 mt-0.5 h-5">
+      <div className={`flex items-center gap-2 w-full ${compact ? "" : "-mb-0.5 mt-0.5"}`}>
         {model.supported_languages.length > 0 && (
           <div
-            className="flex items-center gap-1 text-xs text-text/50"
+            className={`flex items-center gap-1 text-xs px-1.5 py-0.5 rounded ${
+              model.supported_languages.length === 1
+                ? "text-text/50 bg-muted/10"
+                : "text-blue-400/80 bg-blue-400/10"
+            }`}
             title={
               model.supported_languages.length === 1
                 ? t("modelSelector.capabilities.singleLanguage")
                 : t("modelSelector.capabilities.languageSelection")
             }
           >
-            <Globe className="w-3.5 h-3.5" />
+            <Globe className="w-3 h-3" />
             <span>{getLanguageDisplayText(model.supported_languages, t)}</span>
           </div>
         )}
         {model.supports_translation && (
           <div
-            className="flex items-center gap-1 text-xs text-text/50"
+            className="flex items-center gap-1 text-xs text-purple-400/80 bg-purple-400/10 px-1.5 py-0.5 rounded"
             title={t("modelSelector.capabilities.translation")}
           >
-            <Languages className="w-3.5 h-3.5" />
+            <Languages className="w-3 h-3" />
             <span>{t("modelSelector.capabilities.translate")}</span>
           </div>
         )}
         {status === "downloadable" && (
-          <span className="flex items-center gap-1.5 ml-auto text-xs text-text/50">
-            <Download className="w-3.5 h-3.5" />
+          <span className="flex items-center gap-1.5 ml-auto text-xs text-text/50 bg-muted/10 px-1.5 py-0.5 rounded">
+            <Download className="w-3 h-3" />
             <span>{formatModelSize(Number(model.size_mb))}</span>
           </span>
         )}
@@ -236,7 +243,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
 
       {/* Download/extract progress */}
       {status === "downloading" && downloadProgress !== undefined && (
-        <div className="w-full mt-3">
+        <div className={`w-full ${compact ? "mt-1" : "mt-3"}`}>
           <div className="w-full h-1.5 bg-muted/20 rounded-full overflow-hidden">
             <div
               className="h-full bg-accent rounded-full transition-all duration-300"
@@ -276,7 +283,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
         </div>
       )}
       {status === "extracting" && (
-        <div className="w-full mt-3">
+        <div className={`w-full ${compact ? "mt-1" : "mt-3"}`}>
           <div className="w-full h-1.5 bg-muted/20 rounded-full overflow-hidden">
             <div className="h-full bg-accent rounded-full animate-pulse w-full" />
           </div>
