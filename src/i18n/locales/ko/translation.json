@@ -1,4 +1,5 @@
 {
+  "appName": "Handless",
   "tray": {
     "settings": "설정...",
     "checkUpdates": "업데이트 확인...",

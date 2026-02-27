@@ -315,7 +315,7 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
                 )}
               />
               <p
-                className="text-xs text-mid-gray/70"
+                className="text-xs text-muted/70"
                 dangerouslySetInnerHTML={{
                   __html: t("settings.postProcessing.prompts.promptTip"),
                 }}
@@ -344,8 +344,8 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
         )}
 
         {!isCreating && !selectedPrompt && (
-          <div className="p-3 bg-mid-gray/5 rounded-md border border-mid-gray/20">
-            <p className="text-sm text-mid-gray">
+          <div className="p-3 bg-muted/5 rounded-md border border-muted/20">
+            <p className="text-sm text-muted">
               {hasPrompts
                 ? t("settings.postProcessing.prompts.selectToEdit")
                 : t("settings.postProcessing.prompts.createFirst")}
@@ -382,7 +382,7 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
                 )}
               />
               <p
-                className="text-xs text-mid-gray/70"
+                className="text-xs text-muted/70"
                 dangerouslySetInnerHTML={{
                   __html: t("settings.postProcessing.prompts.promptTip"),
                 }}

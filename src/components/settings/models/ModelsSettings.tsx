@@ -195,7 +195,7 @@ export const ModelsSettings: React.FC = () => {
     return (
       <div className="max-w-3xl w-full mx-auto">
         <div className="flex items-center justify-center py-16">
-          <div className="w-8 h-8 border-2 border-logo-primary border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin" />
         </div>
       </div>
     );
@@ -226,8 +226,8 @@ export const ModelsSettings: React.FC = () => {
                   onClick={() => setLanguageDropdownOpen(!languageDropdownOpen)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
                     languageFilter !== "all"
-                      ? "bg-logo-primary/20 text-logo-primary"
-                      : "bg-mid-gray/10 text-text/60 hover:bg-mid-gray/20"
+                      ? "bg-accent/20 text-accent"
+                      : "bg-muted/10 text-text/60 hover:bg-muted/20"
                   }`}
                 >
                   <Globe className="w-3.5 h-3.5" />
@@ -242,8 +242,8 @@ export const ModelsSettings: React.FC = () => {
                 </button>
 
                 {languageDropdownOpen && (
-                  <div className="absolute top-full right-0 mt-1 w-56 bg-background border border-mid-gray/80 rounded-lg shadow-lg z-50 overflow-hidden">
-                    <div className="p-2 border-b border-mid-gray/40">
+                  <div className="absolute top-full right-0 mt-1 w-56 bg-background border border-muted/80 rounded-lg shadow-lg z-50 overflow-hidden">
+                    <div className="p-2 border-b border-muted/40">
                       <input
                         ref={languageSearchInputRef}
                         type="text"
@@ -265,7 +265,7 @@ export const ModelsSettings: React.FC = () => {
                         placeholder={t(
                           "settings.general.language.searchPlaceholder",
                         )}
-                        className="w-full px-2 py-1 text-sm bg-mid-gray/10 border border-mid-gray/40 rounded-md focus:outline-none focus:ring-1 focus:ring-logo-primary"
+                        className="w-full px-2 py-1 text-sm bg-muted/10 border border-muted/40 rounded-md focus:outline-none focus:ring-1 focus:ring-accent"
                       />
                     </div>
                     <div className="max-h-48 overflow-y-auto">
@@ -278,8 +278,8 @@ export const ModelsSettings: React.FC = () => {
                         }}
                         className={`w-full px-3 py-1.5 text-sm text-left transition-colors ${
                           languageFilter === "all"
-                            ? "bg-logo-primary/20 text-logo-primary font-semibold"
-                            : "hover:bg-mid-gray/10"
+                            ? "bg-accent/20 text-accent font-semibold"
+                            : "hover:bg-muted/10"
                         }`}
                       >
                         {t("settings.models.filters.allLanguages")}
@@ -295,8 +295,8 @@ export const ModelsSettings: React.FC = () => {
                           }}
                           className={`w-full px-3 py-1.5 text-sm text-left transition-colors ${
                             languageFilter === lang.value
-                              ? "bg-logo-primary/20 text-logo-primary font-semibold"
-                              : "hover:bg-mid-gray/10"
+                              ? "bg-accent/20 text-accent font-semibold"
+                              : "hover:bg-muted/10"
                           }`}
                         >
                           {lang.label}

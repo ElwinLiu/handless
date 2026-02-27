@@ -31,17 +31,17 @@ const ModelStatusButton: React.FC<ModelStatusButtonProps> = ({
       case "loading":
         return "bg-yellow-400 animate-pulse";
       case "downloading":
-        return "bg-logo-primary animate-pulse";
+        return "bg-accent animate-pulse";
       case "extracting":
         return "bg-orange-400 animate-pulse";
       case "error":
         return "bg-red-400";
       case "unloaded":
-        return "bg-mid-gray/60";
+        return "bg-muted/60";
       case "none":
         return "bg-red-400";
       default:
-        return "bg-mid-gray/60";
+        return "bg-muted/60";
     }
   };
 

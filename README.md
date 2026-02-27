@@ -182,10 +182,10 @@ Without these tools, Handless falls back to enigo which may have limited compati
 
 - You can also manage global shortcuts outside of Handless via Unix signals, which lets Wayland window managers or other hotkey daemons keep ownership of keybindings:
 
-  | Signal    | Action                                    | Example                    |
-  | --------- | ----------------------------------------- | -------------------------- |
-  | `SIGUSR2` | Toggle transcription                      | `pkill -USR2 -n handless`  |
-  | `SIGUSR1` | Toggle transcription with post-processing | `pkill -USR1 -n handless`  |
+  | Signal    | Action                                    | Example                   |
+  | --------- | ----------------------------------------- | ------------------------- |
+  | `SIGUSR2` | Toggle transcription                      | `pkill -USR2 -n handless` |
+  | `SIGUSR1` | Toggle transcription with post-processing | `pkill -USR1 -n handless` |
 
   Example Sway config:
 

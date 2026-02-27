@@ -87,6 +87,24 @@ src/i18n/
     └── vi/translation.json  # Vietnamese
 ```
 
+## Theme Colors
+
+Derived from the creator's personal site (elwin.cc). Dark mode with warm orange accent.
+
+| Token           | Value                       | Usage                     |
+| --------------- | --------------------------- | ------------------------- |
+| Background      | `#050505`                   | Page background           |
+| Surface         | `#141414`                   | Card/container background |
+| Foreground      | `#fafafa`                   | Primary text              |
+| Muted           | `#8a8380`                   | Secondary text            |
+| Accent (orange) | `#ef6f2f`                   | Brand accent, links, glow |
+| Border          | `rgba(250, 250, 250, 0.08)` | Subtle borders            |
+| Error           | `#ff5f57`                   | Error states              |
+| Warning         | `#febc2e`                   | Warning states            |
+| Success         | `#28c840`                   | Success states            |
+
+When adding UI elements, prefer these colors to keep visual consistency.
+
 ## Code Style
 
 **Rust:**
