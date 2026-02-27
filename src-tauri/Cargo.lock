@@ -2495,6 +2495,7 @@ dependencies = [
  "tokio",
  "transcribe-rs",
  "vad-rs",
+ "window-vibrancy",
  "windows 0.61.3",
 ]
 

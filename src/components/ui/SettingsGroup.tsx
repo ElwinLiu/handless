@@ -23,7 +23,7 @@ export const SettingsGroup: React.FC<SettingsGroupProps> = ({
           )}
         </div>
       )}
-      <div className="bg-background border border-muted/20 rounded-lg overflow-visible">
+      <div className="bg-background-translucent backdrop-blur-sm border border-muted/20 rounded-lg overflow-visible">
         <div className="divide-y divide-muted/20">{children}</div>
       </div>
     </div>

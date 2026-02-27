@@ -157,7 +157,7 @@ function App() {
   return (
     <div
       dir={direction}
-      className="h-screen flex flex-col select-none cursor-default"
+      className={`h-screen flex flex-col select-none cursor-default ${platform() === "linux" ? "bg-background" : ""}`}
     >
       <Toaster
         theme="dark"
@@ -165,7 +165,7 @@ function App() {
           unstyled: true,
           classNames: {
             toast:
-              "bg-background border border-muted/20 rounded-lg shadow-lg px-4 py-3 flex items-center gap-3 text-sm",
+              "bg-background-translucent backdrop-blur-sm border border-muted/20 rounded-lg shadow-lg px-4 py-3 flex items-center gap-3 text-sm",
             title: "font-medium",
             description: "text-muted",
           },

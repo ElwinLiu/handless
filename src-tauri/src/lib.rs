@@ -433,6 +433,29 @@ pub fn run(cli_args: CliArgs) {
 
             initialize_core_logic(&app_handle);
 
+            // Apply native vibrancy/blur effect to main window
+            if let Some(main_window) = app_handle.get_webview_window("main") {
+                #[cfg(target_os = "macos")]
+                {
+                    use window_vibrancy::{apply_vibrancy, NSVisualEffectMaterial, NSVisualEffectState};
+                    let _ = apply_vibrancy(
+                        &main_window,
+                        NSVisualEffectMaterial::HudWindow,
+                        Some(NSVisualEffectState::Active),
+                        None,
+                    );
+                }
+
+                #[cfg(target_os = "windows")]
+                {
+                    use window_vibrancy::{apply_mica, apply_acrylic};
+                    // Try Mica (Win11) first, fall back to Acrylic (Win10)
+                    if apply_mica(&main_window, Some(true)).is_err() {
+                        let _ = apply_acrylic(&main_window, Some((5, 5, 5, 180)));
+                    }
+                }
+            }
+
             // Hide tray icon if --no-tray was passed
             if cli_args.no_tray {
                 tray::set_tray_visibility(&app_handle, false);

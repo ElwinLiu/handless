@@ -6,7 +6,9 @@ export default {
       colors: {
         text: "var(--color-text)",
         background: "var(--color-background)",
+        "background-translucent": "var(--color-background-translucent)",
         surface: "var(--color-surface)",
+        "surface-translucent": "var(--color-surface-translucent)",
         accent: "var(--color-accent)",
         muted: "var(--color-muted)",
         border: "var(--color-border)",

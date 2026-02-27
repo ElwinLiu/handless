@@ -147,7 +147,7 @@ export const HistorySettings: React.FC = () => {
               label={t("settings.history.openFolder")}
             />
           </div>
-          <div className="bg-background border border-muted/20 rounded-lg overflow-visible">
+          <div className="bg-background-translucent backdrop-blur-sm border border-muted/20 rounded-lg overflow-visible">
             <div className="px-4 py-3 text-center text-text/60">
               {t("settings.history.loading")}
             </div>
@@ -172,7 +172,7 @@ export const HistorySettings: React.FC = () => {
               label={t("settings.history.openFolder")}
             />
           </div>
-          <div className="bg-background border border-muted/20 rounded-lg overflow-visible">
+          <div className="bg-background-translucent backdrop-blur-sm border border-muted/20 rounded-lg overflow-visible">
             <div className="px-4 py-3 text-center text-text/60">
               {t("settings.history.empty")}
             </div>

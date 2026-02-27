@@ -7,6 +7,8 @@
   --color-accent: #ef6f2f;
   --color-muted: #8a8380;
   --color-border: rgba(250, 250, 250, 0.08);
+  --color-background-translucent: rgba(5, 5, 5, 0.9);
+  --color-surface-translucent: rgba(20, 20, 20, 0.8);
   --color-error: #ff5f57;
   --color-warning: #febc2e;
   --color-success: #28c840;
@@ -27,7 +29,7 @@
 
   /* Apply colors */
   color: var(--color-text);
-  background-color: var(--color-background);
+  background-color: rgba(5, 5, 5, 0.88);
 }
 
 .container {
