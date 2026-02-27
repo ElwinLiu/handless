@@ -95,10 +95,14 @@ const selectStyles: StylesConfig<SelectOption, false> = {
   menu: (provided) => ({
     ...provided,
     zIndex: 30,
-    backgroundColor: "var(--color-background-translucent)",
+    backgroundColor: "#141414",
     color: "var(--color-text)",
     border: "1px solid color-mix(in srgb, var(--color-muted) 30%, transparent)",
     boxShadow: "0 10px 30px rgba(15, 15, 15, 0.2)",
+  }),
+  menuList: (provided) => ({
+    ...provided,
+    backgroundColor: "#141414",
   }),
   option: (base, state) => ({
     ...base,
