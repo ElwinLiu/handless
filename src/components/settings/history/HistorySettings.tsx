@@ -134,9 +134,9 @@ export const HistorySettings: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="max-w-3xl w-full mx-auto space-y-6">
-        <div className="space-y-2">
-          <div className="px-4 flex items-center justify-between">
+      <div className="max-w-3xl w-full mx-auto space-y-4">
+        <div className="space-y-1.5">
+          <div className="px-3 flex items-center justify-between">
             <div>
               <h2 className="text-xs font-medium text-muted uppercase tracking-wide">
                 {t("settings.history.title")}
@@ -148,7 +148,7 @@ export const HistorySettings: React.FC = () => {
             />
           </div>
           <div className="bg-background-translucent backdrop-blur-sm border border-muted/20 rounded overflow-visible">
-            <div className="px-4 py-3 text-center text-text/60">
+            <div className="px-3 py-3 text-center text-text/60">
               {t("settings.history.loading")}
             </div>
           </div>
@@ -159,9 +159,9 @@ export const HistorySettings: React.FC = () => {
 
   if (historyEntries.length === 0) {
     return (
-      <div className="max-w-3xl w-full mx-auto space-y-6">
-        <div className="space-y-2">
-          <div className="px-4 flex items-center justify-between">
+      <div className="max-w-3xl w-full mx-auto space-y-4">
+        <div className="space-y-1.5">
+          <div className="px-3 flex items-center justify-between">
             <div>
               <h2 className="text-xs font-medium text-muted uppercase tracking-wide">
                 {t("settings.history.title")}
@@ -173,7 +173,7 @@ export const HistorySettings: React.FC = () => {
             />
           </div>
           <div className="bg-background-translucent backdrop-blur-sm border border-muted/20 rounded overflow-visible">
-            <div className="px-4 py-3 text-center text-text/60">
+            <div className="px-3 py-3 text-center text-text/60">
               {t("settings.history.empty")}
             </div>
           </div>
@@ -183,9 +183,9 @@ export const HistorySettings: React.FC = () => {
   }
 
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-6">
-      <div className="space-y-2">
-        <div className="px-4 flex items-center justify-between">
+    <div className="max-w-3xl w-full mx-auto space-y-4">
+      <div className="space-y-1.5">
+        <div className="px-3 flex items-center justify-between">
           <div>
             <h2 className="text-xs font-medium text-muted uppercase tracking-wide">
               {t("settings.history.title")}
@@ -256,7 +256,7 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
   const formattedDate = formatDateTime(String(entry.timestamp), i18n.language);
 
   return (
-    <div className="px-4 py-2 pb-5 flex flex-col gap-3">
+    <div className="px-3 py-1.5 pb-4 flex flex-col gap-2">
       <div className="flex justify-between items-center">
         <p className="text-sm font-medium">{formattedDate}</p>
         <div className="flex items-center gap-1">
