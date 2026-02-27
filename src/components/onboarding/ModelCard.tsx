@@ -1,7 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import {
-  Check,
   Download,
   Globe,
   Languages,
@@ -142,7 +141,6 @@ const ModelCard: React.FC<ModelCardProps> = ({
             )}
             {status === "active" && (
               <Badge variant="primary">
-                <Check className="w-3 h-3 mr-1" />
                 {t("modelSelector.active")}
               </Badge>
             )}
