@@ -344,7 +344,7 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
         )}
 
         {!isCreating && !selectedPrompt && (
-          <div className="p-3 bg-muted/5 rounded-md border border-muted/20">
+          <div className="p-3 bg-muted/5 rounded border border-muted/20">
             <p className="text-sm text-muted">
               {hasPrompts
                 ? t("settings.postProcessing.prompts.selectToEdit")

@@ -224,7 +224,7 @@ export const ModelsSettings: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setLanguageDropdownOpen(!languageDropdownOpen)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded transition-colors ${
                     languageFilter !== "all"
                       ? "bg-accent/20 text-accent"
                       : "bg-muted/10 text-text/60 hover:bg-muted/20"
@@ -242,7 +242,7 @@ export const ModelsSettings: React.FC = () => {
                 </button>
 
                 {languageDropdownOpen && (
-                  <div className="absolute top-full right-0 mt-1 w-56 bg-surface border border-muted/80 rounded-lg shadow-lg z-50 overflow-hidden">
+                  <div className="absolute top-full right-0 mt-1 w-56 bg-surface border border-muted/80 rounded shadow-lg z-50 overflow-hidden">
                     <div className="p-2 border-b border-muted/40">
                       <input
                         ref={languageSearchInputRef}
@@ -265,7 +265,7 @@ export const ModelsSettings: React.FC = () => {
                         placeholder={t(
                           "settings.general.language.searchPlaceholder",
                         )}
-                        className="w-full px-2 py-1 text-sm bg-muted/10 border border-muted/40 rounded-md focus:outline-none focus:ring-1 focus:ring-accent"
+                        className="w-full px-2 py-1 text-sm bg-muted/10 border border-muted/40 rounded focus:outline-none focus:ring-1 focus:ring-accent"
                       />
                     </div>
                     <div className="max-h-48 overflow-y-auto">

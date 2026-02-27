@@ -29,6 +29,7 @@
   --color-border: rgba(250, 250, 250, 0.08);
   --color-background-translucent: rgba(18, 18, 18, 0.35);
   --color-surface-translucent: rgba(30, 30, 30, 0.25);
+  --radius: 5px;
   --color-error: #ff5f57;
   --color-warning: #febc2e;
   --color-success: #28c840;
