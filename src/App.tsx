@@ -186,7 +186,7 @@ function App() {
             }}
             className="w-full h-10 shrink-0"
           />
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto overscroll-contain">
             <div className="flex flex-col items-center p-4 gap-4">
               <AccessibilityPermissions />
               {renderSettingsContent(currentSection)}
