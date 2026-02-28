@@ -260,7 +260,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
           onTouchStart={handleSliderTouchStart}
           className={`flex-1 h-1 rounded appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-accent ${progressPercent >= 99.5 ? "[&::-webkit-slider-thumb]:translate-x-0.5 [&::-moz-range-thumb]:translate-x-0.5" : ""}`}
           style={{
-            background: `linear-gradient(to right, #ef6f2f 0%, #ef6f2f ${progressPercent}%, rgba(128, 128, 128, 0.2) ${progressPercent}%, rgba(128, 128, 128, 0.2) 100%)`,
+            background: `linear-gradient(to right, var(--color-accent) 0%, var(--color-accent) ${progressPercent}%, rgba(128, 128, 128, 0.2) ${progressPercent}%, rgba(128, 128, 128, 0.2) 100%)`,
           }}
         />
 

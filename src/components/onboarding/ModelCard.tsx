@@ -1,12 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Download,
-  Globe,
-  Languages,
-  Loader2,
-  Trash2,
-} from "lucide-react";
+import { Download, Globe, Languages, Loader2, Trash2 } from "lucide-react";
 import type { ModelInfo } from "@/bindings";
 import { formatModelSize } from "../../lib/utils/format";
 import {
@@ -143,9 +137,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
               <Badge variant="primary">{t("onboarding.recommended")}</Badge>
             )}
             {status === "active" && (
-              <Badge variant="primary">
-                {t("modelSelector.active")}
-              </Badge>
+              <Badge variant="primary">{t("modelSelector.active")}</Badge>
             )}
             {model.is_custom && (
               <Badge variant="secondary">{t("modelSelector.custom")}</Badge>
@@ -157,7 +149,9 @@ const ModelCard: React.FC<ModelCardProps> = ({
               </Badge>
             )}
           </div>
-          <p className={`text-text/60 text-sm ${compact ? "leading-snug" : "leading-relaxed"}`}>
+          <p
+            className={`text-text/60 text-sm ${compact ? "leading-snug" : "leading-relaxed"}`}
+          >
             {displayDescription}
           </p>
         </div>
@@ -194,7 +188,9 @@ const ModelCard: React.FC<ModelCardProps> = ({
       {!compact && <hr className="w-full border-muted/20" />}
 
       {/* Bottom row: tags + action buttons (full width) */}
-      <div className={`flex items-center gap-2 w-full ${compact ? "" : "-mb-0.5 mt-0.5"}`}>
+      <div
+        className={`flex items-center gap-2 w-full ${compact ? "" : "-mb-0.5 mt-0.5"}`}
+      >
         {model.supported_languages.length > 0 && (
           <div
             className={`flex items-center gap-1 text-xs px-1.5 py-0.5 rounded ${
