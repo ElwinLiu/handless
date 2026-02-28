@@ -41,6 +41,11 @@ interface UseSettingsReturn {
   ) => Promise<void>;
   updatePostProcessModel: (providerId: string, model: string) => Promise<void>;
   fetchPostProcessModels: (providerId: string) => Promise<string[]>;
+
+  // STT provider helpers
+  setSttProvider: (providerId: string) => Promise<void>;
+  updateSttApiKey: (providerId: string, apiKey: string) => Promise<void>;
+  updateSttCloudModel: (providerId: string, model: string) => Promise<void>;
 }
 
 export const useSettings = (): UseSettingsReturn => {
@@ -74,5 +79,8 @@ export const useSettings = (): UseSettingsReturn => {
     updatePostProcessApiKey: store.updatePostProcessApiKey,
     updatePostProcessModel: store.updatePostProcessModel,
     fetchPostProcessModels: store.fetchPostProcessModels,
+    setSttProvider: store.setSttProvider,
+    updateSttApiKey: store.updateSttApiKey,
+    updateSttCloudModel: store.updateSttCloudModel,
   };
 };

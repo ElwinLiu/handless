@@ -48,6 +48,11 @@ interface SettingsStore {
   fetchPostProcessModels: (providerId: string) => Promise<string[]>;
   setPostProcessModelOptions: (providerId: string, models: string[]) => void;
 
+  // STT provider helpers
+  setSttProvider: (providerId: string) => Promise<void>;
+  updateSttApiKey: (providerId: string, apiKey: string) => Promise<void>;
+  updateSttCloudModel: (providerId: string, model: string) => Promise<void>;
+
   // Internal state setters
   setSettings: (settings: Settings | null) => void;
   setDefaultSettings: (defaultSettings: Settings | null) => void;
@@ -526,6 +531,70 @@ export const useSettingsStore = create<SettingsStore>()(
           [providerId]: models,
         },
       })),
+
+    setSttProvider: async (providerId) => {
+      const { settings, setUpdating, refreshSettings } = get();
+      const updateKey = "stt_provider_id";
+      const previousId = settings?.stt_provider_id ?? null;
+
+      setUpdating(updateKey, true);
+
+      if (settings) {
+        set((state) => ({
+          settings: state.settings
+            ? { ...state.settings, stt_provider_id: providerId }
+            : null,
+        }));
+      }
+
+      try {
+        await commands.changeSttProviderSetting(providerId);
+        await refreshSettings();
+      } catch (error) {
+        console.error("Failed to set STT provider:", error);
+        if (previousId !== null) {
+          set((state) => ({
+            settings: state.settings
+              ? { ...state.settings, stt_provider_id: previousId }
+              : null,
+          }));
+        }
+      } finally {
+        setUpdating(updateKey, false);
+      }
+    },
+
+    updateSttApiKey: async (providerId, apiKey) => {
+      const { setUpdating, refreshSettings } = get();
+      const updateKey = `stt_api_key:${providerId}`;
+
+      setUpdating(updateKey, true);
+
+      try {
+        await commands.changeSttApiKeySetting(providerId, apiKey);
+        await refreshSettings();
+      } catch (error) {
+        console.error("Failed to update STT API key:", error);
+      } finally {
+        setUpdating(updateKey, false);
+      }
+    },
+
+    updateSttCloudModel: async (providerId, model) => {
+      const { setUpdating, refreshSettings } = get();
+      const updateKey = `stt_cloud_model:${providerId}`;
+
+      setUpdating(updateKey, true);
+
+      try {
+        await commands.changeSttCloudModelSetting(providerId, model);
+        await refreshSettings();
+      } catch (error) {
+        console.error("Failed to update STT cloud model:", error);
+      } finally {
+        setUpdating(updateKey, false);
+      }
+    },
 
     // Load default settings from Rust
     loadDefaultSettings: async () => {

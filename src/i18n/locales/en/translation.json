@@ -195,7 +195,33 @@
         "translation": "Translation",
         "allLanguages": "All Languages"
       },
-      "noModelsMatch": "No models match this filter."
+      "noModelsMatch": "No models match this filter.",
+      "tabs": {
+        "myModels": "My Models",
+        "library": "Library"
+      },
+      "cloudProviders": {
+        "title": "Cloud Providers",
+        "badge": "Cloud",
+        "notConfigured": "Not configured",
+        "apiKey": {
+          "title": "API Key",
+          "placeholder": "sk-..."
+        },
+        "model": {
+          "title": "Model",
+          "placeholder": "Enter model name"
+        },
+        "baseUrl": {
+          "title": "Base URL"
+        }
+      },
+      "localModels": {
+        "title": "Local Models"
+      },
+      "myModels": {
+        "noModelsConfigured": "No models configured. Visit the Library to download models or set up cloud providers."
+      }
     },
     "sound": {
       "title": "Sound",

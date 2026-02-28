@@ -34,7 +34,10 @@ pub async fn transcribe(
         .text("model", model.to_string());
 
     if let Some(lang) = language {
-        form = form.text("language", lang.to_string());
+        // OpenAI expects ISO 639-1 codes (e.g. "en", "zh", "fr").
+        // Strip subtags like "zh-Hans" → "zh".
+        let code = lang.split('-').next().unwrap_or(lang);
+        form = form.text("language", code.to_string());
     }
 
     let client = reqwest::Client::new();

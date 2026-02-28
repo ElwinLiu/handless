@@ -75,7 +75,10 @@ pub async fn transcribe(
         "model": model,
     });
     if let Some(lang) = language {
-        body["language_hints"] = serde_json::json!([lang]);
+        // Soniox expects ISO 639-1 codes (e.g. "en", "zh", "fr").
+        // Strip subtags like "zh-Hans" → "zh" to avoid 400 errors.
+        let code = lang.split('-').next().unwrap_or(lang);
+        body["language_hints"] = serde_json::json!([code]);
     }
 
     let response = client
