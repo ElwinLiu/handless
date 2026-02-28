@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Dropdown } from "../ui/Dropdown";
 import { SettingContainer } from "../ui/SettingContainer";
@@ -15,11 +15,17 @@ export const ThemeSelector: React.FC<ThemeSelectorProps> = React.memo(
     const { t } = useTranslation();
     const { getSetting, updateSetting, isUpdating } = useSettings();
 
-    const themeOptions = [
-      { value: "dark", label: t("settings.advanced.theme.options.dark") },
-      { value: "light", label: t("settings.advanced.theme.options.light") },
-      { value: "system", label: t("settings.advanced.theme.options.system") },
-    ];
+    const themeOptions = useMemo(
+      () => [
+        { value: "dark", label: t("settings.advanced.theme.options.dark") },
+        { value: "light", label: t("settings.advanced.theme.options.light") },
+        {
+          value: "system",
+          label: t("settings.advanced.theme.options.system"),
+        },
+      ],
+      [t],
+    );
 
     const selectedTheme = (getSetting("app_theme") || "system") as AppTheme;
 

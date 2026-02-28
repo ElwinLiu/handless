@@ -32,7 +32,7 @@ interface SettingsStore {
   checkCustomSounds: () => Promise<void>;
   setPostProcessProvider: (providerId: string) => Promise<void>;
   updatePostProcessSetting: (
-    settingType: "base_url" | "api_key" | "model",
+    settingType: "api_key" | "model",
     providerId: string,
     value: string,
   ) => Promise<void>;
@@ -417,7 +417,7 @@ export const useSettingsStore = create<SettingsStore>()(
 
     // Generic updater for post-processing provider settings
     updatePostProcessSetting: async (
-      settingType: "base_url" | "api_key" | "model",
+      settingType: "api_key" | "model",
       providerId: string,
       value: string,
     ) => {
@@ -427,9 +427,7 @@ export const useSettingsStore = create<SettingsStore>()(
       setUpdating(updateKey, true);
 
       try {
-        if (settingType === "base_url") {
-          await commands.changePostProcessBaseUrlSetting(providerId, value);
-        } else if (settingType === "api_key") {
+        if (settingType === "api_key") {
           await commands.changePostProcessApiKeySetting(providerId, value);
         } else if (settingType === "model") {
           await commands.changePostProcessModelSetting(providerId, value);
@@ -475,12 +473,7 @@ export const useSettingsStore = create<SettingsStore>()(
         }
 
         // Clear cached model options only after both backend writes succeed.
-        set((state) => ({
-          postProcessModelOptions: {
-            ...state.postProcessModelOptions,
-            [providerId]: [],
-          },
-        }));
+        get().setPostProcessModelOptions(providerId, []);
 
         // Single refresh after both backend writes.
         await refreshSettings();
@@ -493,12 +486,7 @@ export const useSettingsStore = create<SettingsStore>()(
 
     updatePostProcessApiKey: async (providerId, apiKey) => {
       // Clear cached models when API key changes - user should click refresh after
-      set((state) => ({
-        postProcessModelOptions: {
-          ...state.postProcessModelOptions,
-          [providerId]: [],
-        },
-      }));
+      get().setPostProcessModelOptions(providerId, []);
       return get().updatePostProcessSetting("api_key", providerId, apiKey);
     },
 

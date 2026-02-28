@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { Toaster } from "sonner";
 import { useTranslation } from "react-i18next";
 import { platform } from "@tauri-apps/plugin-os";
-import { getCurrentWindow } from "@tauri-apps/api/window";
+import { DragRegion } from "./components/ui/DragRegion";
 import {
   checkAccessibilityPermission,
   checkMicrophonePermission,
@@ -182,12 +182,7 @@ function App() {
         />
         {/* Scrollable content area */}
         <div className="flex-1 flex flex-col overflow-hidden">
-          <div
-            onMouseDown={(e) => {
-              if (e.buttons === 1) getCurrentWindow().startDragging();
-            }}
-            className="w-full h-10 shrink-0"
-          />
+          <DragRegion />
           <div className="flex-1 overflow-y-auto overscroll-contain">
             <div className="flex flex-col items-center p-4 gap-4">
               <AccessibilityPermissions />
