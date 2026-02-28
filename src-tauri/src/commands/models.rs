@@ -75,15 +75,16 @@ pub async fn set_active_model(
         return Err(format!("Model not downloaded: {}", model_id));
     }
 
+    // Update settings before loading so that model-state-changed events
+    // (emitted during load_model) read the correct selected_model
+    let mut settings = get_settings(&app_handle);
+    settings.selected_model = model_id.clone();
+    write_settings(&app_handle, settings);
+
     // Load the model in the transcription manager
     transcription_manager
         .load_model(&model_id)
         .map_err(|e| e.to_string())?;
-
-    // Update settings
-    let mut settings = get_settings(&app_handle);
-    settings.selected_model = model_id.clone();
-    write_settings(&app_handle, settings);
 
     Ok(())
 }

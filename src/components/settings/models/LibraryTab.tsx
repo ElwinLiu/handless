@@ -67,14 +67,12 @@ export const LibraryTab: React.FC = () => {
     }
 
     downloaded.sort((a, b) => {
-      if (a.id === currentModel) return -1;
-      if (b.id === currentModel) return 1;
       if (a.is_custom !== b.is_custom) return a.is_custom ? 1 : -1;
       return 0;
     });
 
     return { downloadedModels: downloaded, availableModels: available };
-  }, [filteredModels, downloadingModels, extractingModels, currentModel]);
+  }, [filteredModels, downloadingModels, extractingModels]);
 
   const getModelStatus = (modelId: string): ModelCardStatus => {
     if (modelId in extractingModels) return "extracting";

@@ -50,12 +50,10 @@ export const MyModelsTab: React.FC<MyModelsTabProps> = ({
           m.id in extractingModels,
       )
       .sort((a, b) => {
-        if (a.id === currentModel) return -1;
-        if (b.id === currentModel) return 1;
         if (a.is_custom !== b.is_custom) return a.is_custom ? 1 : -1;
         return 0;
       });
-  }, [models, downloadingModels, extractingModels, currentModel]);
+  }, [models, downloadingModels, extractingModels]);
 
   const getModelStatus = (modelId: string): ModelCardStatus => {
     if (modelId in extractingModels) return "extracting";
