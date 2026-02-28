@@ -20,8 +20,8 @@ use tauri::{AppHandle, Emitter, Manager};
 use tauri_plugin_autostart::ManagerExt;
 
 use crate::settings::{
-    self, get_settings, AutoSubmitKey, ClipboardHandling, KeyboardImplementation, LLMPrompt,
-    OverlayPosition, PasteMethod, ShortcutBinding, SoundTheme, TypingTool,
+    self, get_settings, AppTheme, AutoSubmitKey, ClipboardHandling, KeyboardImplementation,
+    LLMPrompt, OverlayPosition, PasteMethod, ShortcutBinding, SoundTheme, TypingTool,
     APPLE_INTELLIGENCE_DEFAULT_MODEL_ID, APPLE_INTELLIGENCE_PROVIDER_ID,
 };
 use crate::tray;
@@ -1050,6 +1050,24 @@ pub fn change_app_language_setting(app: AppHandle, language: String) -> Result<(
     // Refresh the tray menu with the new language
     tray::update_tray_menu(&app, &tray::TrayIconState::Idle, Some(&language));
 
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn change_app_theme_setting(app: AppHandle, theme: String) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    let parsed = match theme.as_str() {
+        "dark" => AppTheme::Dark,
+        "light" => AppTheme::Light,
+        "system" => AppTheme::System,
+        other => {
+            warn!("Invalid app theme '{}', defaulting to system", other);
+            AppTheme::System
+        }
+    };
+    settings.app_theme = parsed;
+    settings::write_settings(&app, settings);
     Ok(())
 }
 

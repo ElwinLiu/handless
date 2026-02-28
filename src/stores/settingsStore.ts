@@ -135,6 +135,7 @@ const settingUpdaters: {
     commands.changeExperimentalEnabledSetting(value as boolean),
   show_tray_icon: (value) =>
     commands.changeShowTrayIconSetting(value as boolean),
+  app_theme: (value) => commands.changeAppThemeSetting(value as string),
 };
 
 export const useSettingsStore = create<SettingsStore>()(

@@ -63,6 +63,26 @@ body {
   background-color: rgba(5, 5, 5, 0.88);
 }
 
+:root[data-theme="light"] {
+  background-color: rgba(255, 255, 255, 0.92);
+}
+
+@layer base {
+  :root[data-theme="light"] {
+    --color-text: #1a1a1a;
+    --color-background: #ffffff;
+    --color-surface: #f5f3f1;
+    --color-muted: #6b6462;
+    --color-border: rgba(0, 0, 0, 0.1);
+    --color-background-translucent: rgba(255, 255, 255, 0.65);
+    --color-surface-translucent: rgba(245, 243, 241, 0.7);
+    --color-error: #dc3d35;
+    --color-warning: #b58300;
+    --color-success: #1a8f2d;
+    /* accent stays #ef6f2f — brand color, used on buttons with white text */
+  }
+}
+
 .container {
   margin: 0;
   padding-top: 10vh;

@@ -297,6 +297,7 @@ pub fn run(cli_args: CliArgs) {
         shortcut::change_update_checks_setting,
         shortcut::change_keyboard_implementation_setting,
         shortcut::get_keyboard_implementation,
+        shortcut::change_app_theme_setting,
         shortcut::change_show_tray_icon_setting,
         shortcut::handy_keys::start_handy_keys_recording,
         shortcut::handy_keys::stop_handy_keys_recording,
@@ -437,7 +438,9 @@ pub fn run(cli_args: CliArgs) {
             if let Some(main_window) = app_handle.get_webview_window("main") {
                 #[cfg(target_os = "macos")]
                 {
-                    use window_vibrancy::{apply_vibrancy, NSVisualEffectMaterial, NSVisualEffectState};
+                    use window_vibrancy::{
+                        apply_vibrancy, NSVisualEffectMaterial, NSVisualEffectState,
+                    };
                     let _ = apply_vibrancy(
                         &main_window,
                         NSVisualEffectMaterial::HudWindow,
@@ -448,7 +451,7 @@ pub fn run(cli_args: CliArgs) {
 
                 #[cfg(target_os = "windows")]
                 {
-                    use window_vibrancy::{apply_mica, apply_acrylic};
+                    use window_vibrancy::{apply_acrylic, apply_mica};
                     // Try Mica (Win11) first, fall back to Acrylic (Win10)
                     if apply_mica(&main_window, Some(true)).is_err() {
                         let _ = apply_acrylic(&main_window, Some((5, 5, 5, 180)));

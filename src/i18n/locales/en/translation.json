@@ -229,6 +229,15 @@
         "history": "History",
         "experimental": "Experimental"
       },
+      "theme": {
+        "title": "Theme",
+        "description": "Choose the app color theme",
+        "options": {
+          "dark": "Dark",
+          "light": "Light",
+          "system": "System"
+        }
+      },
       "experimentalToggle": {
         "label": "Experimental Features",
         "description": "Enable experimental features that are still in development."

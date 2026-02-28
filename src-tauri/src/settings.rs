@@ -260,6 +260,20 @@ impl SoundTheme {
 
 #[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, Type)]
 #[serde(rename_all = "snake_case")]
+pub enum AppTheme {
+    Dark,
+    Light,
+    System,
+}
+
+impl Default for AppTheme {
+    fn default() -> Self {
+        AppTheme::System
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, Type)]
+#[serde(rename_all = "snake_case")]
 pub enum TypingTool {
     Auto,
     Wtype,
@@ -360,6 +374,8 @@ pub struct AppSettings {
     #[serde(default = "default_typing_tool")]
     pub typing_tool: TypingTool,
     pub external_script_path: Option<String>,
+    #[serde(default)]
+    pub app_theme: AppTheme,
 }
 
 fn default_model() -> String {
@@ -724,6 +740,7 @@ pub fn get_default_settings() -> AppSettings {
         paste_delay_ms: default_paste_delay_ms(),
         typing_tool: default_typing_tool(),
         external_script_path: None,
+        app_theme: AppTheme::default(),
     }
 }
 
