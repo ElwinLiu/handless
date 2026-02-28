@@ -1083,3 +1083,59 @@ pub fn change_show_tray_icon_setting(app: AppHandle, enabled: bool) -> Result<()
 
     Ok(())
 }
+
+// ============================================================================
+// STT Provider Settings Commands
+// ============================================================================
+
+fn validate_stt_provider_exists(
+    settings: &settings::AppSettings,
+    provider_id: &str,
+) -> Result<(), String> {
+    if !settings
+        .stt_providers
+        .iter()
+        .any(|provider| provider.id == provider_id)
+    {
+        return Err(format!("STT provider '{}' not found", provider_id));
+    }
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn change_stt_provider_setting(app: AppHandle, provider_id: String) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    validate_stt_provider_exists(&settings, &provider_id)?;
+    settings.stt_provider_id = provider_id;
+    settings::write_settings(&app, settings);
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn change_stt_api_key_setting(
+    app: AppHandle,
+    provider_id: String,
+    api_key: String,
+) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    validate_stt_provider_exists(&settings, &provider_id)?;
+    settings.stt_api_keys.insert(provider_id, api_key);
+    settings::write_settings(&app, settings);
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn change_stt_cloud_model_setting(
+    app: AppHandle,
+    provider_id: String,
+    model: String,
+) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    validate_stt_provider_exists(&settings, &provider_id)?;
+    settings.stt_cloud_models.insert(provider_id, model);
+    settings::write_settings(&app, settings);
+    Ok(())
+}

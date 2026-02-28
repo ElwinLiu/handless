@@ -91,6 +91,12 @@ impl TranscriptionManager {
                     }
 
                     let settings = get_settings(&app_handle_cloned);
+
+                    // Skip unload logic when cloud provider is active
+                    if settings.stt_provider_id != "local" {
+                        continue;
+                    }
+
                     let timeout_seconds = settings.model_unload_timeout.to_seconds();
 
                     if let Some(limit_seconds) = timeout_seconds {
@@ -380,6 +386,11 @@ impl TranscriptionManager {
 
     /// Kicks off the model loading in a background thread if it's not already loaded
     pub fn initiate_model_load(&self) {
+        let settings = get_settings(&self.app_handle);
+        if settings.stt_provider_id != "local" {
+            return; // Cloud providers don't need local model loading
+        }
+
         let mut is_loading = self.is_loading.lock().unwrap();
         if *is_loading || self.is_model_loaded() {
             return;
@@ -403,7 +414,7 @@ impl TranscriptionManager {
         current_model.clone()
     }
 
-    pub fn transcribe(&self, audio: Vec<f32>) -> Result<String> {
+    pub async fn transcribe(&self, audio: Vec<f32>) -> Result<String> {
         // Update last activity timestamp
         self.last_activity.store(
             SystemTime::now()
@@ -423,6 +434,85 @@ impl TranscriptionManager {
             return Ok(String::new());
         }
 
+        let settings = get_settings(&self.app_handle);
+
+        let raw_text = if settings.stt_provider_id == "local" {
+            self.transcribe_local(audio, &settings)?
+        } else {
+            let wav_bytes = crate::audio_toolkit::audio::encode_wav_bytes(&audio)?;
+            let api_key = settings
+                .stt_api_keys
+                .get(&settings.stt_provider_id)
+                .cloned()
+                .unwrap_or_default();
+            let provider = settings
+                .stt_provider(&settings.stt_provider_id)
+                .ok_or_else(|| anyhow::anyhow!("STT provider not found"))?;
+            let model = settings
+                .stt_cloud_models
+                .get(&settings.stt_provider_id)
+                .cloned()
+                .unwrap_or_default();
+            let language = if settings.selected_language == "auto" {
+                None
+            } else {
+                Some(settings.selected_language.clone())
+            };
+
+            crate::cloud_stt::transcribe(
+                &settings.stt_provider_id,
+                &api_key,
+                &provider.base_url,
+                &model,
+                wav_bytes,
+                language.as_deref(),
+            )
+            .await?
+        };
+
+        // Apply word correction if custom words are configured
+        let corrected_result = if !settings.custom_words.is_empty() {
+            apply_custom_words(
+                &raw_text,
+                &settings.custom_words,
+                settings.word_correction_threshold,
+            )
+        } else {
+            raw_text
+        };
+
+        // Filter out filler words and hallucinations
+        let filtered_result = filter_transcription_output(&corrected_result);
+
+        let et = std::time::Instant::now();
+        let translation_note = if settings.translate_to_english {
+            " (translated)"
+        } else {
+            ""
+        };
+        info!(
+            "Transcription completed in {}ms{}",
+            (et - st).as_millis(),
+            translation_note
+        );
+
+        if filtered_result.is_empty() {
+            info!("Transcription result is empty");
+        } else {
+            info!("Transcription result: {}", filtered_result);
+        }
+
+        self.maybe_unload_immediately("transcription");
+
+        Ok(filtered_result)
+    }
+
+    /// Perform transcription using the local on-device engine (sync).
+    fn transcribe_local(
+        &self,
+        audio: Vec<f32>,
+        settings: &crate::settings::AppSettings,
+    ) -> Result<String> {
         // Check if model is loaded, if not try to load it
         {
             // If the model is loading, wait for it to complete.
@@ -436,9 +526,6 @@ impl TranscriptionManager {
                 return Err(anyhow::anyhow!("Model is not loaded for transcription."));
             }
         }
-
-        // Get current settings for configuration
-        let settings = get_settings(&self.app_handle);
 
         // Perform transcription with the appropriate engine.
         // We use catch_unwind to prevent engine panics from poisoning the mutex,
@@ -579,43 +666,7 @@ impl TranscriptionManager {
             }
         };
 
-        // Apply word correction if custom words are configured
-        let corrected_result = if !settings.custom_words.is_empty() {
-            apply_custom_words(
-                &result.text,
-                &settings.custom_words,
-                settings.word_correction_threshold,
-            )
-        } else {
-            result.text
-        };
-
-        // Filter out filler words and hallucinations
-        let filtered_result = filter_transcription_output(&corrected_result);
-
-        let et = std::time::Instant::now();
-        let translation_note = if settings.translate_to_english {
-            " (translated)"
-        } else {
-            ""
-        };
-        info!(
-            "Transcription completed in {}ms{}",
-            (et - st).as_millis(),
-            translation_note
-        );
-
-        let final_result = filtered_result;
-
-        if final_result.is_empty() {
-            info!("Transcription result is empty");
-        } else {
-            info!("Transcription result: {}", final_result);
-        }
-
-        self.maybe_unload_immediately("transcription");
-
-        Ok(final_result)
+        Ok(result.text)
     }
 }
 

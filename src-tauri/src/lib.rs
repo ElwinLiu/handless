@@ -5,6 +5,7 @@ mod audio_feedback;
 pub mod audio_toolkit;
 pub mod cli;
 mod clipboard;
+mod cloud_stt;
 mod commands;
 mod helpers;
 mod input;
@@ -299,6 +300,9 @@ pub fn run(cli_args: CliArgs) {
         shortcut::get_keyboard_implementation,
         shortcut::change_app_theme_setting,
         shortcut::change_show_tray_icon_setting,
+        shortcut::change_stt_provider_setting,
+        shortcut::change_stt_api_key_setting,
+        shortcut::change_stt_cloud_model_setting,
         shortcut::handy_keys::start_handy_keys_recording,
         shortcut::handy_keys::stop_handy_keys_recording,
         trigger_update_check,

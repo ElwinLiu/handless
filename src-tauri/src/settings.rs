@@ -93,6 +93,22 @@ pub struct LLMPrompt {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Type)]
+pub struct SttProvider {
+    pub id: String,
+    pub label: String,
+    pub provider_type: SttProviderType,
+    pub base_url: String,
+    pub default_model: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, Type)]
+#[serde(rename_all = "snake_case")]
+pub enum SttProviderType {
+    Local,
+    Cloud,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Type)]
 pub struct PostProcessProvider {
     pub id: String,
     pub label: String,
@@ -343,6 +359,14 @@ pub struct AppSettings {
     pub auto_submit: bool,
     #[serde(default)]
     pub auto_submit_key: AutoSubmitKey,
+    #[serde(default = "default_stt_provider_id")]
+    pub stt_provider_id: String,
+    #[serde(default = "default_stt_providers")]
+    pub stt_providers: Vec<SttProvider>,
+    #[serde(default = "default_stt_api_keys")]
+    pub stt_api_keys: HashMap<String, String>,
+    #[serde(default = "default_stt_cloud_models")]
+    pub stt_cloud_models: HashMap<String, String>,
     #[serde(default = "default_post_process_enabled")]
     pub post_process_enabled: bool,
     #[serde(default = "default_post_process_provider_id")]
@@ -586,6 +610,83 @@ fn default_typing_tool() -> TypingTool {
     TypingTool::Auto
 }
 
+fn default_stt_provider_id() -> String {
+    "local".to_string()
+}
+
+fn default_stt_providers() -> Vec<SttProvider> {
+    vec![
+        SttProvider {
+            id: "local".to_string(),
+            label: "Local (on-device)".to_string(),
+            provider_type: SttProviderType::Local,
+            base_url: String::new(),
+            default_model: String::new(),
+        },
+        SttProvider {
+            id: "openai_stt".to_string(),
+            label: "OpenAI".to_string(),
+            provider_type: SttProviderType::Cloud,
+            base_url: "https://api.openai.com/v1".to_string(),
+            default_model: "whisper-1".to_string(),
+        },
+        SttProvider {
+            id: "soniox".to_string(),
+            label: "Soniox".to_string(),
+            provider_type: SttProviderType::Cloud,
+            base_url: "https://api.soniox.com/v1".to_string(),
+            default_model: "stt-async-v4".to_string(),
+        },
+    ]
+}
+
+fn default_stt_api_keys() -> HashMap<String, String> {
+    let mut map = HashMap::new();
+    for provider in default_stt_providers() {
+        if provider.provider_type == SttProviderType::Cloud {
+            map.insert(provider.id, String::new());
+        }
+    }
+    map
+}
+
+fn default_stt_cloud_models() -> HashMap<String, String> {
+    let mut map = HashMap::new();
+    for provider in default_stt_providers() {
+        if provider.provider_type == SttProviderType::Cloud {
+            map.insert(provider.id, provider.default_model);
+        }
+    }
+    map
+}
+
+fn ensure_stt_defaults(settings: &mut AppSettings) -> bool {
+    let mut changed = false;
+    for provider in default_stt_providers() {
+        if !settings.stt_providers.iter().any(|p| p.id == provider.id) {
+            settings.stt_providers.push(provider.clone());
+            changed = true;
+        }
+
+        if provider.provider_type == SttProviderType::Cloud {
+            if !settings.stt_api_keys.contains_key(&provider.id) {
+                settings
+                    .stt_api_keys
+                    .insert(provider.id.clone(), String::new());
+                changed = true;
+            }
+
+            if !settings.stt_cloud_models.contains_key(&provider.id) {
+                settings
+                    .stt_cloud_models
+                    .insert(provider.id.clone(), provider.default_model.clone());
+                changed = true;
+            }
+        }
+    }
+    changed
+}
+
 fn ensure_post_process_defaults(settings: &mut AppSettings) -> bool {
     let mut changed = false;
     for provider in default_post_process_providers() {
@@ -724,6 +825,10 @@ pub fn get_default_settings() -> AppSettings {
         clipboard_handling: ClipboardHandling::default(),
         auto_submit: default_auto_submit(),
         auto_submit_key: AutoSubmitKey::default(),
+        stt_provider_id: default_stt_provider_id(),
+        stt_providers: default_stt_providers(),
+        stt_api_keys: default_stt_api_keys(),
+        stt_cloud_models: default_stt_cloud_models(),
         post_process_enabled: default_post_process_enabled(),
         post_process_provider_id: default_post_process_provider_id(),
         post_process_providers: default_post_process_providers(),
@@ -745,6 +850,12 @@ pub fn get_default_settings() -> AppSettings {
 }
 
 impl AppSettings {
+    pub fn stt_provider(&self, provider_id: &str) -> Option<&SttProvider> {
+        self.stt_providers
+            .iter()
+            .find(|provider| provider.id == provider_id)
+    }
+
     pub fn active_post_process_provider(&self) -> Option<&PostProcessProvider> {
         self.post_process_providers
             .iter()
@@ -811,7 +922,9 @@ pub fn load_or_create_app_settings(app: &AppHandle) -> AppSettings {
         default_settings
     };
 
-    if ensure_post_process_defaults(&mut settings) {
+    let stt_changed = ensure_stt_defaults(&mut settings);
+    let pp_changed = ensure_post_process_defaults(&mut settings);
+    if stt_changed || pp_changed {
         store.set("settings", serde_json::to_value(&settings).unwrap());
     }
 
@@ -835,7 +948,9 @@ pub fn get_settings(app: &AppHandle) -> AppSettings {
         default_settings
     };
 
-    if ensure_post_process_defaults(&mut settings) {
+    let stt_changed = ensure_stt_defaults(&mut settings);
+    let pp_changed = ensure_post_process_defaults(&mut settings);
+    if stt_changed || pp_changed {
         store.set("settings", serde_json::to_value(&settings).unwrap());
     }
 
