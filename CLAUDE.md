@@ -1,5 +1,3 @@
-# CLAUDE.md
-
 ## Development Commands
 
 ```bash
@@ -18,42 +16,7 @@ bun run format            # Prettier + cargo fmt
 bun run format:check      # Check formatting without changes
 ```
 
-**Model Setup (Required for Development):**
-
-```bash
-mkdir -p src-tauri/resources/models
-curl -o src-tauri/resources/models/silero_vad_v4.onnx https://blob.handy.computer/silero_vad_v4.onnx
-```
-
-## Architecture Overview
-
 Handless is a cross-platform desktop speech-to-text app built with Tauri 2.x (Rust backend + React/TypeScript frontend).
-
-### Backend Structure (src-tauri/src/)
-
-- `lib.rs` - Main entry point, Tauri setup, manager initialization
-- `managers/` - Core business logic:
-  - `audio.rs` - Audio recording and device management
-  - `model.rs` - Model downloading and management
-  - `transcription.rs` - Speech-to-text processing pipeline
-  - `history.rs` - Transcription history storage
-- `audio_toolkit/` - Low-level audio processing:
-  - `audio/` - Device enumeration, recording, resampling
-  - `vad/` - Voice Activity Detection (Silero VAD)
-- `commands/` - Tauri command handlers for frontend communication
-- `shortcut.rs` - Global keyboard shortcut handling
-- `settings.rs` - Application settings management
-
-### Frontend Structure (src/)
-
-- `App.tsx` - Main component with onboarding flow
-- `components/settings/` - Settings UI (35+ files)
-- `components/model-selector/` - Model management interface
-- `components/onboarding/` - First-run experience
-- `hooks/useSettings.ts`, `useModels.ts` - State management hooks
-- `stores/settingsStore.ts` - Zustand store for settings
-- `bindings.ts` - Auto-generated Tauri type bindings (via tauri-specta)
-- `overlay/` - Recording overlay window code
 
 ### Key Patterns
 
@@ -73,37 +36,6 @@ All user-facing strings must use i18next translations. ESLint enforces this (no 
 
 1. Add key to `src/i18n/locales/en/translation.json`
 2. Use in component: `const { t } = useTranslation(); t('key.path')`
-
-**File structure:**
-
-```
-src/i18n/
-├── index.ts           # i18n setup
-├── languages.ts       # Language metadata
-└── locales/
-    ├── en/translation.json  # English (source)
-    ├── es/translation.json  # Spanish
-    ├── fr/translation.json  # French
-    └── vi/translation.json  # Vietnamese
-```
-
-## Theme Colors
-
-Derived from the creator's personal site (elwin.cc). Dark mode with warm orange accent.
-
-| Token           | Value                       | Usage                     |
-| --------------- | --------------------------- | ------------------------- |
-| Background      | `#050505`                   | Page background           |
-| Surface         | `#141414`                   | Card/container background |
-| Foreground      | `#fafafa`                   | Primary text              |
-| Muted           | `#8a8380`                   | Secondary text            |
-| Accent (orange) | `#ef6f2f`                   | Brand accent, links, glow |
-| Border          | `rgba(250, 250, 250, 0.08)` | Subtle borders            |
-| Error           | `#ff5f57`                   | Error states              |
-| Warning         | `#febc2e`                   | Warning states            |
-| Success         | `#28c840`                   | Success states            |
-
-When adding UI elements, prefer these colors to keep visual consistency.
 
 ## Code Style
 
@@ -148,13 +80,3 @@ Handless supports command-line parameters on all platforms for integration with 
 - Remote control flags (`--toggle-transcription`, `--toggle-post-process`, `--cancel`) work by launching a second instance that sends its args to the running instance via `tauri_plugin_single_instance`, then exits
 - `send_transcription_input()` in `signal_handle.rs` is shared between signal handlers and CLI to avoid code duplication
 - `CliArgs` is stored in Tauri managed state (`.manage()`) so it's accessible in `on_window_event` and other handlers
-
-## Debug Mode
-
-Access debug features: `Cmd+Shift+D` (macOS) or `Ctrl+Shift+D` (Windows/Linux)
-
-## Platform Notes
-
-- **macOS**: Metal acceleration, accessibility permissions required
-- **Windows**: Vulkan acceleration, code signing
-- **Linux**: OpenBLAS + Vulkan, limited Wayland support, overlay disabled by default
