@@ -143,17 +143,22 @@ const CloudOptionControl: React.FC<{
       return (
         <div className="flex flex-col gap-1">
           <label className="text-xs text-text/60 font-medium">{label}</label>
-          <ReactSelect<LangOption, false>
-            value={selected}
-            options={languageOptions}
-            onChange={(opt) => onChange(opt?.value || "")}
-            isClearable
-            placeholder={t(
-              "settings.models.cloudProviders.options.selectLanguage",
-            )}
-            styles={compactSelectStyles as StylesConfig<LangOption, false>}
-            className="max-w-[300px]"
-          />
+          <div className="flex items-center gap-2">
+            <ReactSelect<LangOption, false>
+              value={selected}
+              options={languageOptions}
+              onChange={(opt) => onChange(opt?.value || "")}
+              isClearable
+              placeholder={t(
+                "settings.models.cloudProviders.options.selectLanguage",
+              )}
+              styles={compactSelectStyles as StylesConfig<LangOption, false>}
+              className="w-[200px]"
+            />
+            <span className="text-xs text-text/40">
+              {t("settings.models.cloudProviders.options.selectLanguageHint")}
+            </span>
+          </div>
         </div>
       );
     }

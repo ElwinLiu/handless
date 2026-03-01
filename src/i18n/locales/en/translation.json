@@ -234,6 +234,7 @@
         "options": {
           "language": "Language",
           "selectLanguage": "Auto detect",
+          "selectLanguageHint": "Leave empty to auto detect",
           "selectLanguages": "Select languages...",
           "prompt": "Prompt",
           "promptDescription": "Optional text to guide the model's style or continue a previous segment",
