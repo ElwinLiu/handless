@@ -596,6 +596,14 @@ async getAllSttProviders() : Promise<Result<SttProviderInfo[], string>> {
     else return { status: "error", error: e  as any };
 }
 },
+async testSttApiKey(providerId: string, apiKey: string, model: string) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("test_stt_api_key", { providerId, apiKey, model }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async updateMicrophoneMode(alwaysOn: boolean) : Promise<Result<null, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("update_microphone_mode", { alwaysOn }) };

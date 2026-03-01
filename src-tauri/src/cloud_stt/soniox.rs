@@ -23,6 +23,63 @@ struct TranscriptResponse {
     text: String,
 }
 
+/// Test API key and model by uploading a minimal file and creating a transcription.
+pub async fn test_api_key(api_key: &str, base_url: &str, model: &str) -> Result<()> {
+    let base = base_url.trim_end_matches('/');
+    let client = reqwest::Client::new();
+    let wav_bytes = crate::audio_toolkit::audio::encode_wav_bytes(&vec![0.0f32; 1600])?;
+
+    // 1. Upload file (validates API key)
+    let file_part = multipart::Part::bytes(wav_bytes)
+        .file_name("test.wav")
+        .mime_str("audio/wav")?;
+    let form = multipart::Form::new().part("file", file_part);
+
+    let response = client
+        .post(format!("{}/files", base))
+        .bearer_auth(api_key)
+        .multipart(form)
+        .send()
+        .await?;
+
+    if !response.status().is_success() {
+        let status = response.status();
+        let body = response.text().await.unwrap_or_default();
+        return Err(anyhow::anyhow!(
+            "API test failed ({}): {}",
+            status,
+            body
+        ));
+    }
+
+    let file: FileUploadResponse = response.json().await?;
+
+    // 2. Create transcription (validates model)
+    let body = serde_json::json!({
+        "file_id": file.id,
+        "model": model,
+    });
+
+    let response = client
+        .post(format!("{}/transcriptions", base))
+        .bearer_auth(api_key)
+        .json(&body)
+        .send()
+        .await?;
+
+    if !response.status().is_success() {
+        let status = response.status();
+        let body = response.text().await.unwrap_or_default();
+        return Err(anyhow::anyhow!(
+            "API test failed ({}): {}",
+            status,
+            body
+        ));
+    }
+
+    Ok(())
+}
+
 /// Transcribe audio using the Soniox async file transcription API.
 ///
 /// Flow: upload file → create transcription → poll until complete → fetch transcript.

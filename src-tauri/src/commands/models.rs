@@ -1,6 +1,6 @@
 use crate::managers::model::{ModelInfo, ModelManager};
 use crate::managers::transcription::TranscriptionManager;
-use crate::settings::{get_settings, write_settings};
+use crate::settings::{get_settings, write_settings, SttProviderType};
 use crate::stt_provider::{cloud_provider_registry, SttProviderInfo};
 use std::sync::Arc;
 use tauri::{AppHandle, State};
@@ -142,6 +142,30 @@ pub async fn cancel_download(
 ) -> Result<(), String> {
     model_manager
         .cancel_download(&model_id)
+        .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn test_stt_api_key(
+    app_handle: AppHandle,
+    provider_id: String,
+    api_key: String,
+    model: String,
+) -> Result<(), String> {
+    let settings = get_settings(&app_handle);
+    let provider = settings
+        .stt_provider(&provider_id)
+        .ok_or_else(|| format!("STT provider '{}' not found", provider_id))?;
+
+    if provider.provider_type != SttProviderType::Cloud {
+        return Err(format!("Provider '{}' is not a cloud provider", provider_id));
+    }
+
+    let base_url = provider.base_url.clone();
+
+    crate::cloud_stt::test_api_key(&provider_id, &api_key, &base_url, &model)
+        .await
         .map_err(|e| e.to_string())
 }
 
