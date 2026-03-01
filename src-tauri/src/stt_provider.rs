@@ -21,6 +21,7 @@ pub enum ProviderBackend {
     Cloud {
         base_url: String,
         default_model: String,
+        console_url: Option<String>,
     },
 }
 
@@ -54,6 +55,7 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
             backend: ProviderBackend::Cloud {
                 base_url: "https://api.openai.com/v1".to_string(),
                 default_model: "whisper-1".to_string(),
+                console_url: Some("https://platform.openai.com/api-keys".to_string()),
             },
         },
         SttProviderInfo {
@@ -69,6 +71,7 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
             backend: ProviderBackend::Cloud {
                 base_url: "https://api.soniox.com/v1".to_string(),
                 default_model: "stt-async-v4".to_string(),
+                console_url: Some("https://console.soniox.com".to_string()),
             },
         },
     ]

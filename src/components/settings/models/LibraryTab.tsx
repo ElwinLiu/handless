@@ -9,12 +9,20 @@ import { useModelActions } from "@/hooks/useModelActions";
 import { getProviderStatus } from "@/lib/utils/providerStatus";
 import type { ProviderBackend, SttProviderInfo } from "@/bindings";
 
+const EMPTY_ARRAY: string[] = [];
+
 export const LibraryTab: React.FC = () => {
   const { t } = useTranslation();
   const [switchingModelId, setSwitchingModelId] = useState<string | null>(null);
   const [languageFilter, setLanguageFilter] = useState("all");
-  const { settings, setSttProvider, updateSttApiKey, updateSttCloudModel } =
-    useSettings();
+  const {
+    settings,
+    setSttProvider,
+    updateSttApiKey,
+    updateSttCloudModel,
+    verifySttProvider,
+    isUpdating,
+  } = useSettings();
   const {
     providers,
     currentModel,
@@ -28,6 +36,7 @@ export const LibraryTab: React.FC = () => {
     useModelActions();
 
   const sttProviderId = settings?.stt_provider_id ?? "local";
+  const verifiedProviders = settings?.stt_verified_providers ?? EMPTY_ARRAY;
 
   const cloudProviders = useMemo(
     () => providers.filter((p) => p.backend.type === "Cloud"),
@@ -108,6 +117,9 @@ export const LibraryTab: React.FC = () => {
               cloudModel={settings?.stt_cloud_models?.[provider.id] ?? ""}
               onApiKeyChange={(apiKey) => updateSttApiKey(provider.id, apiKey)}
               onModelChange={(model) => updateSttCloudModel(provider.id, model)}
+              onVerify={verifySttProvider}
+              isVerifying={isUpdating(`stt_verify:${provider.id}`)}
+              isVerified={verifiedProviders.includes(provider.id)}
             />
           ))}
         </div>

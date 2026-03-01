@@ -8,11 +8,19 @@ import { useModelActions } from "@/hooks/useModelActions";
 import { getProviderStatus } from "@/lib/utils/providerStatus";
 import type { SttProviderInfo } from "@/bindings";
 
+const EMPTY_ARRAY: string[] = [];
+
 export const MyModelsTab: React.FC = () => {
   const { t } = useTranslation();
   const [switchingModelId, setSwitchingModelId] = useState<string | null>(null);
-  const { settings, setSttProvider, updateSttApiKey, updateSttCloudModel } =
-    useSettings();
+  const {
+    settings,
+    setSttProvider,
+    updateSttApiKey,
+    updateSttCloudModel,
+    verifySttProvider,
+    isUpdating,
+  } = useSettings();
   const {
     providers,
     currentModel,
@@ -27,10 +35,14 @@ export const MyModelsTab: React.FC = () => {
 
   const sttProviderId = settings?.stt_provider_id ?? "local";
 
+  const verifiedProviders = settings?.stt_verified_providers ?? EMPTY_ARRAY;
+
   const myProviders = useMemo(() => {
     return providers
       .filter((p: SttProviderInfo) => {
-        if (p.backend.type === "Cloud") return true;
+        if (p.backend.type === "Cloud") {
+          return verifiedProviders.includes(p.id);
+        }
         // Local: show if downloaded, custom, downloading, or extracting
         return (
           p.backend.is_downloaded ||
@@ -51,7 +63,7 @@ export const MyModelsTab: React.FC = () => {
         }
         return 0;
       });
-  }, [providers, downloadingModels, extractingModels]);
+  }, [providers, downloadingModels, extractingModels, verifiedProviders]);
 
   const statusCtx = {
     extractingModels,
@@ -105,6 +117,9 @@ export const MyModelsTab: React.FC = () => {
             }
             onApiKeyChange={(apiKey) => updateSttApiKey(provider.id, apiKey)}
             onModelChange={(model) => updateSttCloudModel(provider.id, model)}
+            onVerify={verifySttProvider}
+            isVerifying={isUpdating(`stt_verify:${provider.id}`)}
+            isVerified={verifiedProviders.includes(provider.id)}
           />
         ) : (
           <ModelCard

@@ -52,6 +52,11 @@ interface SettingsStore {
   setSttProvider: (providerId: string) => Promise<void>;
   updateSttApiKey: (providerId: string, apiKey: string) => Promise<void>;
   updateSttCloudModel: (providerId: string, model: string) => Promise<void>;
+  verifySttProvider: (
+    providerId: string,
+    apiKey: string,
+    model: string,
+  ) => Promise<void>;
 
   // Internal state setters
   setSettings: (settings: Settings | null) => void;
@@ -591,6 +596,23 @@ export const useSettingsStore = create<SettingsStore>()(
         await refreshSettings();
       } catch (error) {
         console.error("Failed to update STT cloud model:", error);
+      } finally {
+        setUpdating(updateKey, false);
+      }
+    },
+
+    verifySttProvider: async (providerId, apiKey, model) => {
+      const { setUpdating, refreshSettings } = get();
+      const updateKey = `stt_verify:${providerId}`;
+
+      setUpdating(updateKey, true);
+
+      try {
+        const result = await commands.testSttApiKey(providerId, apiKey, model);
+        if (result.status === "error") {
+          throw new Error(result.error);
+        }
+        await refreshSettings();
       } finally {
         setUpdating(updateKey, false);
       }

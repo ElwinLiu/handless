@@ -214,6 +214,11 @@
         "title": "Cloud Providers",
         "badge": "Cloud",
         "notConfigured": "Not configured",
+        "verify": "Verify",
+        "verifying": "Verifying...",
+        "verified": "Verified",
+        "verifyFailed": "Verification failed",
+        "verifyFirst": "Verify your API key first",
         "apiKey": {
           "title": "API Key",
           "placeholder": "sk-..."
@@ -224,7 +229,8 @@
         },
         "baseUrl": {
           "title": "Base URL"
-        }
+        },
+        "getApiKey": "Get API key"
       },
       "localModels": {
         "title": "Local Models"

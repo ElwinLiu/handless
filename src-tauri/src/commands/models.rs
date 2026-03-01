@@ -153,7 +153,7 @@ pub async fn test_stt_api_key(
     api_key: String,
     model: String,
 ) -> Result<(), String> {
-    let settings = get_settings(&app_handle);
+    let mut settings = get_settings(&app_handle);
     let provider = settings
         .stt_provider(&provider_id)
         .ok_or_else(|| format!("STT provider '{}' not found", provider_id))?;
@@ -166,7 +166,13 @@ pub async fn test_stt_api_key(
 
     crate::cloud_stt::test_api_key(&provider_id, &api_key, &base_url, &model)
         .await
-        .map_err(|e| e.to_string())
+        .map_err(|e| e.to_string())?;
+
+    // Mark provider as verified on success
+    settings.stt_verified_providers.insert(provider_id);
+    write_settings(&app_handle, settings);
+
+    Ok(())
 }
 
 #[tauri::command]

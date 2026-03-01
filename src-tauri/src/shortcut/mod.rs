@@ -1121,7 +1121,8 @@ pub fn change_stt_api_key_setting(
 ) -> Result<(), String> {
     let mut settings = settings::get_settings(&app);
     validate_stt_provider_exists(&settings, &provider_id)?;
-    settings.stt_api_keys.insert(provider_id, api_key);
+    settings.stt_api_keys.insert(provider_id.clone(), api_key);
+    settings.stt_verified_providers.remove(&provider_id);
     settings::write_settings(&app, settings);
     Ok(())
 }
@@ -1135,7 +1136,8 @@ pub fn change_stt_cloud_model_setting(
 ) -> Result<(), String> {
     let mut settings = settings::get_settings(&app);
     validate_stt_provider_exists(&settings, &provider_id)?;
-    settings.stt_cloud_models.insert(provider_id, model);
+    settings.stt_cloud_models.insert(provider_id.clone(), model);
+    settings.stt_verified_providers.remove(&provider_id);
     settings::write_settings(&app, settings);
     Ok(())
 }

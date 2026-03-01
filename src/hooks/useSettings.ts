@@ -46,6 +46,11 @@ interface UseSettingsReturn {
   setSttProvider: (providerId: string) => Promise<void>;
   updateSttApiKey: (providerId: string, apiKey: string) => Promise<void>;
   updateSttCloudModel: (providerId: string, model: string) => Promise<void>;
+  verifySttProvider: (
+    providerId: string,
+    apiKey: string,
+    model: string,
+  ) => Promise<void>;
 }
 
 export const useSettings = (): UseSettingsReturn => {
@@ -82,5 +87,6 @@ export const useSettings = (): UseSettingsReturn => {
     setSttProvider: store.setSttProvider,
     updateSttApiKey: store.updateSttApiKey,
     updateSttCloudModel: store.updateSttCloudModel,
+    verifySttProvider: store.verifySttProvider,
   };
 };

@@ -6,13 +6,14 @@ import { Input } from "../../ui/Input";
 interface ApiKeyFieldProps {
   value: string;
   onBlur: (value: string) => void;
+  onChange?: (value: string) => void;
   disabled: boolean;
   placeholder?: string;
   className?: string;
 }
 
 export const ApiKeyField: React.FC<ApiKeyFieldProps> = React.memo(
-  ({ value, onBlur, disabled, placeholder, className = "" }) => {
+  ({ value, onBlur, onChange, disabled, placeholder, className = "" }) => {
     const { t } = useTranslation();
     const [localValue, setLocalValue] = useState(value);
     const [showCopied, setShowCopied] = useState(false);
@@ -43,7 +44,10 @@ export const ApiKeyField: React.FC<ApiKeyFieldProps> = React.memo(
         <Input
           type="password"
           value={localValue}
-          onChange={(event) => setLocalValue(event.target.value)}
+          onChange={(event) => {
+            setLocalValue(event.target.value);
+            onChange?.(event.target.value);
+          }}
           onBlur={() => onBlur(localValue)}
           placeholder={placeholder}
           variant="compact"

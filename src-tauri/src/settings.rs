@@ -2,7 +2,7 @@ use log::{debug, warn};
 use serde::de::{self, Visitor};
 use serde::{Deserialize, Deserializer, Serialize};
 use specta::Type;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use tauri::AppHandle;
 use tauri_plugin_store::StoreExt;
 
@@ -400,6 +400,8 @@ pub struct AppSettings {
     pub external_script_path: Option<String>,
     #[serde(default)]
     pub app_theme: AppTheme,
+    #[serde(default)]
+    pub stt_verified_providers: HashSet<String>,
 }
 
 fn default_model() -> String {
@@ -846,6 +848,7 @@ pub fn get_default_settings() -> AppSettings {
         typing_tool: default_typing_tool(),
         external_script_path: None,
         app_theme: AppTheme::default(),
+        stt_verified_providers: HashSet::new(),
     }
 }
 
