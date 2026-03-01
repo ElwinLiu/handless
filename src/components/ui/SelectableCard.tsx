@@ -35,10 +35,14 @@ export const SelectableCard: React.FC<SelectableCardProps> = ({
     ? ""
     : disabled
       ? "opacity-50 cursor-not-allowed"
-      : "cursor-pointer hover:border-accent/50 hover:bg-accent/5 hover:shadow-lg hover:scale-[1.01] active:scale-[0.99] group";
+      : "cursor-pointer hover:border-accent/50 hover:bg-accent/5 hover:shadow-lg group [&_p]:cursor-text [&_h3]:cursor-text";
 
   const handleClick = () => {
-    if (clickable && !disabled && onClick) onClick();
+    if (clickable && !disabled && onClick) {
+      const selection = window.getSelection();
+      if (selection && selection.toString().length > 0) return;
+      onClick();
+    }
   };
 
   return (
@@ -49,7 +53,7 @@ export const SelectableCard: React.FC<SelectableCardProps> = ({
       }}
       role={clickable ? "button" : undefined}
       tabIndex={clickable ? 0 : undefined}
-      className={[baseClasses, variantClasses, interactiveClasses, className]
+      className={[baseClasses, variantClasses, interactiveClasses, "select-text", className]
         .filter(Boolean)
         .join(" ")}
     >

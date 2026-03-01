@@ -346,7 +346,7 @@ export const CloudProviderConfigCard: React.FC<
   return (
     <SelectableCard
       active={effectiveStatus === "active"}
-      clickable
+      clickable={!expanded}
       compact={compact}
       onClick={() => {
         if (isClickable) {
