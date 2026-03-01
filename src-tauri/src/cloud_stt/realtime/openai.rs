@@ -8,6 +8,7 @@ use tokio_tungstenite::{connect_async, tungstenite};
 
 const OPENAI_RT_SAMPLE_RATE: u32 = 24000;
 const WS_READ_TIMEOUT: Duration = Duration::from_secs(30);
+const WS_CONNECT_TIMEOUT: Duration = Duration::from_secs(10);
 
 /// Build an authenticated WebSocket request for the OpenAI Realtime API.
 fn build_ws_request(
@@ -36,16 +37,41 @@ fn build_ws_request(
     Ok(request)
 }
 
-/// Test API key by opening a WebSocket connection to the realtime endpoint.
-/// A successful handshake validates the key and model.
+fn extract_rt_error(event: &serde_json::Value) -> anyhow::Error {
+    let err = event.get("error").unwrap_or(event);
+    let msg = err
+        .get("message")
+        .and_then(|v| v.as_str())
+        .unwrap_or("unknown error");
+    anyhow::anyhow!("OpenAI RT error: {}", msg)
+}
+
+/// Test API key by opening a WebSocket connection to the realtime endpoint and
+/// reading the first message to catch model/auth errors returned as WS events.
 pub async fn test_api_key(api_key: &str, base_url: &str, model: &str) -> Result<()> {
     let request = build_ws_request(api_key, base_url, model)?;
 
     let (ws_stream, _) = connect_async(request)
         .await
         .map_err(|e| anyhow::anyhow!("OpenAI RT connection failed: {}", e))?;
-    let (mut write, _) = ws_stream.split();
+    let (mut write, mut read) = ws_stream.split();
+
+    // Read the first message — OpenAI sends either `session.created` on success
+    // or an `error` event if the model/key is invalid.
+    let first_msg = tokio::time::timeout(WS_CONNECT_TIMEOUT, read.next()).await;
     let _ = write.send(tungstenite::Message::Close(None)).await;
+
+    match first_msg {
+        Ok(Some(Ok(tungstenite::Message::Text(text)))) => {
+            let event: serde_json::Value = serde_json::from_str(&text)?;
+            if event.get("type").and_then(|v| v.as_str()) == Some("error") {
+                return Err(extract_rt_error(&event));
+            }
+        }
+        Ok(Some(Err(e))) => return Err(anyhow::anyhow!("OpenAI RT connection error: {}", e)),
+        Err(_) => return Err(anyhow::anyhow!("OpenAI RT: timed out waiting for session")),
+        _ => {}
+    }
 
     Ok(())
 }
@@ -159,12 +185,7 @@ pub async fn transcribe(
             match event_type {
                 "error" => {
                     let _ = write.send(tungstenite::Message::Close(None)).await;
-                    let err = event.get("error").unwrap_or(&event);
-                    let msg = err
-                        .get("message")
-                        .and_then(|v| v.as_str())
-                        .unwrap_or("unknown error");
-                    return Err(anyhow::anyhow!("OpenAI RT error: {}", msg));
+                    return Err(extract_rt_error(&event));
                 }
                 "conversation.item.input_audio_transcription.completed" => {
                     transcript_final = event
