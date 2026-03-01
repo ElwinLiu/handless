@@ -19,6 +19,7 @@ export const MyModelsTab: React.FC = () => {
     updateSttApiKey,
     updateSttCloudModel,
     updateSttCloudOptions,
+    updateSttRealtimeEnabled,
     verifySttProvider,
     isUpdating,
   } = useSettings();
@@ -42,7 +43,8 @@ export const MyModelsTab: React.FC = () => {
     return providers
       .filter((p: SttProviderInfo) => {
         if (p.backend.type === "Cloud") {
-          return verifiedProviders.includes(p.id);
+          const apiKey = settings?.stt_api_keys?.[p.id];
+          return !!(apiKey && apiKey.trim());
         }
         // Local: show if downloaded, custom, downloading, or extracting
         return (
@@ -64,7 +66,7 @@ export const MyModelsTab: React.FC = () => {
         }
         return 0;
       });
-  }, [providers, downloadingModels, extractingModels, verifiedProviders]);
+  }, [providers, downloadingModels, extractingModels, settings]);
 
   const statusCtx = {
     extractingModels,
@@ -127,6 +129,12 @@ export const MyModelsTab: React.FC = () => {
                 : {}
             }
             onOptionsChange={(opts) => updateSttCloudOptions(provider.id, opts)}
+            realtimeEnabled={
+              settings?.stt_realtime_enabled?.[provider.id] ?? false
+            }
+            onRealtimeChange={(enabled) =>
+              updateSttRealtimeEnabled(provider.id, enabled)
+            }
           />
         ) : (
           <ModelCard
