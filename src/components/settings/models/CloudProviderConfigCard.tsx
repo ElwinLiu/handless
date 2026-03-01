@@ -1,6 +1,14 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Check, ChevronDown, Cloud, ExternalLink, Globe, Languages, Loader2 } from "lucide-react";
+import {
+  Check,
+  ChevronDown,
+  Cloud,
+  ExternalLink,
+  Globe,
+  Languages,
+  Loader2,
+} from "lucide-react";
 import ReactSelect from "react-select";
 import type { StylesConfig } from "react-select";
 import { ApiKeyField } from "@/components/settings/PostProcessingSettingsApi/ApiKeyField";
@@ -53,8 +61,7 @@ const compactSelectStyles: StylesConfig<LangOption, boolean> = {
   }),
   multiValue: (base) => ({
     ...base,
-    backgroundColor:
-      "color-mix(in srgb, var(--color-accent) 15%, transparent)",
+    backgroundColor: "color-mix(in srgb, var(--color-accent) 15%, transparent)",
     borderRadius: 4,
   }),
   multiValueLabel: (base) => ({
@@ -91,8 +98,7 @@ const compactSelectStyles: StylesConfig<LangOption, boolean> = {
     zIndex: 50,
     backgroundColor: "var(--color-surface)",
     color: "var(--color-text)",
-    border:
-      "1px solid color-mix(in srgb, var(--color-muted) 30%, transparent)",
+    border: "1px solid color-mix(in srgb, var(--color-muted) 30%, transparent)",
     boxShadow: "0 10px 30px rgba(15, 15, 15, 0.2)",
   }),
   menuList: (base) => ({
@@ -258,7 +264,11 @@ interface CloudProviderConfigCardProps {
   cloudModel: string;
   onApiKeyChange: (apiKey: string) => void;
   onModelChange: (model: string) => void;
-  onVerify?: (providerId: string, apiKey: string, model: string) => Promise<void>;
+  onVerify?: (
+    providerId: string,
+    apiKey: string,
+    model: string,
+  ) => Promise<void>;
   isVerifying?: boolean;
   isVerified?: boolean;
   status?: ModelCardStatus;
@@ -303,7 +313,8 @@ export const CloudProviderConfigCard: React.FC<
     setVerifyError(null);
   }, [localApiKey, localModel]);
 
-  const effectiveStatus = !isVerified && status === "active" ? "available" : status;
+  const effectiveStatus =
+    !isVerified && status === "active" ? "available" : status;
   const isClickable = isVerified;
 
   const [showVerifyHint, setShowVerifyHint] = useState(false);
@@ -400,7 +411,9 @@ export const CloudProviderConfigCard: React.FC<
               onBlur={onApiKeyChange}
               onChange={setLocalApiKey}
               disabled={false}
-              placeholder={t("settings.models.cloudProviders.apiKey.placeholder")}
+              placeholder={t(
+                "settings.models.cloudProviders.apiKey.placeholder",
+              )}
               className="min-w-[180px] max-w-[240px]"
             />
             <Input
@@ -408,14 +421,18 @@ export const CloudProviderConfigCard: React.FC<
               value={localModel}
               onChange={(e) => setLocalModel(e.target.value)}
               onBlur={() => onModelChange(localModel)}
-              placeholder={t("settings.models.cloudProviders.model.placeholder")}
+              placeholder={t(
+                "settings.models.cloudProviders.model.placeholder",
+              )}
               variant="compact"
               className="min-w-[140px] max-w-[200px]"
             />
             {onVerify && (
               <button
                 type="button"
-                disabled={isVerifying || !localApiKey.trim() || !localModel.trim()}
+                disabled={
+                  isVerifying || !localApiKey.trim() || !localModel.trim()
+                }
                 className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-md bg-accent/10 text-accent hover:bg-accent/20 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 onClick={async () => {
                   setVerifyError(null);
@@ -423,7 +440,9 @@ export const CloudProviderConfigCard: React.FC<
                     await onVerify(provider.id, localApiKey, localModel);
                   } catch (e) {
                     setVerifyError(
-                      e instanceof Error ? e.message : t("settings.models.cloudProviders.verifyFailed"),
+                      e instanceof Error
+                        ? e.message
+                        : t("settings.models.cloudProviders.verifyFailed"),
                     );
                   }
                 }}
@@ -439,53 +458,53 @@ export const CloudProviderConfigCard: React.FC<
               </button>
             )}
             {verifyError && (
-              <span className="text-xs text-red-400">
-                {verifyError}
-              </span>
+              <span className="text-xs text-red-400">{verifyError}</span>
             )}
-            {provider.backend.type === "Cloud" && provider.backend.console_url && (
-              <button
-                type="button"
-                className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-md text-text/60 hover:text-text hover:bg-muted/20 transition-colors"
-                onClick={() => openUrl(provider.backend.console_url!)}
-              >
-                <ExternalLink className="w-3 h-3" />
-                {t("settings.models.cloudProviders.getApiKey")}
-              </button>
-            )}
+            {provider.backend.type === "Cloud" &&
+              provider.backend.console_url && (
+                <button
+                  type="button"
+                  className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-md text-text/60 hover:text-text hover:bg-muted/20 transition-colors"
+                  onClick={() => openUrl(provider.backend.console_url!)}
+                >
+                  <ExternalLink className="w-3 h-3" />
+                  {t("settings.models.cloudProviders.getApiKey")}
+                </button>
+              )}
           </div>
 
           {/* Provider-specific options */}
-          {provider.available_options && provider.available_options.length > 0 && (
-            /* biome-ignore lint/a11y/useKeyWithClickEvents: stopPropagation wrapper for input focus */
-            <div
-              className="flex flex-col gap-3 pt-1"
-              onClick={stopPropagation}
-            >
-              {provider.available_options.map((opt) => (
-                <CloudOptionControl
-                  key={opt.key}
-                  option={opt}
-                  value={cloudOptions[opt.key]}
-                  supportedLanguages={provider.supported_languages}
-                  onChange={(val) => {
-                    const updated = { ...cloudOptions };
-                    if (
-                      val === undefined ||
-                      val === null ||
-                      val === "" ||
-                      (Array.isArray(val) && val.length === 0)
-                    ) {
-                      delete updated[opt.key];
-                    } else {
-                      updated[opt.key] = val;
-                    }
-                    onOptionsChange?.(updated);
-                  }}
-                />
-              ))}
-            </div>
-          )}
+          {provider.available_options &&
+            provider.available_options.length > 0 && (
+              /* biome-ignore lint/a11y/useKeyWithClickEvents: stopPropagation wrapper for input focus */
+              <div
+                className="flex flex-col gap-3 pt-1"
+                onClick={stopPropagation}
+              >
+                {provider.available_options.map((opt) => (
+                  <CloudOptionControl
+                    key={opt.key}
+                    option={opt}
+                    value={cloudOptions[opt.key]}
+                    supportedLanguages={provider.supported_languages}
+                    onChange={(val) => {
+                      const updated = { ...cloudOptions };
+                      if (
+                        val === undefined ||
+                        val === null ||
+                        val === "" ||
+                        (Array.isArray(val) && val.length === 0)
+                      ) {
+                        delete updated[opt.key];
+                      } else {
+                        updated[opt.key] = val;
+                      }
+                      onOptionsChange?.(updated);
+                    }}
+                  />
+                ))}
+              </div>
+            )}
         </>
       )}
 
