@@ -223,6 +223,7 @@ const CloudOptionControl: React.FC<{
           <Input
             type="number"
             value={value !== undefined && value !== null ? String(value) : ""}
+            placeholder={String(min)}
             onChange={(e) =>
               onChange(e.target.value ? Number(e.target.value) : undefined)
             }
@@ -230,7 +231,7 @@ const CloudOptionControl: React.FC<{
             max={max}
             step={step}
             variant="compact"
-            className="max-w-[150px]"
+            className="max-w-[70px]"
           />
         </div>
       );
