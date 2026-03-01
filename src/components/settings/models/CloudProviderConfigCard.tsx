@@ -420,7 +420,7 @@ export const CloudProviderConfigCard: React.FC<
               type="text"
               value={localModel}
               onChange={(e) => setLocalModel(e.target.value)}
-              onBlur={() => onModelChange(localModel)}
+              onBlur={() => { if (localModel !== cloudModel) onModelChange(localModel); }}
               placeholder={t(
                 "settings.models.cloudProviders.model.placeholder",
               )}

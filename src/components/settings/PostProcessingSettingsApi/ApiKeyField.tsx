@@ -48,7 +48,7 @@ export const ApiKeyField: React.FC<ApiKeyFieldProps> = React.memo(
             setLocalValue(event.target.value);
             onChange?.(event.target.value);
           }}
-          onBlur={() => onBlur(localValue)}
+          onBlur={() => { if (localValue !== value) onBlur(localValue); }}
           placeholder={placeholder}
           variant="compact"
           disabled={disabled}
