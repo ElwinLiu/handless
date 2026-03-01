@@ -135,21 +135,40 @@ pub async fn transcribe(
                 body["language_hints"] = serde_json::json!(codes);
             }
         }
-        // language_hints_strict: boolean
-        if let Some(strict) = opts.get("language_hints_strict").and_then(|v| v.as_bool()) {
-            if strict {
-                body["language_hints_strict"] = serde_json::json!(true);
-            }
-        }
-        // context: comma/newline separated terms → {"context": {"general": [...]}}
-        if let Some(context_str) = opts.get("context").and_then(|v| v.as_str()) {
-            let terms: Vec<&str> = context_str
-                .split([',', '\n'])
-                .map(|s| s.trim())
-                .filter(|s| !s.is_empty())
-                .collect();
+        // context_terms: comma/newline separated terms → {"context": {"terms": [...]}}
+        // context_description: freeform text → {"context": {"text": "..."}}
+        let terms: Vec<&str> = opts
+            .get("context_terms")
+            .and_then(|v| v.as_str())
+            .map(|s| {
+                s.split([',', '\n'])
+                    .map(|t| t.trim())
+                    .filter(|t| !t.is_empty())
+                    .collect()
+            })
+            .unwrap_or_default();
+        let context_text = opts
+            .get("context_description")
+            .and_then(|v| v.as_str())
+            .map(|s| s.trim())
+            .filter(|s| !s.is_empty());
+        if !terms.is_empty() || context_text.is_some() {
+            let mut ctx = serde_json::json!({});
             if !terms.is_empty() {
-                body["context"] = serde_json::json!({"general": terms});
+                ctx["terms"] = serde_json::json!(terms);
+            }
+            if let Some(text) = context_text {
+                ctx["text"] = serde_json::json!(text);
+            }
+            body["context"] = ctx;
+        }
+        for key in [
+            "language_hints_strict",
+            "enable_speaker_diarization",
+            "enable_language_identification",
+        ] {
+            if opts.get(key).and_then(|v| v.as_bool()).unwrap_or(false) {
+                body[key] = serde_json::json!(true);
             }
         }
     }

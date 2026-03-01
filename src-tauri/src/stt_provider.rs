@@ -74,7 +74,7 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
             is_recommended: false,
             backend: ProviderBackend::Cloud {
                 base_url: "https://api.openai.com/v1".to_string(),
-                default_model: "whisper-1".to_string(),
+                default_model: "gpt-4o-mini-transcribe".to_string(),
                 console_url: Some("https://platform.openai.com/api-keys".to_string()),
             },
             available_options: vec![
@@ -131,10 +131,28 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                     description: "settings.models.cloudProviders.options.languageHintsStrictDescription".to_string(),
                 },
                 CloudProviderOption {
-                    key: "context".to_string(),
-                    label: "settings.models.cloudProviders.options.context".to_string(),
+                    key: "context_terms".to_string(),
+                    label: "settings.models.cloudProviders.options.contextTerms".to_string(),
                     option_type: CloudOptionType::Text,
-                    description: "settings.models.cloudProviders.options.contextDescription".to_string(),
+                    description: "settings.models.cloudProviders.options.contextTermsDescription".to_string(),
+                },
+                CloudProviderOption {
+                    key: "context_description".to_string(),
+                    label: "settings.models.cloudProviders.options.contextDescription".to_string(),
+                    option_type: CloudOptionType::Text,
+                    description: "settings.models.cloudProviders.options.contextDescriptionDescription".to_string(),
+                },
+                CloudProviderOption {
+                    key: "enable_speaker_diarization".to_string(),
+                    label: "settings.models.cloudProviders.options.enableSpeakerDiarization".to_string(),
+                    option_type: CloudOptionType::Boolean,
+                    description: "settings.models.cloudProviders.options.enableSpeakerDiarizationDescription".to_string(),
+                },
+                CloudProviderOption {
+                    key: "enable_language_identification".to_string(),
+                    label: "settings.models.cloudProviders.options.enableLanguageIdentification".to_string(),
+                    option_type: CloudOptionType::Boolean,
+                    description: "settings.models.cloudProviders.options.enableLanguageIdentificationDescription".to_string(),
                 },
             ],
         },

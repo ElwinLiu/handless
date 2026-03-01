@@ -632,7 +632,7 @@ fn default_stt_providers() -> Vec<SttProvider> {
             label: "OpenAI".to_string(),
             provider_type: SttProviderType::Cloud,
             base_url: "https://api.openai.com/v1".to_string(),
-            default_model: "whisper-1".to_string(),
+            default_model: "gpt-4o-mini-transcribe".to_string(),
         },
         SttProvider {
             id: "soniox".to_string(),
@@ -677,9 +677,22 @@ fn default_stt_cloud_models() -> HashMap<String, String> {
 fn ensure_stt_defaults(settings: &mut AppSettings) -> bool {
     let mut changed = false;
     for provider in default_stt_providers() {
-        if !settings.stt_providers.iter().any(|p| p.id == provider.id) {
-            settings.stt_providers.push(provider.clone());
-            changed = true;
+        match settings
+            .stt_providers
+            .iter_mut()
+            .find(|p| p.id == provider.id)
+        {
+            Some(existing) => {
+                // Sync default_model for existing providers (migration)
+                if existing.default_model != provider.default_model {
+                    existing.default_model = provider.default_model.clone();
+                    changed = true;
+                }
+            }
+            None => {
+                settings.stt_providers.push(provider.clone());
+                changed = true;
+            }
         }
 
         if provider.provider_type == SttProviderType::Cloud {

@@ -237,14 +237,20 @@
           "selectLanguageHint": "Leave empty to auto detect",
           "selectLanguages": "Select languages...",
           "prompt": "Prompt",
-          "promptDescription": "Optional text to guide the model's style or continue a previous segment",
+          "promptDescription": "Optional text to guide the model's style or continue a previous segment. Not supported by gpt-4o-transcribe-diarize.",
           "temperature": "Temperature",
-          "temperatureDescription": "Higher values produce more random results (0-1)",
+          "temperatureDescription": "Higher values produce more random results (0-1). Only supported by whisper-1.",
           "languageHints": "Language Hints",
           "languageHintsStrict": "Strict Language Hints",
           "languageHintsStrictDescription": "Only transcribe in the specified languages",
-          "context": "Context",
-          "contextDescription": "Comma-separated terms to improve recognition accuracy"
+          "contextTerms": "Context Terms",
+          "contextTermsDescription": "Comma-separated terms to improve recognition accuracy",
+          "contextDescription": "Context Description",
+          "contextDescriptionDescription": "Freeform text providing general context about the audio content",
+          "enableSpeakerDiarization": "Speaker Diarization",
+          "enableSpeakerDiarizationDescription": "Identify and separate different speakers",
+          "enableLanguageIdentification": "Language Identification",
+          "enableLanguageIdentificationDescription": "Detect language for each segment"
         }
       },
       "localModels": {
