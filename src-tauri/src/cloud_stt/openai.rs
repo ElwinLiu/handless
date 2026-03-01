@@ -12,10 +12,7 @@ struct TranscriptionResponse {
 pub async fn test_api_key(api_key: &str, base_url: &str, model: &str) -> Result<()> {
     let wav_bytes = crate::audio_toolkit::audio::encode_wav_bytes(&vec![0.0f32; 1600])?;
 
-    let url = format!(
-        "{}/audio/transcriptions",
-        base_url.trim_end_matches('/')
-    );
+    let url = format!("{}/audio/transcriptions", base_url.trim_end_matches('/'));
 
     let file_part = multipart::Part::bytes(wav_bytes)
         .file_name("test.wav")
@@ -36,11 +33,7 @@ pub async fn test_api_key(api_key: &str, base_url: &str, model: &str) -> Result<
     if !response.status().is_success() {
         let status = response.status();
         let body = response.text().await.unwrap_or_default();
-        return Err(anyhow::anyhow!(
-            "API test failed ({}): {}",
-            status,
-            body
-        ));
+        return Err(anyhow::anyhow!("API test failed ({}): {}", status, body));
     }
 
     Ok(())
@@ -52,7 +45,7 @@ pub async fn transcribe(
     base_url: &str,
     model: &str,
     audio_wav: Vec<u8>,
-    language: Option<&str>,
+    options: Option<&serde_json::Value>,
 ) -> Result<String> {
     let url = format!("{}/audio/transcriptions", base_url.trim_end_matches('/'));
 
@@ -71,11 +64,23 @@ pub async fn transcribe(
         .part("file", file_part)
         .text("model", model.to_string());
 
-    if let Some(lang) = language {
-        // OpenAI expects ISO 639-1 codes (e.g. "en", "zh", "fr").
-        // Strip subtags like "zh-Hans" → "zh".
-        let code = lang.split('-').next().unwrap_or(lang);
-        form = form.text("language", code.to_string());
+    if let Some(opts) = options {
+        if let Some(lang) = opts.get("language").and_then(|v| v.as_str()) {
+            if !lang.is_empty() {
+                // OpenAI expects ISO 639-1 codes (e.g. "en", "zh", "fr").
+                // Strip subtags like "zh-Hans" → "zh".
+                let code = lang.split('-').next().unwrap_or(lang);
+                form = form.text("language", code.to_string());
+            }
+        }
+        if let Some(prompt) = opts.get("prompt").and_then(|v| v.as_str()) {
+            if !prompt.is_empty() {
+                form = form.text("prompt", prompt.to_string());
+            }
+        }
+        if let Some(temp) = opts.get("temperature").and_then(|v| v.as_f64()) {
+            form = form.text("temperature", temp.to_string());
+        }
     }
 
     let client = reqwest::Client::new();

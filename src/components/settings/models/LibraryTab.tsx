@@ -20,6 +20,7 @@ export const LibraryTab: React.FC = () => {
     setSttProvider,
     updateSttApiKey,
     updateSttCloudModel,
+    updateSttCloudOptions,
     verifySttProvider,
     isUpdating,
   } = useSettings();
@@ -120,6 +121,14 @@ export const LibraryTab: React.FC = () => {
               onVerify={verifySttProvider}
               isVerifying={isUpdating(`stt_verify:${provider.id}`)}
               isVerified={verifiedProviders.includes(provider.id)}
+              cloudOptions={
+                settings?.stt_cloud_options?.[provider.id]
+                  ? JSON.parse(settings.stt_cloud_options[provider.id]!)
+                  : {}
+              }
+              onOptionsChange={(opts) =>
+                updateSttCloudOptions(provider.id, opts)
+              }
             />
           ))}
         </div>

@@ -230,7 +230,21 @@
         "baseUrl": {
           "title": "Base URL"
         },
-        "getApiKey": "Get API key"
+        "getApiKey": "Get API key",
+        "options": {
+          "language": "Language",
+          "selectLanguage": "Auto detect",
+          "selectLanguages": "Select languages...",
+          "prompt": "Prompt",
+          "promptDescription": "Optional text to guide the model's style or continue a previous segment",
+          "temperature": "Temperature",
+          "temperatureDescription": "Higher values produce more random results (0-1)",
+          "languageHints": "Language Hints",
+          "languageHintsStrict": "Strict Language Hints",
+          "languageHintsStrictDescription": "Only transcribe in the specified languages",
+          "context": "Context",
+          "contextDescription": "Comma-separated terms to improve recognition accuracy"
+        }
       },
       "localModels": {
         "title": "Local Models"

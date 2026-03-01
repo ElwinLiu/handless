@@ -402,6 +402,8 @@ pub struct AppSettings {
     pub app_theme: AppTheme,
     #[serde(default)]
     pub stt_verified_providers: HashSet<String>,
+    #[serde(default = "default_stt_cloud_options")]
+    pub stt_cloud_options: HashMap<String, String>,
 }
 
 fn default_model() -> String {
@@ -642,6 +644,16 @@ fn default_stt_providers() -> Vec<SttProvider> {
     ]
 }
 
+fn default_stt_cloud_options() -> HashMap<String, String> {
+    let mut map = HashMap::new();
+    for provider in default_stt_providers() {
+        if provider.provider_type == SttProviderType::Cloud {
+            map.insert(provider.id, "{}".to_string());
+        }
+    }
+    map
+}
+
 fn default_stt_api_keys() -> HashMap<String, String> {
     let mut map = HashMap::new();
     for provider in default_stt_providers() {
@@ -682,6 +694,13 @@ fn ensure_stt_defaults(settings: &mut AppSettings) -> bool {
                 settings
                     .stt_cloud_models
                     .insert(provider.id.clone(), provider.default_model.clone());
+                changed = true;
+            }
+
+            if !settings.stt_cloud_options.contains_key(&provider.id) {
+                settings
+                    .stt_cloud_options
+                    .insert(provider.id.clone(), "{}".to_string());
                 changed = true;
             }
         }
@@ -849,6 +868,7 @@ pub fn get_default_settings() -> AppSettings {
         external_script_path: None,
         app_theme: AppTheme::default(),
         stt_verified_providers: HashSet::new(),
+        stt_cloud_options: default_stt_cloud_options(),
     }
 }
 

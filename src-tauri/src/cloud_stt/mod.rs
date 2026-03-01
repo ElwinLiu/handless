@@ -23,11 +23,11 @@ pub async fn transcribe(
     base_url: &str,
     model: &str,
     audio_wav: Vec<u8>,
-    language: Option<&str>,
+    options: Option<&serde_json::Value>,
 ) -> anyhow::Result<String> {
     match provider_id {
-        "openai_stt" => openai::transcribe(api_key, base_url, model, audio_wav, language).await,
-        "soniox" => soniox::transcribe(api_key, base_url, model, audio_wav, language).await,
+        "openai_stt" => openai::transcribe(api_key, base_url, model, audio_wav, options).await,
+        "soniox" => soniox::transcribe(api_key, base_url, model, audio_wav, options).await,
         _ => Err(anyhow::anyhow!(
             "Unknown cloud STT provider: {}",
             provider_id

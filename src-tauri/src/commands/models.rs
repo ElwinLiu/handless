@@ -159,7 +159,10 @@ pub async fn test_stt_api_key(
         .ok_or_else(|| format!("STT provider '{}' not found", provider_id))?;
 
     if provider.provider_type != SttProviderType::Cloud {
-        return Err(format!("Provider '{}' is not a cloud provider", provider_id));
+        return Err(format!(
+            "Provider '{}' is not a cloud provider",
+            provider_id
+        ));
     }
 
     let base_url = provider.base_url.clone();
@@ -172,6 +175,22 @@ pub async fn test_stt_api_key(
     settings.stt_verified_providers.insert(provider_id);
     write_settings(&app_handle, settings);
 
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn change_stt_cloud_options_setting(
+    app_handle: AppHandle,
+    provider_id: String,
+    options: String,
+) -> Result<(), String> {
+    // Validate that the string is valid JSON
+    serde_json::from_str::<serde_json::Value>(&options)
+        .map_err(|e| format!("Invalid JSON options: {}", e))?;
+    let mut settings = get_settings(&app_handle);
+    settings.stt_cloud_options.insert(provider_id, options);
+    write_settings(&app_handle, settings);
     Ok(())
 }
 

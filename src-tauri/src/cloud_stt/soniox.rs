@@ -45,11 +45,7 @@ pub async fn test_api_key(api_key: &str, base_url: &str, model: &str) -> Result<
     if !response.status().is_success() {
         let status = response.status();
         let body = response.text().await.unwrap_or_default();
-        return Err(anyhow::anyhow!(
-            "API test failed ({}): {}",
-            status,
-            body
-        ));
+        return Err(anyhow::anyhow!("API test failed ({}): {}", status, body));
     }
 
     let file: FileUploadResponse = response.json().await?;
@@ -70,11 +66,7 @@ pub async fn test_api_key(api_key: &str, base_url: &str, model: &str) -> Result<
     if !response.status().is_success() {
         let status = response.status();
         let body = response.text().await.unwrap_or_default();
-        return Err(anyhow::anyhow!(
-            "API test failed ({}): {}",
-            status,
-            body
-        ));
+        return Err(anyhow::anyhow!("API test failed ({}): {}", status, body));
     }
 
     Ok(())
@@ -88,7 +80,7 @@ pub async fn transcribe(
     base_url: &str,
     model: &str,
     audio_wav: Vec<u8>,
-    language: Option<&str>,
+    options: Option<&serde_json::Value>,
 ) -> Result<String> {
     let base = base_url.trim_end_matches('/');
     let client = reqwest::Client::new();
@@ -131,11 +123,35 @@ pub async fn transcribe(
         "file_id": file.id,
         "model": model,
     });
-    if let Some(lang) = language {
-        // Soniox expects ISO 639-1 codes (e.g. "en", "zh", "fr").
-        // Strip subtags like "zh-Hans" → "zh" to avoid 400 errors.
-        let code = lang.split('-').next().unwrap_or(lang);
-        body["language_hints"] = serde_json::json!([code]);
+    if let Some(opts) = options {
+        // language_hints: array of language codes
+        if let Some(hints) = opts.get("language_hints").and_then(|v| v.as_array()) {
+            let codes: Vec<String> = hints
+                .iter()
+                .filter_map(|v| v.as_str())
+                .map(|lang| lang.split('-').next().unwrap_or(lang).to_string())
+                .collect();
+            if !codes.is_empty() {
+                body["language_hints"] = serde_json::json!(codes);
+            }
+        }
+        // language_hints_strict: boolean
+        if let Some(strict) = opts.get("language_hints_strict").and_then(|v| v.as_bool()) {
+            if strict {
+                body["language_hints_strict"] = serde_json::json!(true);
+            }
+        }
+        // context: comma/newline separated terms → {"context": {"general": [...]}}
+        if let Some(context_str) = opts.get("context").and_then(|v| v.as_str()) {
+            let terms: Vec<&str> = context_str
+                .split([',', '\n'])
+                .map(|s| s.trim())
+                .filter(|s| !s.is_empty())
+                .collect();
+            if !terms.is_empty() {
+                body["context"] = serde_json::json!({"general": terms});
+            }
+        }
     }
 
     let response = client

@@ -332,6 +332,7 @@ pub fn run(cli_args: CliArgs) {
         commands::models::has_any_models_or_downloads,
         commands::models::get_all_stt_providers,
         commands::models::test_stt_api_key,
+        commands::models::change_stt_cloud_options_setting,
         commands::audio::update_microphone_mode,
         commands::audio::get_microphone_mode,
         commands::audio::get_available_microphones,

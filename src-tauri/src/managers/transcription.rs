@@ -453,11 +453,10 @@ impl TranscriptionManager {
                 .get(&settings.stt_provider_id)
                 .cloned()
                 .unwrap_or_default();
-            let language = if settings.selected_language == "auto" {
-                None
-            } else {
-                Some(settings.selected_language.clone())
-            };
+            let cloud_options: Option<serde_json::Value> = settings
+                .stt_cloud_options
+                .get(&settings.stt_provider_id)
+                .and_then(|s| serde_json::from_str(s).ok());
 
             crate::cloud_stt::transcribe(
                 &settings.stt_provider_id,
@@ -465,7 +464,7 @@ impl TranscriptionManager {
                 &provider.base_url,
                 &model,
                 wav_bytes,
-                language.as_deref(),
+                cloud_options.as_ref(),
             )
             .await?
         };

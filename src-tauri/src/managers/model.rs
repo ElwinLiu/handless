@@ -464,6 +464,7 @@ impl ModelManager {
                     speed_score: m.speed_score,
                     is_custom: m.is_custom,
                 },
+                available_options: Vec::new(),
             })
             .collect()
     }
