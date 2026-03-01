@@ -304,6 +304,7 @@ pub fn run(cli_args: CliArgs) {
         shortcut::change_stt_provider_setting,
         shortcut::change_stt_api_key_setting,
         shortcut::change_stt_cloud_model_setting,
+        shortcut::change_stt_realtime_enabled_setting,
         shortcut::handy_keys::start_handy_keys_recording,
         shortcut::handy_keys::stop_handy_keys_recording,
         trigger_update_check,

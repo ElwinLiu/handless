@@ -1,6 +1,5 @@
-pub mod openai;
-pub mod realtime;
-pub mod soniox;
+mod openai;
+mod soniox;
 
 pub async fn test_api_key(
     provider_id: &str,
@@ -10,9 +9,9 @@ pub async fn test_api_key(
 ) -> anyhow::Result<()> {
     match provider_id {
         "openai_stt" => openai::test_api_key(api_key, base_url, model).await,
-        "soniox" => soniox::test_api_key(api_key, base_url, model).await,
+        "soniox" => soniox::test_api_key(api_key, model).await,
         _ => Err(anyhow::anyhow!(
-            "Unknown cloud STT provider: {}",
+            "Unknown cloud STT provider for realtime: {}",
             provider_id
         )),
     }
@@ -28,9 +27,9 @@ pub async fn transcribe(
 ) -> anyhow::Result<String> {
     match provider_id {
         "openai_stt" => openai::transcribe(api_key, base_url, model, audio_wav, options).await,
-        "soniox" => soniox::transcribe(api_key, base_url, model, audio_wav, options).await,
+        "soniox" => soniox::transcribe(api_key, model, audio_wav, options).await,
         _ => Err(anyhow::anyhow!(
-            "Unknown cloud STT provider: {}",
+            "Unknown cloud STT provider for realtime: {}",
             provider_id
         )),
     }

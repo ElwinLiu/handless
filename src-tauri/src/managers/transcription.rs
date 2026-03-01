@@ -458,15 +458,33 @@ impl TranscriptionManager {
                 .get(&settings.stt_provider_id)
                 .and_then(|s| serde_json::from_str(s).ok());
 
-            crate::cloud_stt::transcribe(
-                &settings.stt_provider_id,
-                &api_key,
-                &provider.base_url,
-                &model,
-                wav_bytes,
-                cloud_options.as_ref(),
-            )
-            .await?
+            let realtime_enabled = settings
+                .stt_realtime_enabled
+                .get(&settings.stt_provider_id)
+                .copied()
+                .unwrap_or(false);
+
+            if realtime_enabled {
+                crate::cloud_stt::realtime::transcribe(
+                    &settings.stt_provider_id,
+                    &api_key,
+                    &provider.base_url,
+                    &model,
+                    wav_bytes,
+                    cloud_options.as_ref(),
+                )
+                .await?
+            } else {
+                crate::cloud_stt::transcribe(
+                    &settings.stt_provider_id,
+                    &api_key,
+                    &provider.base_url,
+                    &model,
+                    wav_bytes,
+                    cloud_options.as_ref(),
+                )
+                .await?
+            }
         };
 
         // Apply word correction if custom words are configured

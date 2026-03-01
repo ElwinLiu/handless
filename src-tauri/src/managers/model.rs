@@ -450,6 +450,7 @@ impl ModelManager {
                 description: m.description.clone(),
                 supported_languages: m.supported_languages.clone(),
                 supports_translation: m.supports_translation,
+                supports_realtime: false,
                 is_recommended: m.is_recommended,
                 backend: ProviderBackend::Local {
                     engine_type: m.engine_type,

@@ -231,6 +231,8 @@
           "title": "Base URL"
         },
         "getApiKey": "Get API key",
+        "realtimeTranscription": "Real-time transcription",
+        "realtimeDescription": "Uses a WebSocket connection instead of file upload for lower latency",
         "options": {
           "language": "Language",
           "selectLanguage": "Auto detect",

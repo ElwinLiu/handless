@@ -132,6 +132,7 @@ pub async fn test_stt_api_key(
     provider_id: String,
     api_key: String,
     model: String,
+    realtime: bool,
 ) -> Result<(), String> {
     let mut settings = get_settings(&app_handle);
     let provider = settings
@@ -147,9 +148,15 @@ pub async fn test_stt_api_key(
 
     let base_url = provider.base_url.clone();
 
-    crate::cloud_stt::test_api_key(&provider_id, &api_key, &base_url, &model)
-        .await
-        .map_err(|e| e.to_string())?;
+    if realtime {
+        crate::cloud_stt::realtime::test_api_key(&provider_id, &api_key, &base_url, &model)
+            .await
+            .map_err(|e| e.to_string())?;
+    } else {
+        crate::cloud_stt::test_api_key(&provider_id, &api_key, &base_url, &model)
+            .await
+            .map_err(|e| e.to_string())?;
+    }
 
     // Mark provider as verified on success
     settings.stt_verified_providers.insert(provider_id);

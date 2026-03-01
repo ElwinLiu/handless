@@ -1,6 +1,54 @@
 use rubato::{FftFixedIn, Resampler};
 use std::time::Duration;
 
+/// One-shot resample an entire buffer of i16 PCM samples.
+/// Returns the input unchanged if `from_hz == to_hz`.
+pub fn resample_i16(samples: &[i16], from_hz: u32, to_hz: u32) -> anyhow::Result<Vec<i16>> {
+    if from_hz == to_hz {
+        return Ok(samples.to_vec());
+    }
+
+    let chunk_size = RESAMPLER_CHUNK_SIZE;
+    let mut resampler = FftFixedIn::<f32>::new(
+        from_hz as usize,
+        to_hz as usize,
+        chunk_size,
+        1,
+        1,
+    )?;
+
+    let input_f32: Vec<f32> = samples.iter().map(|&s| s as f32 / 32768.0).collect();
+    let mut output = Vec::with_capacity(
+        (samples.len() as f64 * to_hz as f64 / from_hz as f64) as usize + chunk_size,
+    );
+
+    for chunk in input_f32.chunks(chunk_size) {
+        let padded;
+        let buf = if chunk.len() < chunk_size {
+            padded = {
+                let mut v = chunk.to_vec();
+                v.resize(chunk_size, 0.0);
+                v
+            };
+            &padded
+        } else {
+            chunk
+        };
+        if let Ok(out) = resampler.process(&[buf], None) {
+            output.extend_from_slice(&out[0]);
+        }
+    }
+
+    // Trim to expected length and convert back to i16
+    let expected_len = (samples.len() as f64 * to_hz as f64 / from_hz as f64).round() as usize;
+    output.truncate(expected_len);
+
+    Ok(output
+        .iter()
+        .map(|&s| (s * 32767.0).clamp(-32768.0, 32767.0) as i16)
+        .collect())
+}
+
 // Make this a constant you can tweak
 const RESAMPLER_CHUNK_SIZE: usize = 1024;
 

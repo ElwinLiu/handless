@@ -269,6 +269,7 @@ interface CloudProviderConfigCardProps {
     providerId: string,
     apiKey: string,
     model: string,
+    realtime: boolean,
   ) => Promise<void>;
   isVerifying?: boolean;
   isVerified?: boolean;
@@ -277,6 +278,8 @@ interface CloudProviderConfigCardProps {
   onSelect?: (providerId: string) => void;
   cloudOptions?: Record<string, unknown>;
   onOptionsChange?: (options: Record<string, unknown>) => void;
+  realtimeEnabled?: boolean;
+  onRealtimeChange?: (enabled: boolean) => void;
 }
 
 export const CloudProviderConfigCard: React.FC<
@@ -295,6 +298,8 @@ export const CloudProviderConfigCard: React.FC<
   onSelect,
   cloudOptions = {},
   onOptionsChange,
+  realtimeEnabled = false,
+  onRealtimeChange,
 }) => {
   const { t } = useTranslation();
   const [localApiKey, setLocalApiKey] = useState(apiKey);
@@ -437,7 +442,7 @@ export const CloudProviderConfigCard: React.FC<
                 onClick={async () => {
                   setVerifyError(null);
                   try {
-                    await onVerify(provider.id, localApiKey, localModel);
+                    await onVerify(provider.id, localApiKey, localModel, realtimeEnabled);
                   } catch (e) {
                     setVerifyError(
                       e instanceof Error
@@ -472,6 +477,27 @@ export const CloudProviderConfigCard: React.FC<
                 </button>
               )}
           </div>
+
+          {/* Real-time transcription toggle */}
+          {provider.supports_realtime && onRealtimeChange && (
+            // biome-ignore lint/a11y/useKeyWithClickEvents: stopPropagation wrapper
+            <div onClick={stopPropagation}>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={realtimeEnabled}
+                  onChange={(e) => onRealtimeChange(e.target.checked)}
+                  className="rounded border-muted/80 accent-[var(--color-accent)]"
+                />
+                <span className="text-xs text-text/60 font-medium">
+                  {t("settings.models.cloudProviders.realtimeTranscription")}
+                </span>
+              </label>
+              <p className="text-[10px] text-text/40 mt-0.5 ml-6">
+                {t("settings.models.cloudProviders.realtimeDescription")}
+              </p>
+            </div>
+          )}
 
           {/* Provider-specific options */}
           {provider.available_options &&

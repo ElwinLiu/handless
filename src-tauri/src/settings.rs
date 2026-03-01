@@ -404,6 +404,8 @@ pub struct AppSettings {
     pub stt_verified_providers: HashSet<String>,
     #[serde(default = "default_stt_cloud_options")]
     pub stt_cloud_options: HashMap<String, String>,
+    #[serde(default)]
+    pub stt_realtime_enabled: HashMap<String, bool>,
 }
 
 fn default_model() -> String {
@@ -882,6 +884,7 @@ pub fn get_default_settings() -> AppSettings {
         app_theme: AppTheme::default(),
         stt_verified_providers: HashSet::new(),
         stt_cloud_options: default_stt_cloud_options(),
+        stt_realtime_enabled: HashMap::new(),
     }
 }
 

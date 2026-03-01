@@ -1141,3 +1141,20 @@ pub fn change_stt_cloud_model_setting(
     settings::write_settings(&app, settings);
     Ok(())
 }
+
+#[tauri::command]
+#[specta::specta]
+pub fn change_stt_realtime_enabled_setting(
+    app: AppHandle,
+    provider_id: String,
+    enabled: bool,
+) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    validate_stt_provider_exists(&settings, &provider_id)?;
+    settings
+        .stt_realtime_enabled
+        .insert(provider_id.clone(), enabled);
+    settings.stt_verified_providers.remove(&provider_id);
+    settings::write_settings(&app, settings);
+    Ok(())
+}

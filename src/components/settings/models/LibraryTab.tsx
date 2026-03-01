@@ -21,6 +21,7 @@ export const LibraryTab: React.FC = () => {
     updateSttApiKey,
     updateSttCloudModel,
     updateSttCloudOptions,
+    updateSttRealtimeEnabled,
     verifySttProvider,
     isUpdating,
   } = useSettings();
@@ -128,6 +129,12 @@ export const LibraryTab: React.FC = () => {
               }
               onOptionsChange={(opts) =>
                 updateSttCloudOptions(provider.id, opts)
+              }
+              realtimeEnabled={
+                settings?.stt_realtime_enabled?.[provider.id] ?? false
+              }
+              onRealtimeChange={(enabled) =>
+                updateSttRealtimeEnabled(provider.id, enabled)
               }
             />
           ))}

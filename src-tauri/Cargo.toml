@@ -59,6 +59,9 @@ vad-rs = { git = "https://github.com/cjpais/vad-rs", default-features = false }
 enigo = "0.6.1"
 rodio = { git = "https://github.com/cjpais/rodio.git" }
 reqwest = { version = "0.12", features = ["json", "stream", "multipart"] }
+tokio-tungstenite = { version = "0.21", features = ["native-tls"] }
+base64 = "0.22"
+percent-encoding = "2"
 futures-util = "0.3"
 rustfft = "6.4.0"
 strsim = "0.11.0"

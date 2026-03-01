@@ -56,10 +56,15 @@ interface SettingsStore {
     providerId: string,
     options: Record<string, unknown>,
   ) => Promise<void>;
+  updateSttRealtimeEnabled: (
+    providerId: string,
+    enabled: boolean,
+  ) => Promise<void>;
   verifySttProvider: (
     providerId: string,
     apiKey: string,
     model: string,
+    realtime: boolean,
   ) => Promise<void>;
 
   // Internal state setters
@@ -624,14 +629,30 @@ export const useSettingsStore = create<SettingsStore>()(
       }
     },
 
-    verifySttProvider: async (providerId, apiKey, model) => {
+    updateSttRealtimeEnabled: async (providerId, enabled) => {
+      const { setUpdating, refreshSettings } = get();
+      const updateKey = `stt_realtime:${providerId}`;
+
+      setUpdating(updateKey, true);
+
+      try {
+        await commands.changeSttRealtimeEnabledSetting(providerId, enabled);
+        await refreshSettings();
+      } catch (error) {
+        console.error("Failed to update STT realtime enabled:", error);
+      } finally {
+        setUpdating(updateKey, false);
+      }
+    },
+
+    verifySttProvider: async (providerId, apiKey, model, realtime) => {
       const { setUpdating, refreshSettings } = get();
       const updateKey = `stt_verify:${providerId}`;
 
       setUpdating(updateKey, true);
 
       try {
-        const result = await commands.testSttApiKey(providerId, apiKey, model);
+        const result = await commands.testSttApiKey(providerId, apiKey, model, realtime);
         if (result.status === "error") {
           throw new Error(result.error);
         }

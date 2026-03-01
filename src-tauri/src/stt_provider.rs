@@ -50,6 +50,7 @@ pub struct SttProviderInfo {
     pub description: String,
     pub supported_languages: Vec<String>,
     pub supports_translation: bool,
+    pub supports_realtime: bool,
     pub is_recommended: bool,
     pub backend: ProviderBackend,
     #[serde(default)]
@@ -71,6 +72,7 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                 "ta", "th", "tr", "uk", "ur", "vi", "cy",
             ].into_iter().map(String::from).collect(),
             supports_translation: true,
+            supports_realtime: true,
             is_recommended: false,
             backend: ProviderBackend::Cloud {
                 base_url: "https://api.openai.com/v1".to_string(),
@@ -111,6 +113,7 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
                 "sw", "sv", "tl", "ta", "te", "th", "tr", "uk", "ur", "vi", "cy",
             ].into_iter().map(String::from).collect(),
             supports_translation: false,
+            supports_realtime: true,
             is_recommended: false,
             backend: ProviderBackend::Cloud {
                 base_url: "https://api.soniox.com/v1".to_string(),

@@ -371,6 +371,14 @@ async changeSttCloudModelSetting(providerId: string, model: string) : Promise<Re
     else return { status: "error", error: e  as any };
 }
 },
+async changeSttRealtimeEnabledSetting(providerId: string, enabled: boolean) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("change_stt_realtime_enabled_setting", { providerId, enabled }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 /**
  * Start key recording mode
  */
@@ -580,9 +588,9 @@ async getAllSttProviders() : Promise<Result<SttProviderInfo[], string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async testSttApiKey(providerId: string, apiKey: string, model: string) : Promise<Result<null, string>> {
+async testSttApiKey(providerId: string, apiKey: string, model: string, realtime: boolean) : Promise<Result<null, string>> {
     try {
-    return { status: "ok", data: await TAURI_INVOKE("test_stt_api_key", { providerId, apiKey, model }) };
+    return { status: "ok", data: await TAURI_INVOKE("test_stt_api_key", { providerId, apiKey, model, realtime }) };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -778,7 +786,7 @@ async isLaptop() : Promise<Result<boolean, string>> {
 
 /** user-defined types **/
 
-export type AppSettings = { bindings: Partial<{ [key in string]: ShortcutBinding }>; push_to_talk: boolean; audio_feedback: boolean; audio_feedback_volume?: number; sound_theme?: SoundTheme; start_hidden?: boolean; autostart_enabled?: boolean; update_checks_enabled?: boolean; selected_model?: string; always_on_microphone?: boolean; selected_microphone?: string | null; clamshell_microphone?: string | null; selected_output_device?: string | null; translate_to_english?: boolean; selected_language?: string; overlay_position?: OverlayPosition; debug_mode?: boolean; log_level?: LogLevel; custom_words?: string[]; model_unload_timeout?: ModelUnloadTimeout; word_correction_threshold?: number; history_limit?: number; recording_retention_period?: RecordingRetentionPeriod; paste_method?: PasteMethod; clipboard_handling?: ClipboardHandling; auto_submit?: boolean; auto_submit_key?: AutoSubmitKey; stt_provider_id?: string; stt_providers?: SttProvider[]; stt_api_keys?: Partial<{ [key in string]: string }>; stt_cloud_models?: Partial<{ [key in string]: string }>; post_process_enabled?: boolean; post_process_provider_id?: string; post_process_providers?: PostProcessProvider[]; post_process_api_keys?: Partial<{ [key in string]: string }>; post_process_models?: Partial<{ [key in string]: string }>; post_process_prompts?: LLMPrompt[]; post_process_selected_prompt_id?: string | null; mute_while_recording?: boolean; append_trailing_space?: boolean; app_language?: string; experimental_enabled?: boolean; keyboard_implementation?: KeyboardImplementation; show_tray_icon?: boolean; paste_delay_ms?: number; typing_tool?: TypingTool; external_script_path: string | null; app_theme?: AppTheme; stt_verified_providers?: string[]; stt_cloud_options?: Partial<{ [key in string]: string }> }
+export type AppSettings = { bindings: Partial<{ [key in string]: ShortcutBinding }>; push_to_talk: boolean; audio_feedback: boolean; audio_feedback_volume?: number; sound_theme?: SoundTheme; start_hidden?: boolean; autostart_enabled?: boolean; update_checks_enabled?: boolean; selected_model?: string; always_on_microphone?: boolean; selected_microphone?: string | null; clamshell_microphone?: string | null; selected_output_device?: string | null; translate_to_english?: boolean; selected_language?: string; overlay_position?: OverlayPosition; debug_mode?: boolean; log_level?: LogLevel; custom_words?: string[]; model_unload_timeout?: ModelUnloadTimeout; word_correction_threshold?: number; history_limit?: number; recording_retention_period?: RecordingRetentionPeriod; paste_method?: PasteMethod; clipboard_handling?: ClipboardHandling; auto_submit?: boolean; auto_submit_key?: AutoSubmitKey; stt_provider_id?: string; stt_providers?: SttProvider[]; stt_api_keys?: Partial<{ [key in string]: string }>; stt_cloud_models?: Partial<{ [key in string]: string }>; post_process_enabled?: boolean; post_process_provider_id?: string; post_process_providers?: PostProcessProvider[]; post_process_api_keys?: Partial<{ [key in string]: string }>; post_process_models?: Partial<{ [key in string]: string }>; post_process_prompts?: LLMPrompt[]; post_process_selected_prompt_id?: string | null; mute_while_recording?: boolean; append_trailing_space?: boolean; app_language?: string; experimental_enabled?: boolean; keyboard_implementation?: KeyboardImplementation; show_tray_icon?: boolean; paste_delay_ms?: number; typing_tool?: TypingTool; external_script_path: string | null; app_theme?: AppTheme; stt_verified_providers?: string[]; stt_cloud_options?: Partial<{ [key in string]: string }>; stt_realtime_enabled?: Partial<{ [key in string]: boolean }> }
 export type AppTheme = "dark" | "light" | "system"
 export type AudioDevice = { index: string; name: string; is_default: boolean }
 export type AutoSubmitKey = "enter" | "ctrl_enter" | "cmd_enter"
@@ -811,7 +819,7 @@ export type RecordingRetentionPeriod = "never" | "preserve_limit" | "days_3" | "
 export type ShortcutBinding = { id: string; name: string; description: string; default_binding: string; current_binding: string }
 export type SoundTheme = "marimba" | "pop" | "custom"
 export type SttProvider = { id: string; label: string; provider_type: SttProviderType; base_url: string; default_model: string }
-export type SttProviderInfo = { id: string; name: string; description: string; supported_languages: string[]; supports_translation: boolean; is_recommended: boolean; backend: ProviderBackend; available_options?: CloudProviderOption[] }
+export type SttProviderInfo = { id: string; name: string; description: string; supported_languages: string[]; supports_translation: boolean; supports_realtime: boolean; is_recommended: boolean; backend: ProviderBackend; available_options?: CloudProviderOption[] }
 export type SttProviderType = "local" | "cloud"
 export type TypingTool = "auto" | "wtype" | "kwtype" | "dotool" | "ydotool" | "xdotool"
 
