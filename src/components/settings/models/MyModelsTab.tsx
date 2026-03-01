@@ -1,12 +1,12 @@
 import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ask } from "@tauri-apps/plugin-dialog";
 import type { ModelCardStatus } from "@/components/onboarding";
 import { ModelCard } from "@/components/onboarding";
-import { CloudProviderCard } from "./CloudProviderCard";
 import { useModelStore } from "@/stores/modelStore";
 import { useSettings } from "@/hooks/useSettings";
-import type { ModelInfo, SttProvider } from "@/bindings";
+import { useModelActions } from "@/hooks/useModelActions";
+import { getProviderStatus } from "@/lib/utils/providerStatus";
+import type { SttProviderInfo } from "@/bindings";
 
 interface MyModelsTabProps {
   onNavigateToLibrary: () => void;
@@ -19,110 +19,82 @@ export const MyModelsTab: React.FC<MyModelsTabProps> = ({
   const [switchingModelId, setSwitchingModelId] = useState<string | null>(null);
   const { settings, setSttProvider } = useSettings();
   const {
-    models,
+    providers,
     currentModel,
     downloadingModels,
     downloadProgress,
     downloadStats,
     extractingModels,
-    downloadModel,
-    cancelDownload,
     selectModel,
-    deleteModel,
   } = useModelStore();
+  const { handleModelDownload, handleModelDelete, handleModelCancel } =
+    useModelActions();
 
   const sttProviderId = settings?.stt_provider_id ?? "local";
-  const cloudProviders =
-    settings?.stt_providers?.filter((p) => p.provider_type === "cloud") ?? [];
 
-  const isCloudConfigured = (provider: SttProvider): boolean => {
-    const apiKey = settings?.stt_api_keys?.[provider.id];
+  const isCloudConfigured = (providerId: string): boolean => {
+    const apiKey = settings?.stt_api_keys?.[providerId];
     return !!apiKey && apiKey.length > 0;
   };
 
-  const downloadedModels = useMemo(() => {
-    return models
-      .filter(
-        (m: ModelInfo) =>
-          m.is_downloaded ||
-          m.is_custom ||
-          m.id in downloadingModels ||
-          m.id in extractingModels,
-      )
+  const myProviders = useMemo(() => {
+    return providers
+      .filter((p: SttProviderInfo) => {
+        if (p.backend.type === "Cloud") return true;
+        // Local: show if downloaded, custom, downloading, or extracting
+        return (
+          p.backend.is_downloaded ||
+          p.backend.is_custom ||
+          p.id in downloadingModels ||
+          p.id in extractingModels
+        );
+      })
       .sort((a, b) => {
-        if (a.is_custom !== b.is_custom) return a.is_custom ? 1 : -1;
+        // Cloud providers first, then local
+        if (a.backend.type !== b.backend.type) {
+          return a.backend.type === "Cloud" ? -1 : 1;
+        }
+        // Within local: custom models last
+        if (a.backend.type === "Local" && b.backend.type === "Local") {
+          if (a.backend.is_custom !== b.backend.is_custom)
+            return a.backend.is_custom ? 1 : -1;
+        }
         return 0;
       });
-  }, [models, downloadingModels, extractingModels]);
+  }, [providers, downloadingModels, extractingModels]);
 
-  const getModelStatus = (modelId: string): ModelCardStatus => {
-    if (modelId in extractingModels) return "extracting";
-    if (modelId in downloadingModels) return "downloading";
-    if (switchingModelId === modelId) return "switching";
-    if (modelId === currentModel && sttProviderId === "local") return "active";
-    const model = models.find((m: ModelInfo) => m.id === modelId);
-    if (model?.is_downloaded) return "available";
-    return "downloadable";
+  const statusCtx = {
+    extractingModels,
+    downloadingModels,
+    switchingModelId,
+    currentModel,
+    sttProviderId,
   };
 
-  const handleModelSelect = async (modelId: string) => {
-    setSwitchingModelId(modelId);
+  const handleProviderSelect = async (providerId: string) => {
+    const provider = providers.find((p) => p.id === providerId);
+    if (!provider) return;
+
+    if (provider.backend.type === "Cloud") {
+      if (isCloudConfigured(providerId)) {
+        await setSttProvider(providerId);
+      } else {
+        onNavigateToLibrary();
+      }
+      return;
+    }
+
+    // Local model selection
+    setSwitchingModelId(providerId);
     try {
       await setSttProvider("local");
-      await selectModel(modelId);
+      await selectModel(providerId);
     } finally {
       setSwitchingModelId(null);
     }
   };
 
-  const handleModelDownload = async (modelId: string) => {
-    await downloadModel(modelId);
-  };
-
-  const handleModelDelete = async (modelId: string) => {
-    const model = models.find((m: ModelInfo) => m.id === modelId);
-    const modelName = model?.name || modelId;
-    const isActive = modelId === currentModel && sttProviderId === "local";
-
-    const confirmed = await ask(
-      isActive
-        ? t("settings.models.deleteActiveConfirm", { modelName })
-        : t("settings.models.deleteConfirm", { modelName }),
-      {
-        title: t("settings.models.deleteTitle"),
-        kind: "warning",
-      },
-    );
-
-    if (confirmed) {
-      try {
-        await deleteModel(modelId);
-      } catch (err) {
-        console.error(`Failed to delete model ${modelId}:`, err);
-      }
-    }
-  };
-
-  const handleModelCancel = async (modelId: string) => {
-    try {
-      await cancelDownload(modelId);
-    } catch (err) {
-      console.error(`Failed to cancel download for ${modelId}:`, err);
-    }
-  };
-
-  const handleCloudProviderClick = async (provider: SttProvider) => {
-    if (isCloudConfigured(provider)) {
-      await setSttProvider(provider.id);
-    } else {
-      onNavigateToLibrary();
-    }
-  };
-
-  const hasAnyContent =
-    cloudProviders.length > 0 || downloadedModels.length > 0;
-
-  if (!hasAnyContent) {
+  if (myProviders.length === 0) {
     return (
       <div className="text-center py-8 text-text/50">
         {t("settings.models.myModels.noModelsConfigured")}
@@ -132,29 +104,27 @@ export const MyModelsTab: React.FC<MyModelsTabProps> = ({
 
   return (
     <div className="space-y-2">
-      {cloudProviders.map((provider) => (
-        <CloudProviderCard
+      {myProviders.map((provider) => (
+        <ModelCard
           key={provider.id}
           provider={provider}
-          isActive={sttProviderId === provider.id}
-          isConfigured={isCloudConfigured(provider)}
-          configuredModel={settings?.stt_cloud_models?.[provider.id]}
-          onClick={() => handleCloudProviderClick(provider)}
-        />
-      ))}
-      {downloadedModels.map((model: ModelInfo) => (
-        <ModelCard
-          key={model.id}
-          model={model}
           compact
-          status={getModelStatus(model.id)}
-          onSelect={handleModelSelect}
+          status={getProviderStatus(provider, statusCtx)}
+          onSelect={handleProviderSelect}
           onDownload={handleModelDownload}
-          onDelete={handleModelDelete}
+          onDelete={
+            provider.backend.type === "Local" ? handleModelDelete : undefined
+          }
           onCancel={handleModelCancel}
-          downloadProgress={downloadProgress[model.id]?.percentage}
-          downloadSpeed={downloadStats[model.id]?.speed}
+          downloadProgress={downloadProgress[provider.id]?.percentage}
+          downloadSpeed={downloadStats[provider.id]?.speed}
           showRecommended={false}
+          configuredModel={
+            provider.backend.type === "Cloud"
+              ? (settings?.stt_cloud_models?.[provider.id] ??
+                provider.backend.default_model)
+              : undefined
+          }
         />
       ))}
     </div>

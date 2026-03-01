@@ -1,7 +1,14 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Download, Globe, Languages, Loader2, Trash2 } from "lucide-react";
-import type { ModelInfo } from "@/bindings";
+import {
+  Cloud,
+  Download,
+  Globe,
+  Languages,
+  Loader2,
+  Trash2,
+} from "lucide-react";
+import type { SttProviderInfo } from "@/bindings";
 import { formatModelSize } from "../../lib/utils/format";
 import {
   getTranslatedModelDescription,
@@ -34,23 +41,24 @@ export type ModelCardStatus =
   | "available";
 
 interface ModelCardProps {
-  model: ModelInfo;
+  provider: SttProviderInfo;
   variant?: "default" | "featured";
   status?: ModelCardStatus;
   disabled?: boolean;
   compact?: boolean;
   className?: string;
-  onSelect: (modelId: string) => void;
-  onDownload?: (modelId: string) => void;
-  onDelete?: (modelId: string) => void;
-  onCancel?: (modelId: string) => void;
+  onSelect: (providerId: string) => void;
+  onDownload?: (providerId: string) => void;
+  onDelete?: (providerId: string) => void;
+  onCancel?: (providerId: string) => void;
   downloadProgress?: number;
   downloadSpeed?: number; // MB/s
   showRecommended?: boolean;
+  configuredModel?: string;
 }
 
 const ModelCard: React.FC<ModelCardProps> = ({
-  model,
+  provider,
   variant = "default",
   status = "downloadable",
   disabled = false,
@@ -63,15 +71,19 @@ const ModelCard: React.FC<ModelCardProps> = ({
   downloadProgress,
   downloadSpeed,
   showRecommended = true,
+  configuredModel,
 }) => {
   const { t } = useTranslation();
   const isFeatured = variant === "featured";
+  const isCloud = provider.backend.type === "Cloud";
+  const isLocal = provider.backend.type === "Local";
+  const isCustom = isLocal && provider.backend.is_custom;
   const isClickable =
     status === "available" || status === "active" || status === "downloadable";
 
   // Get translated model name and description
-  const displayName = getTranslatedModelName(model, t);
-  const displayDescription = getTranslatedModelDescription(model, t);
+  const displayName = getTranslatedModelName(provider, t);
+  const displayDescription = getTranslatedModelDescription(provider, t);
 
   const baseClasses = compact
     ? "flex flex-col rounded px-3 py-2 gap-1 text-left transition-all duration-200"
@@ -95,16 +107,16 @@ const ModelCard: React.FC<ModelCardProps> = ({
 
   const handleClick = () => {
     if (!isClickable || disabled) return;
-    if (status === "downloadable" && onDownload) {
-      onDownload(model.id);
+    if (status === "downloadable" && onDownload && isLocal) {
+      onDownload(provider.id);
     } else {
-      onSelect(model.id);
+      onSelect(provider.id);
     }
   };
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onDelete?.(model.id);
+    onDelete?.(provider.id);
   };
 
   return (
@@ -133,13 +145,19 @@ const ModelCard: React.FC<ModelCardProps> = ({
             >
               {displayName}
             </h3>
-            {showRecommended && model.is_recommended && (
+            {isCloud && (
+              <Badge variant="secondary">
+                <Cloud className="w-3 h-3 mr-1" />
+                {t("settings.models.cloudProviders.badge")}
+              </Badge>
+            )}
+            {showRecommended && provider.is_recommended && (
               <Badge variant="primary">{t("onboarding.recommended")}</Badge>
             )}
             {status === "active" && (
               <Badge variant="primary">{t("modelSelector.active")}</Badge>
             )}
-            {model.is_custom && (
+            {isCustom && (
               <Badge variant="secondary">{t("modelSelector.custom")}</Badge>
             )}
             {status === "switching" && (
@@ -152,37 +170,43 @@ const ModelCard: React.FC<ModelCardProps> = ({
           <p
             className={`text-text/60 text-sm ${compact ? "leading-snug" : "leading-relaxed"}`}
           >
-            {displayDescription}
+            {isCloud && configuredModel ? configuredModel : displayDescription}
           </p>
         </div>
-        {(model.accuracy_score > 0 || model.speed_score > 0) && (
-          <div className="hidden sm:flex items-center ml-4">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <p className="text-xs text-text/60 w-14 text-right">
-                  {t("onboarding.modelCard.accuracy")}
-                </p>
-                <div className="w-16 h-1.5 bg-muted/20 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-accent rounded-full"
-                    style={{ width: `${model.accuracy_score * 100}%` }}
-                  />
+        {isLocal &&
+          (provider.backend.accuracy_score > 0 ||
+            provider.backend.speed_score > 0) && (
+            <div className="hidden sm:flex items-center ml-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <p className="text-xs text-text/60 w-14 text-right">
+                    {t("onboarding.modelCard.accuracy")}
+                  </p>
+                  <div className="w-16 h-1.5 bg-muted/20 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-accent rounded-full"
+                      style={{
+                        width: `${provider.backend.accuracy_score * 100}%`,
+                      }}
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <p className="text-xs text-text/60 w-14 text-right">
-                  {t("onboarding.modelCard.speed")}
-                </p>
-                <div className="w-16 h-1.5 bg-muted/20 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-accent rounded-full"
-                    style={{ width: `${model.speed_score * 100}%` }}
-                  />
+                <div className="flex items-center gap-2">
+                  <p className="text-xs text-text/60 w-14 text-right">
+                    {t("onboarding.modelCard.speed")}
+                  </p>
+                  <div className="w-16 h-1.5 bg-muted/20 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-accent rounded-full"
+                      style={{
+                        width: `${provider.backend.speed_score * 100}%`,
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
       </div>
 
       {!compact && <hr className="w-full border-muted/20" />}
@@ -191,24 +215,26 @@ const ModelCard: React.FC<ModelCardProps> = ({
       <div
         className={`flex items-center gap-2 w-full ${compact ? "" : "-mb-0.5 mt-0.5"}`}
       >
-        {model.supported_languages.length > 0 && (
+        {provider.supported_languages.length > 0 && (
           <div
             className={`flex items-center gap-1 text-xs px-1.5 py-0.5 rounded ${
-              model.supported_languages.length === 1
+              provider.supported_languages.length === 1
                 ? "text-text/50 bg-muted/10"
                 : "text-blue-400/80 bg-blue-400/10"
             }`}
             title={
-              model.supported_languages.length === 1
+              provider.supported_languages.length === 1
                 ? t("modelSelector.capabilities.singleLanguage")
                 : t("modelSelector.capabilities.languageSelection")
             }
           >
             <Globe className="w-3 h-3" />
-            <span>{getLanguageDisplayText(model.supported_languages, t)}</span>
+            <span>
+              {getLanguageDisplayText(provider.supported_languages, t)}
+            </span>
           </div>
         )}
-        {model.supports_translation && (
+        {provider.supports_translation && (
           <div
             className="flex items-center gap-1 text-xs text-purple-400/80 bg-purple-400/10 px-1.5 py-0.5 rounded"
             title={t("modelSelector.capabilities.translation")}
@@ -217,27 +243,31 @@ const ModelCard: React.FC<ModelCardProps> = ({
             <span>{t("modelSelector.capabilities.translate")}</span>
           </div>
         )}
-        {status === "downloadable" && (
+        {isLocal && status === "downloadable" && (
           <span className="flex items-center gap-1.5 ml-auto text-xs text-text/50 bg-muted/10 px-1.5 py-0.5 rounded">
             <Download className="w-3 h-3" />
-            <span>{formatModelSize(Number(model.size_mb))}</span>
+            <span>{formatModelSize(Number(provider.backend.size_mb))}</span>
           </span>
         )}
-        {onDelete && (status === "available" || status === "active") && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleDelete}
-            title={t("modelSelector.deleteModel", { modelName: displayName })}
-            className="flex items-center gap-1.5 ml-auto text-accent/85 hover:text-accent hover:bg-accent/10"
-          >
-            <Trash2 className="w-3.5 h-3.5" />
-            <span>{t("common.delete")}</span>
-          </Button>
-        )}
+        {isLocal &&
+          onDelete &&
+          (status === "available" || status === "active") && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleDelete}
+              title={t("modelSelector.deleteModel", {
+                modelName: displayName,
+              })}
+              className="flex items-center gap-1.5 ml-auto text-accent/85 hover:text-accent hover:bg-accent/10"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span>{t("common.delete")}</span>
+            </Button>
+          )}
       </div>
 
-      {/* Download/extract progress */}
+      {/* Download/extract progress (local only) */}
       {status === "downloading" && downloadProgress !== undefined && (
         <div className={`w-full ${compact ? "mt-1" : "mt-3"}`}>
           <div className="w-full h-1.5 bg-muted/20 rounded-full overflow-hidden">
@@ -267,7 +297,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    onCancel(model.id);
+                    onCancel(provider.id);
                   }}
                   aria-label={t("modelSelector.cancelDownload")}
                 >

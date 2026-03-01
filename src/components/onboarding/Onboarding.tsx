@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import type { ModelInfo } from "@/bindings";
+import type { SttProviderInfo } from "@/bindings";
 import type { ModelCardStatus } from "./ModelCard";
 import ModelCard from "./ModelCard";
 import { useModelStore } from "../../stores/modelStore";
@@ -13,7 +13,7 @@ interface OnboardingProps {
 const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected }) => {
   const { t } = useTranslation();
   const {
-    models,
+    providers,
     downloadModel,
     selectModel,
     downloadingModels,
@@ -25,15 +25,39 @@ const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected }) => {
 
   const isDownloading = selectedModelId !== null;
 
+  const localProviders = useMemo(
+    () =>
+      providers.filter(
+        (p) => p.backend.type === "Local" && !p.backend.is_downloaded,
+      ),
+    [providers],
+  );
+
+  const { recommended, other } = useMemo(() => {
+    const rec = localProviders.filter((p) => p.is_recommended);
+    const rest = localProviders
+      .filter((p) => !p.is_recommended)
+      .sort((a, b) => {
+        const aSize =
+          a.backend.type === "Local" ? Number(a.backend.size_mb) : 0;
+        const bSize =
+          b.backend.type === "Local" ? Number(b.backend.size_mb) : 0;
+        return aSize - bSize;
+      });
+    return { recommended: rec, other: rest };
+  }, [localProviders]);
+
   // Watch for the selected model to finish downloading + extracting
   useEffect(() => {
     if (!selectedModelId) return;
 
-    const model = models.find((m) => m.id === selectedModelId);
+    const provider = providers.find((p) => p.id === selectedModelId);
+    const isDownloaded =
+      provider?.backend.type === "Local" && provider.backend.is_downloaded;
     const stillDownloading = selectedModelId in downloadingModels;
     const stillExtracting = selectedModelId in extractingModels;
 
-    if (model?.is_downloaded && !stillDownloading && !stillExtracting) {
+    if (isDownloaded && !stillDownloading && !stillExtracting) {
       // Model is ready — select it and transition
       selectModel(selectedModelId).then((success) => {
         if (success) {
@@ -46,7 +70,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected }) => {
     }
   }, [
     selectedModelId,
-    models,
+    providers,
     downloadingModels,
     extractingModels,
     selectModel,
@@ -88,42 +112,32 @@ const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected }) => {
 
       <div className="max-w-[600px] w-full mx-auto text-center flex-1 flex flex-col min-h-0">
         <div className="flex flex-col gap-4 pb-6">
-          {models
-            .filter((m: ModelInfo) => !m.is_downloaded)
-            .filter((model: ModelInfo) => model.is_recommended)
-            .map((model: ModelInfo) => (
-              <ModelCard
-                key={model.id}
-                model={model}
-                variant="featured"
-                status={getModelStatus(model.id)}
-                disabled={isDownloading}
-                onSelect={handleDownloadModel}
-                onDownload={handleDownloadModel}
-                downloadProgress={getModelDownloadProgress(model.id)}
-                downloadSpeed={getModelDownloadSpeed(model.id)}
-              />
-            ))}
+          {recommended.map((p: SttProviderInfo) => (
+            <ModelCard
+              key={p.id}
+              provider={p}
+              variant="featured"
+              status={getModelStatus(p.id)}
+              disabled={isDownloading}
+              onSelect={handleDownloadModel}
+              onDownload={handleDownloadModel}
+              downloadProgress={getModelDownloadProgress(p.id)}
+              downloadSpeed={getModelDownloadSpeed(p.id)}
+            />
+          ))}
 
-          {models
-            .filter((m: ModelInfo) => !m.is_downloaded)
-            .filter((model: ModelInfo) => !model.is_recommended)
-            .sort(
-              (a: ModelInfo, b: ModelInfo) =>
-                Number(a.size_mb) - Number(b.size_mb),
-            )
-            .map((model: ModelInfo) => (
-              <ModelCard
-                key={model.id}
-                model={model}
-                status={getModelStatus(model.id)}
-                disabled={isDownloading}
-                onSelect={handleDownloadModel}
-                onDownload={handleDownloadModel}
-                downloadProgress={getModelDownloadProgress(model.id)}
-                downloadSpeed={getModelDownloadSpeed(model.id)}
-              />
-            ))}
+          {other.map((p: SttProviderInfo) => (
+            <ModelCard
+              key={p.id}
+              provider={p}
+              status={getModelStatus(p.id)}
+              disabled={isDownloading}
+              onSelect={handleDownloadModel}
+              onDownload={handleDownloadModel}
+              downloadProgress={getModelDownloadProgress(p.id)}
+              downloadSpeed={getModelDownloadSpeed(p.id)}
+            />
+          ))}
         </div>
       </div>
     </div>

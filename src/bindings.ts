@@ -588,6 +588,14 @@ async hasAnyModelsOrDownloads() : Promise<Result<boolean, string>> {
     else return { status: "error", error: e  as any };
 }
 },
+async getAllSttProviders() : Promise<Result<SttProviderInfo[], string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_all_stt_providers") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async updateMicrophoneMode(alwaysOn: boolean) : Promise<Result<null, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("update_microphone_mode", { alwaysOn }) };
@@ -796,10 +804,12 @@ export type ModelUnloadTimeout = "never" | "immediately" | "min_2" | "min_5" | "
 export type OverlayPosition = "none" | "top" | "bottom"
 export type PasteMethod = "ctrl_v" | "direct" | "none" | "shift_insert" | "ctrl_shift_v" | "external_script"
 export type PostProcessProvider = { id: string; label: string; base_url: string; allow_base_url_edit?: boolean; models_endpoint?: string | null; supports_structured_output?: boolean }
+export type ProviderBackend = { type: "Local"; engine_type: EngineType; filename: string; url: string | null; size_mb: number; is_downloaded: boolean; is_downloading: boolean; partial_size: number; is_directory: boolean; accuracy_score: number; speed_score: number; is_custom: boolean } | { type: "Cloud"; base_url: string; default_model: string }
 export type RecordingRetentionPeriod = "never" | "preserve_limit" | "days_3" | "weeks_2" | "months_3"
 export type ShortcutBinding = { id: string; name: string; description: string; default_binding: string; current_binding: string }
 export type SoundTheme = "marimba" | "pop" | "custom"
 export type SttProvider = { id: string; label: string; provider_type: SttProviderType; base_url: string; default_model: string }
+export type SttProviderInfo = { id: string; name: string; description: string; supported_languages: string[]; supports_translation: boolean; is_recommended: boolean; backend: ProviderBackend }
 export type SttProviderType = "local" | "cloud"
 export type TypingTool = "auto" | "wtype" | "kwtype" | "dotool" | "ydotool" | "xdotool"
 

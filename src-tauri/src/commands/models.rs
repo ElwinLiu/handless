@@ -1,6 +1,7 @@
 use crate::managers::model::{ModelInfo, ModelManager};
 use crate::managers::transcription::TranscriptionManager;
 use crate::settings::{get_settings, write_settings};
+use crate::stt_provider::{cloud_provider_registry, SttProviderInfo};
 use std::sync::Arc;
 use tauri::{AppHandle, State};
 
@@ -142,4 +143,14 @@ pub async fn cancel_download(
     model_manager
         .cancel_download(&model_id)
         .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn get_all_stt_providers(
+    model_manager: State<'_, Arc<ModelManager>>,
+) -> Result<Vec<SttProviderInfo>, String> {
+    let mut providers = model_manager.get_all_local_providers();
+    providers.extend(cloud_provider_registry());
+    Ok(providers)
 }

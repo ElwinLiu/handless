@@ -1,33 +1,45 @@
 import type { TFunction } from "i18next";
-import type { ModelInfo } from "@/bindings";
+import type { SttProviderInfo } from "@/bindings";
 
 /**
- * Get the translated name for a model
- * @param model - The model info object
+ * Get the translated name for a provider
+ * @param provider - The STT provider info object
  * @param t - The translation function from useTranslation
- * @returns The translated model name, or the original name if no translation exists
+ * @returns The translated provider name, or the original name if no translation exists
  */
-export function getTranslatedModelName(model: ModelInfo, t: TFunction): string {
-  const translationKey = `onboarding.models.${model.id}.name`;
+export function getTranslatedModelName(
+  provider: SttProviderInfo,
+  t: TFunction,
+): string {
+  if (provider.backend.type === "Cloud") {
+    const cloudKey = `onboarding.cloud.${provider.id}.name`;
+    const cloudTranslated = t(cloudKey, { defaultValue: "" });
+    return cloudTranslated !== "" ? cloudTranslated : provider.name;
+  }
+  const translationKey = `onboarding.models.${provider.id}.name`;
   const translated = t(translationKey, { defaultValue: "" });
-  return translated !== "" ? translated : model.name;
+  return translated !== "" ? translated : provider.name;
 }
 
 /**
- * Get the translated description for a model
- * @param model - The model info object
+ * Get the translated description for a provider
+ * @param provider - The STT provider info object
  * @param t - The translation function from useTranslation
- * @returns The translated model description, or the original description if no translation exists
+ * @returns The translated provider description, or the original description if no translation exists
  */
 export function getTranslatedModelDescription(
-  model: ModelInfo,
+  provider: SttProviderInfo,
   t: TFunction,
 ): string {
-  // Custom models use a generic translation key
-  if (model.is_custom) {
+  if (provider.backend.type === "Local" && provider.backend.is_custom) {
     return t("onboarding.customModelDescription");
   }
-  const translationKey = `onboarding.models.${model.id}.description`;
+  if (provider.backend.type === "Cloud") {
+    const cloudKey = `onboarding.cloud.${provider.id}.description`;
+    const cloudTranslated = t(cloudKey, { defaultValue: "" });
+    return cloudTranslated !== "" ? cloudTranslated : provider.description;
+  }
+  const translationKey = `onboarding.models.${provider.id}.description`;
   const translated = t(translationKey, { defaultValue: "" });
-  return translated !== "" ? translated : model.description;
+  return translated !== "" ? translated : provider.description;
 }

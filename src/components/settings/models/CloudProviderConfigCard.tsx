@@ -5,10 +5,10 @@ import { SettingContainer } from "@/components/ui/SettingContainer";
 import { ApiKeyField } from "@/components/settings/PostProcessingSettingsApi/ApiKeyField";
 import { Input } from "@/components/ui/Input";
 import Badge from "@/components/ui/Badge";
-import type { SttProvider } from "@/bindings";
+import type { SttProviderInfo } from "@/bindings";
 
 interface CloudProviderConfigCardProps {
-  provider: SttProvider;
+  provider: SttProviderInfo;
   apiKey: string;
   cloudModel: string;
   onApiKeyChange: (apiKey: string) => void;
@@ -25,10 +25,13 @@ export const CloudProviderConfigCard: React.FC<
     setLocalModel(cloudModel);
   }, [cloudModel]);
 
+  const baseUrl =
+    provider.backend.type === "Cloud" ? provider.backend.base_url : "";
+
   return (
     <div className="space-y-0 divide-y divide-muted/20">
       <div className="px-3 py-2 flex items-center gap-2">
-        <h3 className="text-sm font-semibold">{provider.label}</h3>
+        <h3 className="text-sm font-semibold">{provider.name}</h3>
         <Badge variant="secondary">
           <Cloud className="w-3 h-3 mr-1" />
           {t("settings.models.cloudProviders.badge")}
@@ -66,7 +69,7 @@ export const CloudProviderConfigCard: React.FC<
         description={t("settings.models.cloudProviders.baseUrl.title")}
         grouped
       >
-        <span className="text-sm text-text/50">{provider.base_url}</span>
+        <span className="text-sm text-text/50">{baseUrl}</span>
       </SettingContainer>
     </div>
   );

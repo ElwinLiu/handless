@@ -78,6 +78,16 @@
         "description": "Very fast. Chinese, English, Japanese, Korean, Cantonese."
       }
     },
+    "cloud": {
+      "openai_stt": {
+        "name": "OpenAI",
+        "description": "OpenAI's cloud speech-to-text API. Fast and accurate with support for 57+ languages."
+      },
+      "soniox": {
+        "name": "Soniox",
+        "description": "Soniox cloud speech-to-text. High accuracy with async transcription."
+      }
+    },
     "errors": {
       "loadModels": "Failed to load available models",
       "downloadModel": "Failed to download model: {{error}}"

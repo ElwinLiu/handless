@@ -432,6 +432,42 @@ impl ModelManager {
         models.get(model_id).cloned()
     }
 
+    /// Returns all local models as STT provider info.
+    ///
+    /// NOTE: `is_downloading` is always up-to-date (toggled in real-time during
+    /// download lifecycle), but `is_downloaded` is only refreshed at startup or
+    /// after download/delete operations. If a model file is externally
+    /// added/removed on disk, `is_downloaded` may be stale until the next
+    /// `update_download_status()` call.
+    pub fn get_all_local_providers(&self) -> Vec<crate::stt_provider::SttProviderInfo> {
+        use crate::stt_provider::{ProviderBackend, SttProviderInfo};
+
+        self.get_available_models()
+            .into_iter()
+            .map(|m| SttProviderInfo {
+                id: m.id.clone(),
+                name: m.name.clone(),
+                description: m.description.clone(),
+                supported_languages: m.supported_languages.clone(),
+                supports_translation: m.supports_translation,
+                is_recommended: m.is_recommended,
+                backend: ProviderBackend::Local {
+                    engine_type: m.engine_type,
+                    filename: m.filename,
+                    url: m.url,
+                    size_mb: m.size_mb,
+                    is_downloaded: m.is_downloaded,
+                    is_downloading: m.is_downloading,
+                    partial_size: m.partial_size,
+                    is_directory: m.is_directory,
+                    accuracy_score: m.accuracy_score,
+                    speed_score: m.speed_score,
+                    is_custom: m.is_custom,
+                },
+            })
+            .collect()
+    }
+
     fn migrate_bundled_models(&self) -> Result<()> {
         // Check for bundled models and copy them to user directory
         let bundled_models = ["ggml-small.bin"]; // Add other bundled models here if any

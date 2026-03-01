@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 import { produce } from "immer";
 import { listen } from "@tauri-apps/api/event";
-import { commands, type ModelInfo } from "@/bindings";
+import { commands, type SttProviderInfo } from "@/bindings";
 
 interface DownloadProgress {
   model_id: string;
@@ -20,7 +20,7 @@ interface DownloadStats {
 
 // Using Record instead of Set/Map for Immer compatibility
 interface ModelsStore {
-  models: ModelInfo[];
+  providers: SttProviderInfo[];
   currentModel: string;
   downloadingModels: Record<string, true>;
   extractingModels: Record<string, true>;
@@ -34,20 +34,18 @@ interface ModelsStore {
 
   // Actions
   initialize: () => Promise<void>;
-  loadModels: () => Promise<void>;
+  loadProviders: () => Promise<void>;
   loadCurrentModel: () => Promise<void>;
   checkFirstRun: () => Promise<boolean>;
   selectModel: (modelId: string) => Promise<boolean>;
   downloadModel: (modelId: string) => Promise<boolean>;
   cancelDownload: (modelId: string) => Promise<boolean>;
   deleteModel: (modelId: string) => Promise<boolean>;
-  getModelInfo: (modelId: string) => ModelInfo | undefined;
   isModelDownloading: (modelId: string) => boolean;
   isModelExtracting: (modelId: string) => boolean;
   getDownloadProgress: (modelId: string) => DownloadProgress | undefined;
 
   // Internal setters
-  setModels: (models: ModelInfo[]) => void;
   setCurrentModel: (modelId: string) => void;
   setError: (error: string | null) => void;
   setLoading: (loading: boolean) => void;
@@ -55,7 +53,7 @@ interface ModelsStore {
 
 export const useModelStore = create<ModelsStore>()(
   subscribeWithSelector((set, get) => ({
-    models: [],
+    providers: [],
     currentModel: "",
     downloadingModels: {},
     extractingModels: {},
@@ -68,25 +66,26 @@ export const useModelStore = create<ModelsStore>()(
     initialized: false,
 
     // Internal setters
-    setModels: (models) => set({ models }),
     setCurrentModel: (currentModel) => set({ currentModel }),
     setError: (error) => set({ error }),
     setLoading: (loading) => set({ loading }),
 
-    loadModels: async () => {
+    loadProviders: async () => {
       try {
-        const result = await commands.getAvailableModels();
+        const result = await commands.getAllSttProviders();
         if (result.status === "ok") {
-          set({ models: result.data, error: null });
+          set({ providers: result.data, error: null });
 
-          // Sync downloading state from backend
+          // Sync downloading state from backend (local providers)
           set(
             produce((state) => {
               const backendDownloading: Record<string, true> = {};
               result.data
-                .filter((m) => m.is_downloading)
-                .forEach((m) => {
-                  backendDownloading[m.id] = true;
+                .filter(
+                  (p) => p.backend.type === "Local" && p.backend.is_downloading,
+                )
+                .forEach((p) => {
+                  backendDownloading[p.id] = true;
                 });
 
               // Merge: keep frontend state if downloading, add backend state
@@ -210,8 +209,8 @@ export const useModelStore = create<ModelsStore>()(
             }),
           );
 
-          // Reload models to sync with backend state
-          await get().loadModels();
+          // Reload providers to sync with backend state
+          await get().loadProviders();
           return true;
         } else {
           set({ error: `Failed to cancel download: ${result.error}` });
@@ -228,7 +227,7 @@ export const useModelStore = create<ModelsStore>()(
         set({ error: null });
         const result = await commands.deleteModel(modelId);
         if (result.status === "ok") {
-          await get().loadModels();
+          await get().loadProviders();
           await get().loadCurrentModel();
           return true;
         } else {
@@ -239,10 +238,6 @@ export const useModelStore = create<ModelsStore>()(
         set({ error: `Failed to delete model: ${err}` });
         return false;
       }
-    },
-
-    getModelInfo: (modelId: string) => {
-      return get().models.find((model) => model.id === modelId);
     },
 
     isModelDownloading: (modelId: string) => {
@@ -260,10 +255,14 @@ export const useModelStore = create<ModelsStore>()(
     initialize: async () => {
       if (get().initialized) return;
 
-      const { loadModels, loadCurrentModel, checkFirstRun } = get();
+      const { loadProviders, loadCurrentModel, checkFirstRun } = get();
 
       // Load initial data
-      await Promise.all([loadModels(), loadCurrentModel(), checkFirstRun()]);
+      await Promise.all([loadProviders(), loadCurrentModel(), checkFirstRun()]);
+
+      const reloadModelData = () => {
+        get().loadProviders();
+      };
 
       // Set up event listeners
       listen<DownloadProgress>("model-download-progress", (event) => {
@@ -320,7 +319,7 @@ export const useModelStore = create<ModelsStore>()(
             delete state.downloadStats[modelId];
           }),
         );
-        get().loadModels();
+        reloadModelData();
       });
 
       listen<string>("model-extraction-started", (event) => {
@@ -339,7 +338,7 @@ export const useModelStore = create<ModelsStore>()(
             delete state.extractingModels[modelId];
           }),
         );
-        get().loadModels();
+        reloadModelData();
       });
 
       listen<{ model_id: string; error: string }>(
@@ -367,12 +366,12 @@ export const useModelStore = create<ModelsStore>()(
       });
 
       listen<string>("model-deleted", () => {
-        get().loadModels();
+        reloadModelData();
         get().loadCurrentModel();
       });
 
       listen("model-state-changed", () => {
-        get().loadModels();
+        reloadModelData();
         get().loadCurrentModel();
       });
 

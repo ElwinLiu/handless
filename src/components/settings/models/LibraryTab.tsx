@@ -1,14 +1,14 @@
 import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ask } from "@tauri-apps/plugin-dialog";
-import type { ModelCardStatus } from "@/components/onboarding";
 import { ModelCard } from "@/components/onboarding";
 import { CloudProviderConfigCard } from "./CloudProviderConfigCard";
 import { LanguageFilter } from "./LanguageFilter";
 import { SettingsGroup } from "@/components/ui/SettingsGroup";
 import { useModelStore } from "@/stores/modelStore";
 import { useSettings } from "@/hooks/useSettings";
-import type { ModelInfo } from "@/bindings";
+import { useModelActions } from "@/hooks/useModelActions";
+import { getProviderStatus } from "@/lib/utils/providerStatus";
+import type { ProviderBackend, SttProviderInfo } from "@/bindings";
 
 export const LibraryTab: React.FC = () => {
   const { t } = useTranslation();
@@ -17,71 +17,68 @@ export const LibraryTab: React.FC = () => {
   const { settings, setSttProvider, updateSttApiKey, updateSttCloudModel } =
     useSettings();
   const {
-    models,
+    providers,
     currentModel,
     downloadingModels,
     downloadProgress,
     downloadStats,
     extractingModels,
-    downloadModel,
-    cancelDownload,
     selectModel,
-    deleteModel,
   } = useModelStore();
+  const { handleModelDownload, handleModelDelete, handleModelCancel } =
+    useModelActions();
 
   const sttProviderId = settings?.stt_provider_id ?? "local";
-  const cloudProviders =
-    settings?.stt_providers?.filter((p) => p.provider_type === "cloud") ?? [];
 
-  const modelSupportsLanguage = (
-    model: ModelInfo,
-    langCode: string,
-  ): boolean => {
-    return model.supported_languages.includes(langCode);
-  };
+  const cloudProviders = useMemo(
+    () => providers.filter((p) => p.backend.type === "Cloud"),
+    [providers],
+  );
 
-  const filteredModels = useMemo(() => {
-    return models.filter((model: ModelInfo) => {
+  const filteredLocalProviders = useMemo(() => {
+    return providers.filter((p: SttProviderInfo) => {
+      if (p.backend.type !== "Local") return false;
       if (languageFilter !== "all") {
-        if (!modelSupportsLanguage(model, languageFilter)) return false;
+        if (!p.supported_languages.includes(languageFilter)) return false;
       }
       return true;
     });
-  }, [models, languageFilter]);
+  }, [providers, languageFilter]);
 
-  const { downloadedModels, availableModels } = useMemo(() => {
-    const downloaded: ModelInfo[] = [];
-    const available: ModelInfo[] = [];
+  const { downloadedProviders, availableProviders } = useMemo(() => {
+    const downloaded: SttProviderInfo[] = [];
+    const available: SttProviderInfo[] = [];
 
-    for (const model of filteredModels) {
+    for (const p of filteredLocalProviders) {
+      const backend = p.backend as Extract<ProviderBackend, { type: "Local" }>;
       if (
-        model.is_custom ||
-        model.is_downloaded ||
-        model.id in downloadingModels ||
-        model.id in extractingModels
+        backend.is_custom ||
+        backend.is_downloaded ||
+        p.id in downloadingModels ||
+        p.id in extractingModels
       ) {
-        downloaded.push(model);
+        downloaded.push(p);
       } else {
-        available.push(model);
+        available.push(p);
       }
     }
 
     downloaded.sort((a, b) => {
-      if (a.is_custom !== b.is_custom) return a.is_custom ? 1 : -1;
+      const aCustom = a.backend.type === "Local" && a.backend.is_custom;
+      const bCustom = b.backend.type === "Local" && b.backend.is_custom;
+      if (aCustom !== bCustom) return aCustom ? 1 : -1;
       return 0;
     });
 
-    return { downloadedModels: downloaded, availableModels: available };
-  }, [filteredModels, downloadingModels, extractingModels]);
+    return { downloadedProviders: downloaded, availableProviders: available };
+  }, [filteredLocalProviders, downloadingModels, extractingModels]);
 
-  const getModelStatus = (modelId: string): ModelCardStatus => {
-    if (modelId in extractingModels) return "extracting";
-    if (modelId in downloadingModels) return "downloading";
-    if (switchingModelId === modelId) return "switching";
-    if (modelId === currentModel && sttProviderId === "local") return "active";
-    const model = models.find((m: ModelInfo) => m.id === modelId);
-    if (model?.is_downloaded) return "available";
-    return "downloadable";
+  const statusCtx = {
+    extractingModels,
+    downloadingModels,
+    switchingModelId,
+    currentModel,
+    sttProviderId,
   };
 
   const handleModelSelect = async (modelId: string) => {
@@ -91,42 +88,6 @@ export const LibraryTab: React.FC = () => {
       await selectModel(modelId);
     } finally {
       setSwitchingModelId(null);
-    }
-  };
-
-  const handleModelDownload = async (modelId: string) => {
-    await downloadModel(modelId);
-  };
-
-  const handleModelDelete = async (modelId: string) => {
-    const model = models.find((m: ModelInfo) => m.id === modelId);
-    const modelName = model?.name || modelId;
-    const isActive = modelId === currentModel && sttProviderId === "local";
-
-    const confirmed = await ask(
-      isActive
-        ? t("settings.models.deleteActiveConfirm", { modelName })
-        : t("settings.models.deleteConfirm", { modelName }),
-      {
-        title: t("settings.models.deleteTitle"),
-        kind: "warning",
-      },
-    );
-
-    if (confirmed) {
-      try {
-        await deleteModel(modelId);
-      } catch (err) {
-        console.error(`Failed to delete model ${modelId}:`, err);
-      }
-    }
-  };
-
-  const handleModelCancel = async (modelId: string) => {
-    try {
-      await cancelDownload(modelId);
-    } catch (err) {
-      console.error(`Failed to cancel download for ${modelId}:`, err);
     }
   };
 
@@ -155,53 +116,53 @@ export const LibraryTab: React.FC = () => {
           <LanguageFilter value={languageFilter} onChange={setLanguageFilter} />
         </div>
 
-        {downloadedModels.length > 0 && (
+        {downloadedProviders.length > 0 && (
           <div className="space-y-2">
             <h3 className="text-xs font-medium text-text/40">
               {t("settings.models.yourModels")}
             </h3>
-            {downloadedModels.map((model: ModelInfo) => (
+            {downloadedProviders.map((provider: SttProviderInfo) => (
               <ModelCard
-                key={model.id}
-                model={model}
+                key={provider.id}
+                provider={provider}
                 compact
-                status={getModelStatus(model.id)}
+                status={getProviderStatus(provider, statusCtx)}
                 onSelect={handleModelSelect}
                 onDownload={handleModelDownload}
                 onDelete={handleModelDelete}
                 onCancel={handleModelCancel}
-                downloadProgress={downloadProgress[model.id]?.percentage}
-                downloadSpeed={downloadStats[model.id]?.speed}
+                downloadProgress={downloadProgress[provider.id]?.percentage}
+                downloadSpeed={downloadStats[provider.id]?.speed}
                 showRecommended={false}
               />
             ))}
           </div>
         )}
 
-        {availableModels.length > 0 && (
+        {availableProviders.length > 0 && (
           <div className="space-y-2">
             <h3 className="text-xs font-medium text-text/40">
               {t("settings.models.availableModels")}
             </h3>
-            {availableModels.map((model: ModelInfo) => (
+            {availableProviders.map((provider: SttProviderInfo) => (
               <ModelCard
-                key={model.id}
-                model={model}
+                key={provider.id}
+                provider={provider}
                 compact
-                status={getModelStatus(model.id)}
+                status={getProviderStatus(provider, statusCtx)}
                 onSelect={handleModelSelect}
                 onDownload={handleModelDownload}
                 onDelete={handleModelDelete}
                 onCancel={handleModelCancel}
-                downloadProgress={downloadProgress[model.id]?.percentage}
-                downloadSpeed={downloadStats[model.id]?.speed}
+                downloadProgress={downloadProgress[provider.id]?.percentage}
+                downloadSpeed={downloadStats[provider.id]?.speed}
                 showRecommended={false}
               />
             ))}
           </div>
         )}
 
-        {filteredModels.length === 0 && (
+        {filteredLocalProviders.length === 0 && (
           <div className="text-center py-8 text-text/50">
             {t("settings.models.noModelsMatch")}
           </div>
