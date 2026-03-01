@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Cloud } from "lucide-react";
-import { SettingContainer } from "@/components/ui/SettingContainer";
+import { Cloud, Globe, Languages } from "lucide-react";
 import { ApiKeyField } from "@/components/settings/PostProcessingSettingsApi/ApiKeyField";
 import { Input } from "@/components/ui/Input";
 import Badge from "@/components/ui/Badge";
+import { SelectableCard } from "@/components/ui/SelectableCard";
 import type { SttProviderInfo } from "@/bindings";
+import type { ModelCardStatus } from "@/components/onboarding/ModelCard";
+import { getLanguageDisplayText } from "@/lib/utils/modelTranslation";
 
 interface CloudProviderConfigCardProps {
   provider: SttProviderInfo;
@@ -13,11 +15,23 @@ interface CloudProviderConfigCardProps {
   cloudModel: string;
   onApiKeyChange: (apiKey: string) => void;
   onModelChange: (model: string) => void;
+  status?: ModelCardStatus;
+  compact?: boolean;
+  onSelect?: (providerId: string) => void;
 }
 
 export const CloudProviderConfigCard: React.FC<
   CloudProviderConfigCardProps
-> = ({ provider, apiKey, cloudModel, onApiKeyChange, onModelChange }) => {
+> = ({
+  provider,
+  apiKey,
+  cloudModel,
+  onApiKeyChange,
+  onModelChange,
+  status = "available",
+  compact = false,
+  onSelect,
+}) => {
   const { t } = useTranslation();
   const [localModel, setLocalModel] = useState(cloudModel);
 
@@ -28,32 +42,57 @@ export const CloudProviderConfigCard: React.FC<
   const baseUrl =
     provider.backend.type === "Cloud" ? provider.backend.base_url : "";
 
+  const isClickable = status === "available" || status === "active";
+
+  const stopPropagation = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
   return (
-    <div className="space-y-0 divide-y divide-muted/20">
-      <div className="px-3 py-2 flex items-center gap-2">
-        <h3 className="text-sm font-semibold">{provider.name}</h3>
+    <SelectableCard
+      active={status === "active"}
+      clickable={isClickable}
+      compact={compact}
+      onClick={() => onSelect?.(provider.id)}
+    >
+      {/* Header */}
+      <div className="flex items-center gap-3 flex-wrap">
+        <h3
+          className={`text-base font-semibold text-text ${isClickable ? "group-hover:text-accent" : ""} transition-colors`}
+        >
+          {provider.name}
+        </h3>
         <Badge variant="secondary">
           <Cloud className="w-3 h-3 mr-1" />
           {t("settings.models.cloudProviders.badge")}
         </Badge>
+        {status === "active" && (
+          <Badge variant="primary">{t("modelSelector.active")}</Badge>
+        )}
       </div>
-      <SettingContainer
-        title={t("settings.models.cloudProviders.apiKey.title")}
-        description={t("settings.models.cloudProviders.apiKey.title")}
-        grouped
+
+      {/* Description */}
+      {provider.description && (
+        <p
+          className={`text-text/60 text-sm ${compact ? "leading-snug" : "leading-relaxed"}`}
+        >
+          {provider.description}
+        </p>
+      )}
+
+      {/* Inline config fields */}
+      {/* biome-ignore lint/a11y/useKeyWithClickEvents: stopPropagation wrapper for input focus */}
+      <div
+        className="flex flex-wrap gap-2 items-center"
+        onClick={stopPropagation}
       >
         <ApiKeyField
           value={apiKey}
           onBlur={onApiKeyChange}
           disabled={false}
           placeholder={t("settings.models.cloudProviders.apiKey.placeholder")}
+          className="min-w-[180px] max-w-[240px]"
         />
-      </SettingContainer>
-      <SettingContainer
-        title={t("settings.models.cloudProviders.model.title")}
-        description={t("settings.models.cloudProviders.model.title")}
-        grouped
-      >
         <Input
           type="text"
           value={localModel}
@@ -61,16 +100,46 @@ export const CloudProviderConfigCard: React.FC<
           onBlur={() => onModelChange(localModel)}
           placeholder={t("settings.models.cloudProviders.model.placeholder")}
           variant="compact"
-          className="min-w-[200px]"
+          className="min-w-[140px] max-w-[200px]"
         />
-      </SettingContainer>
-      <SettingContainer
-        title={t("settings.models.cloudProviders.baseUrl.title")}
-        description={t("settings.models.cloudProviders.baseUrl.title")}
-        grouped
-      >
-        <span className="text-sm text-text/50">{baseUrl}</span>
-      </SettingContainer>
-    </div>
+        {baseUrl && (
+          <span className="text-xs text-text/40 truncate max-w-[200px]">
+            {baseUrl}
+          </span>
+        )}
+      </div>
+
+      {/* Language/translation tags */}
+      <div className="flex items-center gap-2">
+        {provider.supported_languages.length > 0 && (
+          <div
+            className={`flex items-center gap-1 text-xs px-1.5 py-0.5 rounded ${
+              provider.supported_languages.length === 1
+                ? "text-text/50 bg-muted/10"
+                : "text-blue-400/80 bg-blue-400/10"
+            }`}
+            title={
+              provider.supported_languages.length === 1
+                ? t("modelSelector.capabilities.singleLanguage")
+                : t("modelSelector.capabilities.languageSelection")
+            }
+          >
+            <Globe className="w-3 h-3" />
+            <span>
+              {getLanguageDisplayText(provider.supported_languages, t)}
+            </span>
+          </div>
+        )}
+        {provider.supports_translation && (
+          <div
+            className="flex items-center gap-1 text-xs text-purple-400/80 bg-purple-400/10 px-1.5 py-0.5 rounded"
+            title={t("modelSelector.capabilities.translation")}
+          >
+            <Languages className="w-3 h-3" />
+            <span>{t("modelSelector.capabilities.translate")}</span>
+          </div>
+        )}
+      </div>
+    </SelectableCard>
   );
 };

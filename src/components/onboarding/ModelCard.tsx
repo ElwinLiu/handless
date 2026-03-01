@@ -11,26 +11,13 @@ import {
 import type { SttProviderInfo } from "@/bindings";
 import { formatModelSize } from "../../lib/utils/format";
 import {
+  getLanguageDisplayText,
   getTranslatedModelDescription,
   getTranslatedModelName,
 } from "../../lib/utils/modelTranslation";
-import { LANGUAGES } from "../../lib/constants/languages";
 import Badge from "../ui/Badge";
 import { Button } from "../ui/Button";
-
-// Get display text for model's language support
-const getLanguageDisplayText = (
-  supportedLanguages: string[],
-  t: (key: string, options?: Record<string, unknown>) => string,
-): string => {
-  if (supportedLanguages.length === 1) {
-    const langCode = supportedLanguages[0];
-    const langName =
-      LANGUAGES.find((l) => l.value === langCode)?.label || langCode;
-    return t("modelSelector.capabilities.languageOnly", { language: langName });
-  }
-  return t("modelSelector.capabilities.multiLanguage");
-};
+import { SelectableCard } from "../ui/SelectableCard";
 
 export type ModelCardStatus =
   | "downloadable"
@@ -85,28 +72,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
   const displayName = getTranslatedModelName(provider, t);
   const displayDescription = getTranslatedModelDescription(provider, t);
 
-  const baseClasses = compact
-    ? "flex flex-col rounded px-3 py-2 gap-1 text-left transition-all duration-200"
-    : "flex flex-col rounded px-4 py-3 gap-2 text-left transition-all duration-200";
-
-  const getVariantClasses = () => {
-    if (status === "active") {
-      return "border-2 border-accent/50 bg-accent/10";
-    }
-    if (isFeatured) {
-      return "border-2 border-accent/25 bg-accent/5";
-    }
-    return "border-2 border-muted/20";
-  };
-
-  const getInteractiveClasses = () => {
-    if (!isClickable) return "";
-    if (disabled) return "opacity-50 cursor-not-allowed";
-    return "cursor-pointer hover:border-accent/50 hover:bg-accent/5 hover:shadow-lg hover:scale-[1.01] active:scale-[0.99] group";
-  };
-
   const handleClick = () => {
-    if (!isClickable || disabled) return;
     if (status === "downloadable" && onDownload && isLocal) {
       onDownload(provider.id);
     } else {
@@ -120,21 +86,14 @@ const ModelCard: React.FC<ModelCardProps> = ({
   };
 
   return (
-    <div
+    <SelectableCard
+      active={status === "active"}
+      featured={isFeatured}
+      clickable={isClickable}
+      disabled={disabled}
+      compact={compact}
+      className={className}
       onClick={handleClick}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" && isClickable) handleClick();
-      }}
-      role={isClickable ? "button" : undefined}
-      tabIndex={isClickable ? 0 : undefined}
-      className={[
-        baseClasses,
-        getVariantClasses(),
-        getInteractiveClasses(),
-        className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
     >
       {/* Top section: name/description + score bars */}
       <div className="flex justify-between items-center w-full">
@@ -318,7 +277,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
           </p>
         </div>
       )}
-    </div>
+    </SelectableCard>
   );
 };
 

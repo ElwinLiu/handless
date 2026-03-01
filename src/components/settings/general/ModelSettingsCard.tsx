@@ -17,8 +17,7 @@ export const ModelSettingsCard: React.FC = () => {
       : undefined;
   const supportsLanguageSelection =
     engineType === "Whisper" || engineType === "SenseVoice";
-  const supportsTranslation =
-    currentProvider?.supports_translation ?? false;
+  const supportsTranslation = currentProvider?.supports_translation ?? false;
   const hasAnySettings = supportsLanguageSelection || supportsTranslation;
 
   // Don't render anything if no model is selected or no settings available

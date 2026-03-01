@@ -57,11 +57,7 @@ export const ModelsSettings: React.FC = () => {
         </button>
       </div>
 
-      {activeTab === "myModels" ? (
-        <MyModelsTab onNavigateToLibrary={() => setActiveTab("library")} />
-      ) : (
-        <LibraryTab />
-      )}
+      {activeTab === "myModels" ? <MyModelsTab /> : <LibraryTab />}
     </div>
   );
 };

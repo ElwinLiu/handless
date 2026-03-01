@@ -1,5 +1,6 @@
 import type { TFunction } from "i18next";
 import type { SttProviderInfo } from "@/bindings";
+import { LANGUAGES } from "@/lib/constants/languages";
 
 /**
  * Get the translated name for a provider
@@ -42,4 +43,17 @@ export function getTranslatedModelDescription(
   const translationKey = `onboarding.models.${provider.id}.description`;
   const translated = t(translationKey, { defaultValue: "" });
   return translated !== "" ? translated : provider.description;
+}
+
+export function getLanguageDisplayText(
+  supportedLanguages: string[],
+  t: (key: string, options?: Record<string, unknown>) => string,
+): string {
+  if (supportedLanguages.length === 1) {
+    const langCode = supportedLanguages[0];
+    const langName =
+      LANGUAGES.find((l) => l.value === langCode)?.label || langCode;
+    return t("modelSelector.capabilities.languageOnly", { language: langName });
+  }
+  return t("modelSelector.capabilities.multiLanguage");
 }

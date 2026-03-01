@@ -1,23 +1,18 @@
 import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { ModelCardStatus } from "@/components/onboarding";
 import { ModelCard } from "@/components/onboarding";
+import { CloudProviderConfigCard } from "./CloudProviderConfigCard";
 import { useModelStore } from "@/stores/modelStore";
 import { useSettings } from "@/hooks/useSettings";
 import { useModelActions } from "@/hooks/useModelActions";
 import { getProviderStatus } from "@/lib/utils/providerStatus";
 import type { SttProviderInfo } from "@/bindings";
 
-interface MyModelsTabProps {
-  onNavigateToLibrary: () => void;
-}
-
-export const MyModelsTab: React.FC<MyModelsTabProps> = ({
-  onNavigateToLibrary,
-}) => {
+export const MyModelsTab: React.FC = () => {
   const { t } = useTranslation();
   const [switchingModelId, setSwitchingModelId] = useState<string | null>(null);
-  const { settings, setSttProvider } = useSettings();
+  const { settings, setSttProvider, updateSttApiKey, updateSttCloudModel } =
+    useSettings();
   const {
     providers,
     currentModel,
@@ -31,11 +26,6 @@ export const MyModelsTab: React.FC<MyModelsTabProps> = ({
     useModelActions();
 
   const sttProviderId = settings?.stt_provider_id ?? "local";
-
-  const isCloudConfigured = (providerId: string): boolean => {
-    const apiKey = settings?.stt_api_keys?.[providerId];
-    return !!apiKey && apiKey.length > 0;
-  };
 
   const myProviders = useMemo(() => {
     return providers
@@ -76,11 +66,7 @@ export const MyModelsTab: React.FC<MyModelsTabProps> = ({
     if (!provider) return;
 
     if (provider.backend.type === "Cloud") {
-      if (isCloudConfigured(providerId)) {
-        await setSttProvider(providerId);
-      } else {
-        onNavigateToLibrary();
-      }
+      await setSttProvider(providerId);
       return;
     }
 
@@ -104,29 +90,38 @@ export const MyModelsTab: React.FC<MyModelsTabProps> = ({
 
   return (
     <div className="space-y-2">
-      {myProviders.map((provider) => (
-        <ModelCard
-          key={provider.id}
-          provider={provider}
-          compact
-          status={getProviderStatus(provider, statusCtx)}
-          onSelect={handleProviderSelect}
-          onDownload={handleModelDownload}
-          onDelete={
-            provider.backend.type === "Local" ? handleModelDelete : undefined
-          }
-          onCancel={handleModelCancel}
-          downloadProgress={downloadProgress[provider.id]?.percentage}
-          downloadSpeed={downloadStats[provider.id]?.speed}
-          showRecommended={false}
-          configuredModel={
-            provider.backend.type === "Cloud"
-              ? (settings?.stt_cloud_models?.[provider.id] ??
-                provider.backend.default_model)
-              : undefined
-          }
-        />
-      ))}
+      {myProviders.map((provider) =>
+        provider.backend.type === "Cloud" ? (
+          <CloudProviderConfigCard
+            key={provider.id}
+            provider={provider}
+            compact
+            status={getProviderStatus(provider, statusCtx)}
+            onSelect={handleProviderSelect}
+            apiKey={settings?.stt_api_keys?.[provider.id] ?? ""}
+            cloudModel={
+              settings?.stt_cloud_models?.[provider.id] ??
+              provider.backend.default_model
+            }
+            onApiKeyChange={(apiKey) => updateSttApiKey(provider.id, apiKey)}
+            onModelChange={(model) => updateSttCloudModel(provider.id, model)}
+          />
+        ) : (
+          <ModelCard
+            key={provider.id}
+            provider={provider}
+            compact
+            status={getProviderStatus(provider, statusCtx)}
+            onSelect={handleProviderSelect}
+            onDownload={handleModelDownload}
+            onDelete={handleModelDelete}
+            onCancel={handleModelCancel}
+            downloadProgress={downloadProgress[provider.id]?.percentage}
+            downloadSpeed={downloadStats[provider.id]?.speed}
+            showRecommended={false}
+          />
+        ),
+      )}
     </div>
   );
 };

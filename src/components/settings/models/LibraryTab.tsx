@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { ModelCard } from "@/components/onboarding";
 import { CloudProviderConfigCard } from "./CloudProviderConfigCard";
 import { LanguageFilter } from "./LanguageFilter";
-import { SettingsGroup } from "@/components/ui/SettingsGroup";
 import { useModelStore } from "@/stores/modelStore";
 import { useSettings } from "@/hooks/useSettings";
 import { useModelActions } from "@/hooks/useModelActions";
@@ -94,18 +93,24 @@ export const LibraryTab: React.FC = () => {
   return (
     <div className="space-y-4">
       {cloudProviders.length > 0 && (
-        <SettingsGroup title={t("settings.models.cloudProviders.title")}>
+        <div className="space-y-2">
+          <h2 className="text-sm font-medium text-text/60">
+            {t("settings.models.cloudProviders.title")}
+          </h2>
           {cloudProviders.map((provider) => (
             <CloudProviderConfigCard
               key={provider.id}
               provider={provider}
+              compact
+              status={getProviderStatus(provider, statusCtx)}
+              onSelect={setSttProvider}
               apiKey={settings?.stt_api_keys?.[provider.id] ?? ""}
               cloudModel={settings?.stt_cloud_models?.[provider.id] ?? ""}
               onApiKeyChange={(apiKey) => updateSttApiKey(provider.id, apiKey)}
               onModelChange={(model) => updateSttCloudModel(provider.id, model)}
             />
           ))}
-        </SettingsGroup>
+        </div>
       )}
 
       <div className="space-y-2">
