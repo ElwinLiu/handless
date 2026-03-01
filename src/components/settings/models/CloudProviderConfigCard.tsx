@@ -359,8 +359,7 @@ export const CloudProviderConfigCard: React.FC<
           {provider.name}
         </h3>
         <Badge variant="secondary">
-          <Cloud className="w-3 h-3 mr-1" />
-          {t("settings.models.cloudProviders.badge")}
+          <Cloud className="w-3 h-3" />
         </Badge>
         {isVerified && (
           <Badge variant="success">

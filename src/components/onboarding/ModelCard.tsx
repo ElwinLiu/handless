@@ -106,8 +106,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
             </h3>
             {isCloud && (
               <Badge variant="secondary">
-                <Cloud className="w-3 h-3 mr-1" />
-                {t("settings.models.cloudProviders.badge")}
+                <Cloud className="w-3 h-3" />
               </Badge>
             )}
             {showRecommended && provider.is_recommended && (
