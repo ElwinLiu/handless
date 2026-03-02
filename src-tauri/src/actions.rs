@@ -56,9 +56,15 @@ fn strip_invisible_chars(s: &str) -> String {
 }
 
 /// Build a system prompt from the user's prompt template.
-/// Removes `${output}` placeholder since the transcription is sent as the user message.
+/// Removes the `${output}` placeholder and any preceding "Transcript:" label,
+/// since the transcription is sent separately as the user message.
 fn build_system_prompt(prompt_template: &str) -> String {
-    prompt_template.replace("${output}", "").trim().to_string()
+    let without_placeholder = prompt_template.replace("${output}", "");
+    without_placeholder
+        .trim_end()
+        .trim_end_matches("Transcript:")
+        .trim()
+        .to_string()
 }
 
 async fn post_process_transcription(settings: &AppSettings, transcription: &str) -> Option<String> {
@@ -127,7 +133,7 @@ async fn post_process_transcription(settings: &AppSettings, transcription: &str)
         debug!("Using structured outputs for provider '{}'", provider.id);
 
         let system_prompt = build_system_prompt(&prompt);
-        let user_content = transcription.to_string();
+        let user_content = format!("Transcript: {}", transcription);
 
         // Handle Apple Intelligence separately since it uses native Swift APIs
         if provider.id == APPLE_INTELLIGENCE_PROVIDER_ID {
@@ -238,8 +244,13 @@ async fn post_process_transcription(settings: &AppSettings, transcription: &str)
         }
     }
 
-    // Legacy mode: Replace ${output} variable in the prompt with the actual text
-    let processed_prompt = prompt.replace("${output}", transcription);
+    // Legacy mode: Replace ${output} variable in the prompt with the actual text,
+    // or append the transcript at the end if no placeholder is present.
+    let processed_prompt = if prompt.contains("${output}") {
+        prompt.replace("${output}", transcription)
+    } else {
+        format!("{}\n\nTranscript: {}", prompt.trim_end(), transcription)
+    };
     debug!("Processed prompt length: {} chars", processed_prompt.len());
 
     match crate::llm_client::send_chat_completion(&provider, api_key, &model, processed_prompt)
