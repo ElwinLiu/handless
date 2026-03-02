@@ -28,7 +28,7 @@
   grid-template-columns: auto 1fr auto;
   align-items: center;
   padding: 6px;
-  background: rgba(10, 10, 10, 0.78);
+  background: rgba(0, 0, 0, 1);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -92,7 +92,7 @@
 /* Audio bars */
 .bars-container {
   display: flex;
-  align-items: end;
+  align-items: center;
   justify-content: center;
   gap: 3px;
   height: 24px;

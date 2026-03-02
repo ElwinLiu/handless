@@ -21,7 +21,7 @@ type OverlayState = "recording" | "transcribing" | "processing";
 
 const BAR_COUNT = 9;
 const LERP_SPEED = 0.12;
-const STREAMING_WIDTH = 420;
+const STREAMING_WIDTH = 300;
 const STREAMING_LINE_HEIGHT = 18;
 const MAX_LINES = 5;
 const OVERLAY_PADDING = 12;
@@ -56,7 +56,7 @@ const RecordingOverlay: React.FC = () => {
   const overlayWidth = (() => {
     if (!isVisible) return 36;
     if (hasStreamingText) return STREAMING_WIDTH;
-    return 172;
+    return 150;
   })();
 
   const overlayHeight = (() => {
