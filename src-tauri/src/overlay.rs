@@ -1,7 +1,7 @@
 use crate::input;
 use crate::settings;
 use crate::settings::OverlayPosition;
-use tauri::{AppHandle, Emitter, Manager, PhysicalPosition, PhysicalSize};
+use tauri::{AppHandle, Emitter, Manager};
 
 #[cfg(not(target_os = "macos"))]
 use log::debug;
@@ -133,13 +133,35 @@ fn force_overlay_topmost(overlay_window: &tauri::webview::WebviewWindow) {
     });
 }
 
+/// Monitor bounds in logical (point) coordinates.
+struct LogicalBounds {
+    x: f64,
+    y: f64,
+    width: f64,
+    height: f64,
+}
+
+/// Convert a monitor's physical-pixel bounds to logical (point) coordinates.
+/// On macOS, enigo returns logical coordinates while Tauri monitor bounds are
+/// physical pixels, so this conversion is needed for correct comparisons.
+fn logical_bounds(monitor: &tauri::Monitor) -> LogicalBounds {
+    let scale = monitor.scale_factor();
+    LogicalBounds {
+        x: monitor.position().x as f64 / scale,
+        y: monitor.position().y as f64 / scale,
+        width: monitor.size().width as f64 / scale,
+        height: monitor.size().height as f64 / scale,
+    }
+}
+
 fn get_monitor_with_cursor(app_handle: &AppHandle) -> Option<tauri::Monitor> {
     if let Some(mouse_location) = input::get_cursor_position(app_handle) {
         if let Ok(monitors) = app_handle.available_monitors() {
             for monitor in monitors {
-                let is_within =
-                    is_mouse_within_monitor(mouse_location, monitor.position(), monitor.size());
-                if is_within {
+                let b = logical_bounds(&monitor);
+                let (mx, my) = (mouse_location.0 as f64, mouse_location.1 as f64);
+
+                if mx >= b.x && mx < b.x + b.width && my >= b.y && my < b.y + b.height {
                     return Some(monitor);
                 }
             }
@@ -149,43 +171,22 @@ fn get_monitor_with_cursor(app_handle: &AppHandle) -> Option<tauri::Monitor> {
     app_handle.primary_monitor().ok().flatten()
 }
 
-fn is_mouse_within_monitor(
-    mouse_pos: (i32, i32),
-    monitor_pos: &PhysicalPosition<i32>,
-    monitor_size: &PhysicalSize<u32>,
-) -> bool {
-    let (mouse_x, mouse_y) = mouse_pos;
-    let PhysicalPosition {
-        x: monitor_x,
-        y: monitor_y,
-    } = *monitor_pos;
-    let PhysicalSize {
-        width: monitor_width,
-        height: monitor_height,
-    } = *monitor_size;
-
-    mouse_x >= monitor_x
-        && mouse_x < (monitor_x + monitor_width as i32)
-        && mouse_y >= monitor_y
-        && mouse_y < (monitor_y + monitor_height as i32)
-}
-
 fn calculate_overlay_position(app_handle: &AppHandle) -> Option<(f64, f64)> {
     if let Some(monitor) = get_monitor_with_cursor(app_handle) {
-        let work_area = monitor.work_area();
-        let scale = monitor.scale_factor();
-        let work_area_width = work_area.size.width as f64 / scale;
-        let work_area_height = work_area.size.height as f64 / scale;
-        let work_area_x = work_area.position.x as f64 / scale;
-        let work_area_y = work_area.position.y as f64 / scale;
+        // Use monitor bounds directly instead of work_area() to avoid a bug in
+        // tauri-runtime-wry's macOS work_area() implementation where the y-position
+        // is incorrect for non-primary monitors (it uses global Cocoa coordinates
+        // instead of relative offsets). The OVERLAY_TOP_OFFSET and OVERLAY_BOTTOM_OFFSET
+        // constants already account for menubar/dock insets.
+        let b = logical_bounds(&monitor);
 
         let settings = settings::get_settings(app_handle);
 
-        let x = work_area_x + (work_area_width - OVERLAY_WIDTH) / 2.0;
+        let x = b.x + (b.width - OVERLAY_WIDTH) / 2.0;
         let y = match settings.overlay_position {
-            OverlayPosition::Top => work_area_y + OVERLAY_TOP_OFFSET,
+            OverlayPosition::Top => b.y + OVERLAY_TOP_OFFSET,
             OverlayPosition::Bottom | OverlayPosition::None => {
-                work_area_y + work_area_height - OVERLAY_HEIGHT - OVERLAY_BOTTOM_OFFSET
+                b.y + b.height - OVERLAY_HEIGHT - OVERLAY_BOTTOM_OFFSET
             }
         };
 
