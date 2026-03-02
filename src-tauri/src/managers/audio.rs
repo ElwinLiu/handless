@@ -332,7 +332,11 @@ impl AudioRecordingManager {
 
     /* ---------- recording --------------------------------------------------- */
 
-    pub fn try_start_recording(&self, binding_id: &str) -> bool {
+    pub fn try_start_recording(
+        &self,
+        binding_id: &str,
+        stream_tap: Option<tokio::sync::mpsc::Sender<Vec<f32>>>,
+    ) -> bool {
         let mut state = self.state.lock().unwrap();
 
         if let RecordingState::Idle = *state {
@@ -345,7 +349,11 @@ impl AudioRecordingManager {
             }
 
             if let Some(rec) = self.recorder.lock().unwrap().as_ref() {
-                if rec.start().is_ok() {
+                let ok = match stream_tap {
+                    Some(tap_tx) => rec.start_with_stream_tap(tap_tx).is_ok(),
+                    None => rec.start().is_ok(),
+                };
+                if ok {
                     *self.is_recording.lock().unwrap() = true;
                     *state = RecordingState::Recording {
                         binding_id: binding_id.to_string(),

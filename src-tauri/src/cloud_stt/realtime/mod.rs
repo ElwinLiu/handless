@@ -1,5 +1,8 @@
 mod openai;
+mod session;
 mod soniox;
+
+pub use session::{RealtimeStreamingSession, SessionConfig, StreamingHandles};
 
 pub async fn test_api_key(
     provider_id: &str,

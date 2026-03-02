@@ -1,6 +1,7 @@
 #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
 use crate::apple_intelligence;
 use crate::audio_feedback::{play_feedback_sound, play_feedback_sound_blocking, SoundType};
+use crate::cloud_stt::realtime::{RealtimeStreamingSession, SessionConfig};
 use crate::managers::audio::AudioRecordingManager;
 use crate::managers::history::HistoryManager;
 use crate::managers::transcription::TranscriptionManager;
@@ -12,13 +13,17 @@ use crate::utils::{
 };
 use crate::TranscriptionCoordinator;
 use ferrous_opencc::{config::BuiltinConfig, OpenCC};
-use log::{debug, error, warn};
+use log::{debug, error, info, warn};
 use once_cell::sync::Lazy;
 use std::collections::HashMap;
 use std::sync::Arc;
 use std::time::Instant;
 use tauri::AppHandle;
 use tauri::Manager;
+use tokio::sync::Mutex as TokioMutex;
+
+/// Managed state holding the active streaming session (if any).
+pub type ActiveStreamingState = Arc<TokioMutex<Option<RealtimeStreamingSession>>>;
 
 /// Drop guard that notifies the [`TranscriptionCoordinator`] when the
 /// transcription pipeline finishes — whether it completes normally or panics.
@@ -328,37 +333,99 @@ impl ShortcutAction for TranscribeAction {
         let is_always_on = settings.always_on_microphone;
         debug!("Microphone mode - always_on: {}", is_always_on);
 
+        // Check if cloud realtime streaming should be used
+        let use_streaming = settings.stt_provider_id != "local"
+            && settings
+                .stt_realtime_enabled
+                .get(&settings.stt_provider_id)
+                .copied()
+                .unwrap_or(false);
+
+        // If streaming, create the audio channel and pass it to the recorder
+        let stream_tap_tx = if use_streaming {
+            let (tx, rx) = tokio::sync::mpsc::channel::<Vec<f32>>(128);
+
+            // Create a channel for streaming transcription deltas → overlay
+            let (delta_tx, mut delta_rx) = tokio::sync::mpsc::unbounded_channel::<String>();
+            let app_for_delta = app.clone();
+            tauri::async_runtime::spawn(async move {
+                while let Some(text) = delta_rx.recv().await {
+                    crate::overlay::emit_streaming_text(&app_for_delta, &text);
+                }
+            });
+
+            // Spawn the WS connection async — frames buffer in the channel until ready
+            let streaming_state = app.state::<ActiveStreamingState>();
+            let streaming_state = Arc::clone(&streaming_state);
+            let session_config = SessionConfig {
+                provider_id: settings.stt_provider_id.clone(),
+                api_key: settings
+                    .stt_api_keys
+                    .get(&settings.stt_provider_id)
+                    .cloned()
+                    .unwrap_or_default(),
+                base_url: settings
+                    .stt_provider(&settings.stt_provider_id)
+                    .map(|p| p.base_url.clone())
+                    .unwrap_or_default(),
+                model: settings
+                    .stt_cloud_models
+                    .get(&settings.stt_provider_id)
+                    .cloned()
+                    .unwrap_or_default(),
+                options: settings
+                    .stt_cloud_options
+                    .get(&settings.stt_provider_id)
+                    .and_then(|s| serde_json::from_str(s).ok()),
+                delta_tx: Some(delta_tx),
+            };
+
+            tauri::async_runtime::spawn(async move {
+                match RealtimeStreamingSession::start(session_config, rx).await {
+                    Ok(session) => {
+                        info!("Realtime streaming session connected");
+                        *streaming_state.lock().await = Some(session);
+                    }
+                    Err(e) => {
+                        error!(
+                            "Failed to start realtime streaming session: {e}. \
+                             Will fall back to batch transcription."
+                        );
+                    }
+                }
+            });
+
+            Some(tx)
+        } else {
+            None
+        };
+
         let mut recording_started = false;
         if is_always_on {
             // Always-on mode: Play audio feedback immediately, then apply mute after sound finishes
             debug!("Always-on mode: Playing audio feedback immediately");
             let rm_clone = Arc::clone(&rm);
             let app_clone = app.clone();
-            // The blocking helper exits immediately if audio feedback is disabled,
-            // so we can always reuse this thread to ensure mute happens right after playback.
             std::thread::spawn(move || {
                 play_feedback_sound_blocking(&app_clone, SoundType::Start);
                 rm_clone.apply_mute();
             });
 
-            recording_started = rm.try_start_recording(&binding_id);
+            recording_started = rm.try_start_recording(&binding_id, stream_tap_tx);
             debug!("Recording started: {}", recording_started);
         } else {
             // On-demand mode: Start recording first, then play audio feedback, then apply mute
-            // This allows the microphone to be activated before playing the sound
             debug!("On-demand mode: Starting recording first, then audio feedback");
             let recording_start_time = Instant::now();
-            if rm.try_start_recording(&binding_id) {
+            let started = rm.try_start_recording(&binding_id, stream_tap_tx);
+            if started {
                 recording_started = true;
                 debug!("Recording started in {:?}", recording_start_time.elapsed());
-                // Small delay to ensure microphone stream is active
                 let app_clone = app.clone();
                 let rm_clone = Arc::clone(&rm);
                 std::thread::spawn(move || {
                     std::thread::sleep(std::time::Duration::from_millis(100));
                     debug!("Handling delayed audio feedback/mute sequence");
-                    // Helper handles disabled audio feedback by returning early, so we reuse it
-                    // to keep mute sequencing consistent in every mode.
                     play_feedback_sound_blocking(&app_clone, SoundType::Start);
                     rm_clone.apply_mute();
                 });
@@ -368,7 +435,6 @@ impl ShortcutAction for TranscribeAction {
         }
 
         if recording_started {
-            // Dynamically register the cancel shortcut in a separate task to avoid deadlock
             shortcut::register_cancel_shortcut(app);
         }
 
@@ -389,6 +455,7 @@ impl ShortcutAction for TranscribeAction {
         let rm = Arc::clone(&app.state::<Arc<AudioRecordingManager>>());
         let tm = Arc::clone(&app.state::<Arc<TranscriptionManager>>());
         let hm = Arc::clone(&app.state::<Arc<HistoryManager>>());
+        let streaming_state = Arc::clone(&app.state::<ActiveStreamingState>());
 
         change_tray_icon(app, TrayIconState::Transcribing);
         show_transcribing_overlay(app);
@@ -399,18 +466,20 @@ impl ShortcutAction for TranscribeAction {
         // Play audio feedback for recording stop
         play_feedback_sound(app, SoundType::Stop);
 
-        let binding_id = binding_id.to_string(); // Clone binding_id for the async task
+        let binding_id = binding_id.to_string();
         let post_process = self.post_process;
 
         tauri::async_runtime::spawn(async move {
             let _guard = FinishGuard(ah.clone());
-            let binding_id = binding_id.clone(); // Clone for the inner async task
+            let binding_id = binding_id.clone();
             debug!(
                 "Starting async transcription task for binding: {}",
                 binding_id
             );
 
             let stop_recording_time = Instant::now();
+            // stop_recording drops the stream tap (via the recorder's Cmd::Stop),
+            // which signals end-of-audio to the streaming sender task.
             if let Some(samples) = rm.stop_recording(&binding_id) {
                 debug!(
                     "Recording stopped and samples retrieved in {:?}, sample count: {}",
@@ -418,9 +487,47 @@ impl ShortcutAction for TranscribeAction {
                     samples.len()
                 );
 
+                // Check if we have an active streaming session
+                let session = streaming_state.lock().await.take();
+
                 let transcription_time = Instant::now();
-                let samples_clone = samples.clone(); // Clone for history saving
-                match tm.transcribe(samples).await {
+
+                // Returns (result, samples_for_history). In the streaming
+                // success path `samples` is not consumed so we avoid a clone.
+                let (transcription_result, samples_for_history) = if let Some(session) = session {
+                    debug!("Finishing realtime streaming session...");
+                    match session.finish().await {
+                        Ok(transcript) => {
+                            // Apply custom words + filtering (normally done inside tm.transcribe)
+                            let settings = get_settings(&ah);
+                            let corrected = if !settings.custom_words.is_empty() {
+                                crate::audio_toolkit::apply_custom_words(
+                                    &transcript,
+                                    &settings.custom_words,
+                                    settings.word_correction_threshold,
+                                )
+                            } else {
+                                transcript
+                            };
+                            let filtered =
+                                crate::audio_toolkit::filter_transcription_output(&corrected);
+                            (Ok(filtered), samples)
+                        }
+                        Err(e) => {
+                            warn!(
+                                "Streaming session failed: {e}. Falling back to batch transcription."
+                            );
+                            let samples_for_history = samples.clone();
+                            (tm.transcribe(samples).await, samples_for_history)
+                        }
+                    }
+                } else {
+                    // Batch path (no streaming session or streaming failed to start)
+                    let samples_for_history = samples.clone();
+                    (tm.transcribe(samples).await, samples_for_history)
+                };
+
+                match transcription_result {
                     Ok(transcription) => {
                         debug!(
                             "Transcription completed in {:?}: '{}'",
@@ -441,7 +548,6 @@ impl ShortcutAction for TranscribeAction {
                             }
 
                             // Then apply LLM post-processing if this is the post-process hotkey
-                            // Uses final_text which may already have Chinese conversion applied
                             if post_process {
                                 show_processing_overlay(&ah);
                             }
@@ -454,7 +560,6 @@ impl ShortcutAction for TranscribeAction {
                                 post_processed_text = Some(processed_text.clone());
                                 final_text = processed_text;
 
-                                // Get the prompt that was used
                                 if let Some(prompt_id) = &settings.post_process_selected_prompt_id {
                                     if let Some(prompt) = settings
                                         .post_process_prompts
@@ -465,17 +570,16 @@ impl ShortcutAction for TranscribeAction {
                                     }
                                 }
                             } else if final_text != transcription {
-                                // Chinese conversion was applied but no LLM post-processing
                                 post_processed_text = Some(final_text.clone());
                             }
 
-                            // Save to history with post-processed text and prompt
+                            // Save to history
                             let hm_clone = Arc::clone(&hm);
                             let transcription_for_history = transcription.clone();
                             tauri::async_runtime::spawn(async move {
                                 if let Err(e) = hm_clone
                                     .save_transcription(
-                                        samples_clone,
+                                        samples_for_history,
                                         transcription_for_history,
                                         post_processed_text,
                                         post_process_prompt,
@@ -486,7 +590,7 @@ impl ShortcutAction for TranscribeAction {
                                 }
                             });
 
-                            // Paste the final text (either processed or original)
+                            // Paste the final text
                             let ah_clone = ah.clone();
                             let paste_time = Instant::now();
                             ah.run_on_main_thread(move || {
@@ -497,7 +601,6 @@ impl ShortcutAction for TranscribeAction {
                                     ),
                                     Err(e) => error!("Failed to paste transcription: {}", e),
                                 }
-                                // Hide the overlay after transcription is complete
                                 utils::hide_recording_overlay(&ah_clone);
                                 change_tray_icon(&ah_clone, TrayIconState::Idle);
                             })

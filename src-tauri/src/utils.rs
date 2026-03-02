@@ -1,3 +1,4 @@
+use crate::actions::ActiveStreamingState;
 use crate::managers::audio::AudioRecordingManager;
 use crate::managers::transcription::TranscriptionManager;
 use crate::shortcut;
@@ -19,6 +20,16 @@ pub fn cancel_current_operation(app: &AppHandle) {
 
     // Unregister the cancel shortcut asynchronously
     shortcut::unregister_cancel_shortcut(app);
+
+    // Drop any active streaming session so the WS tasks shut down
+    if let Some(state) = app.try_state::<ActiveStreamingState>() {
+        // Use try_lock to avoid blocking the sync cancel path
+        if let Ok(mut guard) = state.try_lock() {
+            if guard.take().is_some() {
+                info!("Dropped active streaming session during cancellation");
+            }
+        }
+    }
 
     // Cancel any ongoing recording
     let audio_manager = app.state::<Arc<AudioRecordingManager>>();

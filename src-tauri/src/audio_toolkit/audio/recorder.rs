@@ -17,7 +17,7 @@ use crate::audio_toolkit::{
 };
 
 enum Cmd {
-    Start,
+    Start(Option<tokio::sync::mpsc::Sender<Vec<f32>>>),
     Stop(mpsc::Sender<Vec<f32>>),
     Shutdown,
 }
@@ -130,7 +130,17 @@ impl AudioRecorder {
 
     pub fn start(&self) -> Result<(), Box<dyn std::error::Error>> {
         if let Some(tx) = &self.cmd_tx {
-            tx.send(Cmd::Start)?;
+            tx.send(Cmd::Start(None))?;
+        }
+        Ok(())
+    }
+
+    pub fn start_with_stream_tap(
+        &self,
+        tap_tx: tokio::sync::mpsc::Sender<Vec<f32>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        if let Some(tx) = &self.cmd_tx {
+            tx.send(Cmd::Start(Some(tap_tx)))?;
         }
         Ok(())
     }
@@ -254,6 +264,7 @@ fn run_consumer(
 
     let mut processed_samples = Vec::<f32>::new();
     let mut recording = false;
+    let mut stream_tap: Option<tokio::sync::mpsc::Sender<Vec<f32>>> = None;
 
     // ---------- spectrum visualisation setup ---------------------------- //
     const BUCKETS: usize = 16;
@@ -271,6 +282,7 @@ fn run_consumer(
         recording: bool,
         vad: &Option<Arc<Mutex<Box<dyn vad::VoiceActivityDetector>>>>,
         out_buf: &mut Vec<f32>,
+        stream_tap: &Option<tokio::sync::mpsc::Sender<Vec<f32>>>,
     ) {
         if !recording {
             return;
@@ -279,11 +291,19 @@ fn run_consumer(
         if let Some(vad_arc) = vad {
             let mut det = vad_arc.lock().unwrap();
             match det.push_frame(samples).unwrap_or(VadFrame::Speech(samples)) {
-                VadFrame::Speech(buf) => out_buf.extend_from_slice(buf),
+                VadFrame::Speech(buf) => {
+                    out_buf.extend_from_slice(buf);
+                    if let Some(tap) = stream_tap {
+                        let _ = tap.try_send(buf.to_vec());
+                    }
+                }
                 VadFrame::Noise => {}
             }
         } else {
             out_buf.extend_from_slice(samples);
+            if let Some(tap) = stream_tap {
+                let _ = tap.try_send(samples.to_vec());
+            }
         }
     }
 
@@ -302,16 +322,17 @@ fn run_consumer(
 
         // ---------- existing pipeline ------------------------------------ //
         frame_resampler.push(&raw, &mut |frame: &[f32]| {
-            handle_frame(frame, recording, &vad, &mut processed_samples)
+            handle_frame(frame, recording, &vad, &mut processed_samples, &stream_tap)
         });
 
         // non-blocking check for a command
         while let Ok(cmd) = cmd_rx.try_recv() {
             match cmd {
-                Cmd::Start => {
+                Cmd::Start(tap_tx) => {
                     processed_samples.clear();
+                    stream_tap = tap_tx;
                     recording = true;
-                    visualizer.reset(); // Reset visualization buffer
+                    visualizer.reset();
                     if let Some(v) = &vad {
                         v.lock().unwrap().reset();
                     }
@@ -322,13 +343,16 @@ fn run_consumer(
                     // Drain any audio chunks that were captured but not yet consumed
                     while let Ok(remaining) = sample_rx.try_recv() {
                         frame_resampler.push(&remaining, &mut |frame: &[f32]| {
-                            handle_frame(frame, true, &vad, &mut processed_samples)
+                            handle_frame(frame, true, &vad, &mut processed_samples, &stream_tap)
                         });
                     }
 
                     frame_resampler.finish(&mut |frame: &[f32]| {
-                        handle_frame(frame, true, &vad, &mut processed_samples)
+                        handle_frame(frame, true, &vad, &mut processed_samples, &stream_tap)
                     });
+
+                    // Drop the stream tap so the receiver side knows audio is done
+                    stream_tap = None;
 
                     let _ = reply_tx.send(std::mem::take(&mut processed_samples));
                 }
