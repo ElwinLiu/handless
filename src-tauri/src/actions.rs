@@ -521,11 +521,17 @@ impl ShortcutAction for TranscribeAction {
                             (Ok(filtered), samples)
                         }
                         Err(e) => {
-                            warn!(
-                                "Streaming session failed: {e}. Falling back to batch transcription."
-                            );
-                            let samples_for_history = samples.clone();
-                            (tm.transcribe(samples).await, samples_for_history)
+                            let err_msg = e.to_string();
+                            if err_msg.contains("No audio received") {
+                                debug!("Streaming session returned no audio – treating as empty transcription.");
+                                (Ok(String::new()), samples)
+                            } else {
+                                warn!(
+                                    "Streaming session failed: {e}. Falling back to batch transcription."
+                                );
+                                let samples_for_history = samples.clone();
+                                (tm.transcribe(samples).await, samples_for_history)
+                            }
                         }
                     }
                 } else {
