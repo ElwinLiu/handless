@@ -10,6 +10,7 @@
   },
   "sidebar": {
     "general": "Genel",
+    "shortcuts": "Kısayollar",
     "models": "Modeller",
     "advanced": "Gelişmiş",
     "postProcessing": "Son İşlem",

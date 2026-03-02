@@ -10,6 +10,7 @@
   },
   "sidebar": {
     "general": "Obecné",
+    "shortcuts": "Zkratky",
     "models": "Modely",
     "advanced": "Pokročilé",
     "postProcessing": "Následné zpracování",

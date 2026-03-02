@@ -6,6 +6,7 @@ import {
   FlaskConical,
   History,
   Info,
+  Keyboard,
   Sparkles,
   Cpu,
   Home,
@@ -13,6 +14,7 @@ import {
 import { useSettings } from "../hooks/useSettings";
 import {
   GeneralSettings,
+  ShortcutsSettings,
   AdvancedSettings,
   HistorySettings,
   DebugSettings,
@@ -45,16 +47,16 @@ export const SECTIONS_CONFIG = {
     component: GeneralSettings,
     enabled: () => true,
   },
+  shortcuts: {
+    labelKey: "sidebar.shortcuts",
+    icon: Keyboard,
+    component: ShortcutsSettings,
+    enabled: () => true,
+  },
   models: {
     labelKey: "sidebar.models",
     icon: Cpu,
     component: ModelsSettings,
-    enabled: () => true,
-  },
-  advanced: {
-    labelKey: "sidebar.advanced",
-    icon: Cog,
-    component: AdvancedSettings,
     enabled: () => true,
   },
   postprocessing: {
@@ -74,6 +76,12 @@ export const SECTIONS_CONFIG = {
     icon: FlaskConical,
     component: DebugSettings,
     enabled: (settings) => settings?.debug_mode ?? false,
+  },
+  advanced: {
+    labelKey: "sidebar.advanced",
+    icon: Cog,
+    component: AdvancedSettings,
+    enabled: () => true,
   },
   about: {
     labelKey: "sidebar.about",

@@ -10,6 +10,7 @@
   },
   "sidebar": {
     "general": "Ogólne",
+    "shortcuts": "Skróty",
     "models": "Modele",
     "advanced": "Zaawansowane",
     "postProcessing": "Postproces",

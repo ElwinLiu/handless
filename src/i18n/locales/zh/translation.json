@@ -10,6 +10,7 @@
   },
   "sidebar": {
     "general": "通用",
+    "shortcuts": "快捷键",
     "models": "模型",
     "advanced": "高级",
     "postProcessing": "后处理",

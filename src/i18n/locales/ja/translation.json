@@ -10,6 +10,7 @@
   },
   "sidebar": {
     "general": "一般",
+    "shortcuts": "ショートカット",
     "models": "モデル",
     "advanced": "詳細設定",
     "postProcessing": "後処理",

@@ -10,6 +10,7 @@
   },
   "sidebar": {
     "general": "Allgemein",
+    "shortcuts": "Tastenkürzel",
     "models": "Modelle",
     "advanced": "Erweitert",
     "postProcessing": "Nachbearbeitung",

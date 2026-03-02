@@ -10,6 +10,7 @@
   },
   "sidebar": {
     "general": "Загальні",
+    "shortcuts": "Гарячі клавіші",
     "models": "Моделі",
     "advanced": "Розширені",
     "postProcessing": "Постобробка",

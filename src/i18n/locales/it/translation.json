@@ -10,6 +10,7 @@
   },
   "sidebar": {
     "general": "Generale",
+    "shortcuts": "Scorciatoie",
     "models": "Modelli",
     "advanced": "Avanzate",
     "postProcessing": "Post-Elaborazione",

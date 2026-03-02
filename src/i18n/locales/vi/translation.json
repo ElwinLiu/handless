@@ -10,6 +10,7 @@
   },
   "sidebar": {
     "general": "Chung",
+    "shortcuts": "Phím tắt",
     "models": "Mô hình",
     "advanced": "Nâng cao",
     "postProcessing": "Xử lý sau",

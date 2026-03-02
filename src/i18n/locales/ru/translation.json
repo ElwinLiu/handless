@@ -10,6 +10,7 @@
   },
   "sidebar": {
     "general": "Общие",
+    "shortcuts": "Горячие клавиши",
     "models": "Модели",
     "advanced": "Продвинутые",
     "postProcessing": "Постобработка",

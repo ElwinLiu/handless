@@ -10,6 +10,7 @@
   },
   "sidebar": {
     "general": "일반",
+    "shortcuts": "단축키",
     "models": "모델",
     "advanced": "고급",
     "postProcessing": "후처리",

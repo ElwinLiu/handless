@@ -10,6 +10,7 @@
   },
   "sidebar": {
     "general": "Geral",
+    "shortcuts": "Atalhos",
     "models": "Modelos",
     "advanced": "Avançado",
     "postProcessing": "Pós-Processamento",
