@@ -2,12 +2,20 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { AudioPlayer } from "../../ui/AudioPlayer";
 import { Button } from "../../ui/Button";
-import { Copy, Star, Check, Trash2, FolderOpen } from "lucide-react";
+import {
+  Copy,
+  Star,
+  Check,
+  Trash2,
+  FolderOpen,
+  Mic,
+  Sparkles,
+} from "lucide-react";
 import { convertFileSrc } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { readFile } from "@tauri-apps/plugin-fs";
 import { commands, type HistoryEntry } from "@/bindings";
-import { formatDateTime } from "@/utils/dateFormat";
+import { formatRelativeTime, formatDateTime } from "@/utils/dateFormat";
 import { useOsType } from "@/hooks/useOsType";
 
 interface OpenRecordingsButtonProps {
@@ -53,14 +61,11 @@ export const HistorySettings: React.FC = () => {
   useEffect(() => {
     loadHistoryEntries();
 
-    // Listen for history update events
     const setupListener = async () => {
       const unlisten = await listen("history-updated", () => {
         console.log("History updated, reloading entries...");
         loadHistoryEntries();
       });
-
-      // Return cleanup function
       return unlisten;
     };
 
@@ -78,7 +83,6 @@ export const HistorySettings: React.FC = () => {
   const toggleSaved = async (id: number) => {
     try {
       await commands.toggleHistoryEntrySaved(id);
-      // No need to reload here - the event listener will handle it
     } catch (error) {
       console.error("Failed to toggle saved status:", error);
     }
@@ -100,10 +104,8 @@ export const HistorySettings: React.FC = () => {
           if (osType === "linux") {
             const fileData = await readFile(result.data);
             const blob = new Blob([fileData], { type: "audio/wav" });
-
             return URL.createObjectURL(blob);
           }
-
           return convertFileSrc(result.data, "asset");
         }
         return null;
@@ -148,8 +150,11 @@ export const HistorySettings: React.FC = () => {
             />
           </div>
           <div className="bg-background-translucent backdrop-blur-sm border border-muted/20 rounded overflow-visible">
-            <div className="px-3 py-3 text-center text-text/60">
-              {t("settings.history.loading")}
+            <div className="px-3 py-8 flex flex-col items-center gap-3">
+              <div className="w-5 h-5 border-2 border-muted/40 border-t-accent rounded-full animate-spin" />
+              <p className="text-sm text-muted">
+                {t("settings.history.loading")}
+              </p>
             </div>
           </div>
         </div>
@@ -173,8 +178,13 @@ export const HistorySettings: React.FC = () => {
             />
           </div>
           <div className="bg-background-translucent backdrop-blur-sm border border-muted/20 rounded overflow-visible">
-            <div className="px-3 py-3 text-center text-text/60">
-              {t("settings.history.empty")}
+            <div className="px-3 py-10 flex flex-col items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-muted/10 flex items-center justify-center">
+                <Mic className="w-5 h-5 text-muted/60" />
+              </div>
+              <p className="text-sm text-muted text-center">
+                {t("settings.history.empty")}
+              </p>
             </div>
           </div>
         </div>
@@ -186,29 +196,30 @@ export const HistorySettings: React.FC = () => {
     <div className="max-w-3xl w-full mx-auto space-y-4">
       <div className="space-y-1.5">
         <div className="px-3 flex items-center justify-between">
-          <div>
+          <div className="flex items-center gap-2">
             <h2 className="text-xs font-medium text-muted uppercase tracking-wide">
               {t("settings.history.title")}
             </h2>
+            <span className="text-[10px] text-muted/60 tabular-nums">
+              {historyEntries.length}
+            </span>
           </div>
           <OpenRecordingsButton
             onClick={openRecordingsFolder}
             label={t("settings.history.openFolder")}
           />
         </div>
-        <div className="bg-background border border-muted/20 rounded overflow-visible">
-          <div className="divide-y divide-muted/20">
-            {historyEntries.map((entry) => (
-              <HistoryEntryComponent
-                key={entry.id}
-                entry={entry}
-                onToggleSaved={() => toggleSaved(entry.id)}
-                onCopyText={() => copyToClipboard(entry.transcription_text)}
-                getAudioUrl={getAudioUrl}
-                deleteAudio={deleteAudioEntry}
-              />
-            ))}
-          </div>
+        <div className="flex flex-col gap-2">
+          {historyEntries.map((entry) => (
+            <HistoryEntryComponent
+              key={entry.id}
+              entry={entry}
+              onToggleSaved={() => toggleSaved(entry.id)}
+              onCopyText={(text) => copyToClipboard(text)}
+              getAudioUrl={getAudioUrl}
+              deleteAudio={deleteAudioEntry}
+            />
+          ))}
         </div>
       </div>
     </div>
@@ -218,7 +229,7 @@ export const HistorySettings: React.FC = () => {
 interface HistoryEntryProps {
   entry: HistoryEntry;
   onToggleSaved: () => void;
-  onCopyText: () => void;
+  onCopyText: (text: string) => void;
   getAudioUrl: (fileName: string) => Promise<string | null>;
   deleteAudio: (id: number) => Promise<void>;
 }
@@ -232,14 +243,18 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
 }) => {
   const { t, i18n } = useTranslation();
   const [showCopied, setShowCopied] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   const handleLoadAudio = useCallback(
     () => getAudioUrl(entry.file_name),
     [getAudioUrl, entry.file_name],
   );
 
+  const displayText = entry.post_processed_text || entry.transcription_text;
+  const hasPostProcessed = !!entry.post_processed_text;
+
   const handleCopyText = () => {
-    onCopyText();
+    onCopyText(displayText);
     setShowCopied(true);
     setTimeout(() => setShowCopied(false), 2000);
   };
@@ -253,27 +268,34 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
     }
   };
 
-  const formattedDate = formatDateTime(String(entry.timestamp), i18n.language);
+  const relativeTime = formatRelativeTime(
+    String(entry.timestamp),
+    i18n.language,
+  );
+  const fullDate = formatDateTime(String(entry.timestamp), i18n.language);
 
   return (
-    <div className="px-3 py-1.5 pb-4 flex flex-col gap-2">
+    <div className="group bg-background-translucent border border-muted/20 rounded hover:border-muted/30 transition-colors px-3 py-2 flex flex-col gap-1.5">
+      {/* Header: timestamp + actions */}
       <div className="flex justify-between items-center">
-        <p className="text-sm font-medium">{formattedDate}</p>
-        <div className="flex items-center gap-1">
+        <span className="text-[11px] text-muted" title={fullDate}>
+          {relativeTime}
+        </span>
+        <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
             onClick={handleCopyText}
-            className="text-text/50 hover:text-accent  hover:border-accent transition-colors cursor-pointer"
+            className="p-1 rounded text-text/50 hover:text-accent transition-colors cursor-pointer"
             title={t("settings.history.copyToClipboard")}
           >
             {showCopied ? (
-              <Check width={16} height={16} />
+              <Check width={12} height={12} />
             ) : (
-              <Copy width={16} height={16} />
+              <Copy width={12} height={12} />
             )}
           </button>
           <button
             onClick={onToggleSaved}
-            className={`p-2 rounded transition-colors cursor-pointer ${
+            className={`p-1 rounded transition-colors cursor-pointer ${
               entry.saved
                 ? "text-accent hover:text-accent/80"
                 : "text-text/50 hover:text-accent"
@@ -285,23 +307,41 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
             }
           >
             <Star
-              width={16}
-              height={16}
+              width={12}
+              height={12}
               fill={entry.saved ? "currentColor" : "none"}
             />
           </button>
           <button
             onClick={handleDeleteEntry}
-            className="text-text/50 hover:text-accent transition-colors cursor-pointer"
+            className="p-1 rounded text-text/50 hover:text-red-400 transition-colors cursor-pointer"
             title={t("settings.history.delete")}
           >
-            <Trash2 width={16} height={16} />
+            <Trash2 width={12} height={12} />
           </button>
         </div>
       </div>
-      <p className="italic text-text/90 text-sm pb-2 select-text cursor-text">
-        {entry.transcription_text}
+
+      {/* Text content */}
+      <p className="text-[13px] leading-snug text-text/90 select-text cursor-text">
+        {displayText}
       </p>
+      {hasPostProcessed && (
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="flex items-center gap-1 text-[11px] text-muted/60 hover:text-muted transition-colors cursor-pointer"
+        >
+          <Sparkles width={10} height={10} />
+          <span>{expanded ? "Hide original" : "Show original"}</span>
+        </button>
+      )}
+      {hasPostProcessed && expanded && (
+        <p className="text-[12px] leading-snug text-muted/70 select-text cursor-text border-l-2 border-muted/20 pl-2">
+          {entry.transcription_text}
+        </p>
+      )}
+
+      {/* Audio player */}
       <AudioPlayer onLoadRequest={handleLoadAudio} className="w-full" />
     </div>
   );
