@@ -1,0 +1,121 @@
+name: Update Homebrew Tap
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  update-tap:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract version
+        id: version
+        run: |
+          VERSION="${{ github.event.release.tag_name }}"
+          VERSION="${VERSION#v}"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Wait for DMG assets
+        id: assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          ARM_FILE="Handless_${VERSION}_aarch64.dmg"
+          X86_FILE="Handless_${VERSION}_x86_64.dmg"
+
+          for i in $(seq 1 20); do
+            echo "Attempt $i/20: checking for DMG assets..."
+            ASSETS=$(gh api repos/${{ github.repository }}/releases/${{ github.event.release.id }}/assets --jq '[.[].name]')
+            ARM_FOUND=$(echo "$ASSETS" | jq --arg f "$ARM_FILE" 'contains([$f])')
+            X86_FOUND=$(echo "$ASSETS" | jq --arg f "$X86_FILE" 'contains([$f])')
+
+            if [ "$ARM_FOUND" = "true" ] && [ "$X86_FOUND" = "true" ]; then
+              echo "Both DMGs found."
+              ARM_URL=$(gh api repos/${{ github.repository }}/releases/${{ github.event.release.id }}/assets --jq --arg f "$ARM_FILE" '.[] | select(.name==$f) | .browser_download_url')
+              X86_URL=$(gh api repos/${{ github.repository }}/releases/${{ github.event.release.id }}/assets --jq --arg f "$X86_FILE" '.[] | select(.name==$f) | .browser_download_url')
+              echo "arm_url=$ARM_URL" >> "$GITHUB_OUTPUT"
+              echo "x86_url=$X86_URL" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+
+            echo "Not all DMGs available yet. Waiting 30s..."
+            sleep 30
+          done
+
+          echo "Timed out waiting for DMG assets." >&2
+          exit 1
+
+      - name: Download DMGs and compute SHA256
+        id: sha256
+        run: |
+          curl -L -o arm.dmg "${{ steps.assets.outputs.arm_url }}"
+          curl -L -o x86.dmg "${{ steps.assets.outputs.x86_url }}"
+          ARM_SHA=$(sha256sum arm.dmg | awk '{print $1}')
+          X86_SHA=$(sha256sum x86.dmg | awk '{print $1}')
+          echo "arm_sha=$ARM_SHA" >> "$GITHUB_OUTPUT"
+          echo "x86_sha=$X86_SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout tap repo
+        uses: actions/checkout@v4
+        with:
+          repository: ElwinLiu/homebrew-tap
+          token: ${{ secrets.TAP_GITHUB_TOKEN }}
+          path: homebrew-tap
+
+      - name: Update cask file
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          ARM_SHA: ${{ steps.sha256.outputs.arm_sha }}
+          X86_SHA: ${{ steps.sha256.outputs.x86_sha }}
+        run: |
+          python3 - <<'EOF'
+          import re, os
+
+          version = os.environ["VERSION"]
+          arm_sha = os.environ["ARM_SHA"]
+          x86_sha = os.environ["X86_SHA"]
+
+          cask_path = "homebrew-tap/Casks/handless.rb"
+          with open(cask_path) as f:
+              content = f.read()
+
+          # Update version
+          content = re.sub(r'version "[^"]*"', f'version "{version}"', content)
+
+          # Update arm sha256 (inside on_arm block)
+          content = re.sub(
+              r'(on_arm do\s+url "[^"]*"\s+sha256 ")[^"]*(")',
+              rf'\g<1>{arm_sha}\g<2>',
+              content,
+          )
+
+          # Update intel sha256 (inside on_intel block)
+          content = re.sub(
+              r'(on_intel do\s+url "[^"]*"\s+sha256 ")[^"]*(")',
+              rf'\g<1>{x86_sha}\g<2>',
+              content,
+          )
+
+          with open(cask_path, "w") as f:
+              f.write(content)
+
+          print(f"Updated cask to version {version}")
+          EOF
+
+      - name: Open PR on tap repo
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.TAP_GITHUB_TOKEN }}
+          path: homebrew-tap
+          commit-message: "chore: update handless to v${{ steps.version.outputs.version }}"
+          branch: "update-handless-v${{ steps.version.outputs.version }}"
+          title: "chore: update handless to v${{ steps.version.outputs.version }}"
+          body: |
+            Automated update for Handless v${{ steps.version.outputs.version }}.
+
+            - **aarch64 SHA256**: `${{ steps.sha256.outputs.arm_sha }}`
+            - **x86_64 SHA256**: `${{ steps.sha256.outputs.x86_sha }}`
+
+            [Release notes](${{ github.server_url }}/${{ github.repository }}/releases/tag/v${{ steps.version.outputs.version }})
+          delete-branch: true
