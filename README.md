@@ -19,16 +19,22 @@ Handless isn't trying to be the best speech-to-text app -- it's trying to be the
 
 1. **Press** a configurable keyboard shortcut to start/stop recording (or use push-to-talk mode)
 2. **Speak** your words while the shortcut is active
-3. **Release** and Handless processes your speech using Whisper
+3. **Release** and Handless processes your speech using your chosen model
 4. **Get** your transcribed text pasted directly into whatever app you're using
 
 The process is entirely local:
 
 - Silence is filtered using VAD (Voice Activity Detection) with Silero
 - Transcription uses your choice of models:
-  - **Whisper models** (Small/Medium/Turbo/Large) with GPU acceleration when available
-  - **Parakeet V3** - CPU-optimized model with excellent performance and automatic language detection
+  - **Whisper** (Small/Medium/Turbo/Large) - GPU acceleration when available
+  - **Parakeet V2/V3** - CPU-optimized with excellent performance; V3 supports 25 languages with automatic detection
+  - **Moonshine** (Tiny/Small/Medium/Base) - lightweight, fast English-only models
+  - **SenseVoice** - Chinese, English, Japanese, Korean, and Cantonese
+  - **Breeze ASR** - optimized for Taiwanese Mandarin with code-switching support
+- Optional **cloud STT** via OpenAI or Soniox for users who prefer cloud processing
+- Optional **LLM post-processing** to clean up, reformat, or restructure transcriptions
 - Works on Windows, macOS, and Linux
+- Available in 17 languages
 
 ## Quick Start
 
@@ -51,11 +57,11 @@ Handless is built as a Tauri application combining:
 - **Frontend**: React + TypeScript with Tailwind CSS for the settings UI
 - **Backend**: Rust for system integration, audio processing, and ML inference
 - **Core Libraries**:
-  - `whisper-rs`: Local speech recognition with Whisper models
-  - `transcription-rs`: CPU-optimized speech recognition with Parakeet models
+  - `transcribe-rs`: Local speech recognition (Whisper, Parakeet, Moonshine, SenseVoice)
   - `cpal`: Cross-platform audio I/O
-  - `vad-rs`: Voice Activity Detection
-  - `rdev`: Global keyboard shortcuts and system events
+  - `vad-rs`: Voice Activity Detection (Silero)
+  - `rdev`: Global keyboard/mouse events
+  - `handy-keys`: Keyboard shortcut management
   - `rubato`: Audio resampling
 
 ### Debug Mode
@@ -206,19 +212,31 @@ Without these tools, Handless falls back to enigo which may have limited compati
 
 The following are recommendations for running Handless on your own machine. If you don't meet the system requirements, the performance of the application may be degraded. We are working on improving the performance across all kinds of computers and hardware.
 
-**For Whisper Models:**
+**For Whisper Models (including Breeze ASR):**
 
 - **macOS**: M series Mac, Intel Mac
 - **Windows**: Intel, AMD, or NVIDIA GPU
 - **Linux**: Intel, AMD, or NVIDIA GPU
   - Ubuntu 22.04, 24.04
 
-**For Parakeet V3 Model:**
+**For Parakeet Models:**
 
 - **CPU-only operation** - runs on a wide variety of hardware
 - **Minimum**: Intel Skylake (6th gen) or equivalent AMD processors
 - **Performance**: ~5x real-time speed on mid-range hardware (tested on i5)
-- **Automatic language detection** - no manual language selection required
+- **Parakeet V3**: Automatic language detection across 25 languages
+- **Parakeet V2**: English only
+
+**For Moonshine Models:**
+
+- **CPU-only operation** - lightweight and fast
+- Smallest model (Tiny) is only 31 MB -- ideal for resource-constrained systems
+- English only
+
+**For SenseVoice:**
+
+- **CPU-only operation**
+- Supports Chinese, English, Japanese, Korean, and Cantonese
 
 ## Troubleshooting
 
@@ -262,11 +280,23 @@ Download the models you want from below
 - Medium (492 MB): `https://blob.handy.computer/whisper-medium-q4_1.bin`
 - Turbo (1600 MB): `https://blob.handy.computer/ggml-large-v3-turbo.bin`
 - Large (1100 MB): `https://blob.handy.computer/ggml-large-v3-q5_0.bin`
+- Breeze ASR (1080 MB): `https://blob.handy.computer/breeze-asr-q5_k.bin`
 
 **Parakeet Models (compressed archives):**
 
 - V2 (473 MB): `https://blob.handy.computer/parakeet-v2-int8.tar.gz`
 - V3 (478 MB): `https://blob.handy.computer/parakeet-v3-int8.tar.gz`
+
+**Moonshine Models (compressed archives):**
+
+- Base (58 MB): `https://blob.handy.computer/moonshine-base.tar.gz`
+- Tiny Streaming (31 MB): `https://blob.handy.computer/moonshine-tiny-streaming-en.tar.gz`
+- Small Streaming (100 MB): `https://blob.handy.computer/moonshine-small-streaming-en.tar.gz`
+- Medium Streaming (192 MB): `https://blob.handy.computer/moonshine-medium-streaming-en.tar.gz`
+
+**SenseVoice (compressed archive):**
+
+- SenseVoice (160 MB): `https://blob.handy.computer/sense-voice-int8.tar.gz`
 
 #### Step 4: Install Models
 
@@ -279,32 +309,37 @@ Simply place the `.bin` file directly into the `models` directory:
 ├── ggml-small.bin
 ├── whisper-medium-q4_1.bin
 ├── ggml-large-v3-turbo.bin
-└── ggml-large-v3-q5_0.bin
+├── ggml-large-v3-q5_0.bin
+└── breeze-asr-q5_k.bin
 ```
 
-**For Parakeet Models (.tar.gz archives):**
+**For Parakeet, Moonshine, and SenseVoice Models (.tar.gz archives):**
 
 1. Extract the `.tar.gz` file
 2. Place the **extracted directory** into the `models` folder
 3. The directory must be named exactly as follows:
    - **Parakeet V2**: `parakeet-tdt-0.6b-v2-int8`
    - **Parakeet V3**: `parakeet-tdt-0.6b-v3-int8`
+   - **Moonshine Base**: `moonshine-base`
+   - **Moonshine Tiny**: `moonshine-tiny-streaming-en`
+   - **Moonshine Small**: `moonshine-small-streaming-en`
+   - **Moonshine Medium**: `moonshine-medium-streaming-en`
+   - **SenseVoice**: `sense-voice-int8`
 
 Final structure should look like:
 
 ```
 {app_data_dir}/models/
-├── parakeet-tdt-0.6b-v2-int8/     (directory with model files inside)
-│   ├── (model files)
-│   └── (config files)
-└── parakeet-tdt-0.6b-v3-int8/     (directory with model files inside)
-    ├── (model files)
-    └── (config files)
+├── parakeet-tdt-0.6b-v3-int8/     (directory with model files inside)
+├── moonshine-base/
+├── moonshine-tiny-streaming-en/
+├── sense-voice-int8/
+└── ...
 ```
 
 **Important Notes:**
 
-- For Parakeet models, the extracted directory name **must** match exactly as shown above
+- For archive-based models, the extracted directory name **must** match exactly as shown above
 - Do not rename the `.bin` files for Whisper models -- use the exact filenames from the download URLs
 - After placing the files, restart Handless to detect the new models
 
@@ -349,6 +384,9 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 - **Whisper** by OpenAI for the speech recognition model
 - **whisper.cpp and ggml** for amazing cross-platform whisper inference/acceleration
+- **NVIDIA NeMo** for the Parakeet speech recognition models
+- **Moonshine** by Useful Sensors for lightweight speech recognition
+- **SenseVoice** by FunAudioLLM for multilingual speech recognition
 - **Silero** for great lightweight VAD
 - **Tauri** team for the excellent Rust-based app framework
 - **[Handy](https://github.com/cjpais/Handy)** - the upstream project this was forked from
