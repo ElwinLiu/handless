@@ -72,9 +72,7 @@
         "files": {}
       }
     },
-    "windows": {
-      "signCommand": ""
-    }
+    "windows": {}
   },
   "plugins": {
     "updater": {
