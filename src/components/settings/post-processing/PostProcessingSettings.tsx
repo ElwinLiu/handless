@@ -283,7 +283,7 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
       grouped={true}
     >
       <div className="space-y-3">
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
           <Dropdown
             selectedValue={selectedPromptId || null}
             options={prompts.map((p) => ({
