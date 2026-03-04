@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Check, RefreshCcw } from "lucide-react";
 import { commands } from "@/bindings";
-import { listen } from "@tauri-apps/api/event";
 
 import { Alert } from "../../ui/Alert";
 import {
@@ -21,6 +20,7 @@ import { ApiKeyField } from "../PostProcessingSettingsApi/ApiKeyField";
 import { ModelSelect } from "../PostProcessingSettingsApi/ModelSelect";
 import { usePostProcessProviderState } from "../PostProcessingSettingsApi/usePostProcessProviderState";
 import { useSettings } from "../../../hooks/useSettings";
+import { usePostProcessStats } from "../../../hooks/usePostProcessStats";
 
 const BUILTIN_PROMPT_PREFIX = "default_";
 const FIELD_WIDTH = "w-[260px]";
@@ -413,24 +413,9 @@ export const PostProcessingSettingsPrompts = React.memo(
 );
 PostProcessingSettingsPrompts.displayName = "PostProcessingSettingsPrompts";
 
-interface PostProcessStats {
-  model: string;
-  tokens_per_second: number | null;
-  elapsed_ms: number;
-}
-
 export const PostProcessingSettings: React.FC = () => {
   const { t } = useTranslation();
-  const [stats, setStats] = useState<PostProcessStats | null>(null);
-
-  useEffect(() => {
-    const unlisten = listen<PostProcessStats>("post-process-stats", (event) => {
-      setStats(event.payload);
-    });
-    return () => {
-      unlisten.then((fn) => fn());
-    };
-  }, []);
+  const stats = usePostProcessStats();
 
   const statsLine = stats
     ? `${stats.model}${stats.tokens_per_second != null ? ` — ${stats.tokens_per_second.toFixed(1)} tok/s` : ""}`
