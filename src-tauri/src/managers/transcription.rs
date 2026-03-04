@@ -248,43 +248,35 @@ impl TranscriptionManager {
 
         let model_path = self.model_manager.get_model_path(model_id)?;
 
+        // Helper to emit a loading_failed event and return an error.
+        let emit_load_failure = |engine_label: &str, err: &dyn std::fmt::Display| -> anyhow::Error {
+            let error_msg = format!("Failed to load {} model {}: {}", engine_label, model_id, err);
+            let _ = self.app_handle.emit(
+                "model-state-changed",
+                ModelStateEvent {
+                    event_type: "loading_failed".to_string(),
+                    model_id: Some(model_id.to_string()),
+                    model_name: Some(model_info.name.clone()),
+                    error: Some(error_msg.clone()),
+                },
+            );
+            anyhow::anyhow!(error_msg)
+        };
+
         // Create appropriate engine based on model type
         let loaded_engine = match model_info.engine_type {
             EngineType::Whisper => {
                 let mut engine = WhisperEngine::new();
-                engine.load_model(&model_path).map_err(|e| {
-                    let error_msg = format!("Failed to load whisper model {}: {}", model_id, e);
-                    let _ = self.app_handle.emit(
-                        "model-state-changed",
-                        ModelStateEvent {
-                            event_type: "loading_failed".to_string(),
-                            model_id: Some(model_id.to_string()),
-                            model_name: Some(model_info.name.clone()),
-                            error: Some(error_msg.clone()),
-                        },
-                    );
-                    anyhow::anyhow!(error_msg)
-                })?;
+                engine
+                    .load_model(&model_path)
+                    .map_err(|e| emit_load_failure("whisper", &e))?;
                 LoadedEngine::Whisper(engine)
             }
             EngineType::Parakeet => {
                 let mut engine = ParakeetEngine::new();
                 engine
                     .load_model_with_params(&model_path, ParakeetModelParams::int8())
-                    .map_err(|e| {
-                        let error_msg =
-                            format!("Failed to load parakeet model {}: {}", model_id, e);
-                        let _ = self.app_handle.emit(
-                            "model-state-changed",
-                            ModelStateEvent {
-                                event_type: "loading_failed".to_string(),
-                                model_id: Some(model_id.to_string()),
-                                model_name: Some(model_info.name.clone()),
-                                error: Some(error_msg.clone()),
-                            },
-                        );
-                        anyhow::anyhow!(error_msg)
-                    })?;
+                    .map_err(|e| emit_load_failure("parakeet", &e))?;
                 LoadedEngine::Parakeet(engine)
             }
             EngineType::Moonshine => {
@@ -294,62 +286,21 @@ impl TranscriptionManager {
                         &model_path,
                         MoonshineModelParams::variant(ModelVariant::Base),
                     )
-                    .map_err(|e| {
-                        let error_msg =
-                            format!("Failed to load moonshine model {}: {}", model_id, e);
-                        let _ = self.app_handle.emit(
-                            "model-state-changed",
-                            ModelStateEvent {
-                                event_type: "loading_failed".to_string(),
-                                model_id: Some(model_id.to_string()),
-                                model_name: Some(model_info.name.clone()),
-                                error: Some(error_msg.clone()),
-                            },
-                        );
-                        anyhow::anyhow!(error_msg)
-                    })?;
+                    .map_err(|e| emit_load_failure("moonshine", &e))?;
                 LoadedEngine::Moonshine(engine)
             }
             EngineType::MoonshineStreaming => {
                 let mut engine = MoonshineStreamingEngine::new();
                 engine
                     .load_model_with_params(&model_path, StreamingModelParams::default())
-                    .map_err(|e| {
-                        let error_msg = format!(
-                            "Failed to load moonshine streaming model {}: {}",
-                            model_id, e
-                        );
-                        let _ = self.app_handle.emit(
-                            "model-state-changed",
-                            ModelStateEvent {
-                                event_type: "loading_failed".to_string(),
-                                model_id: Some(model_id.to_string()),
-                                model_name: Some(model_info.name.clone()),
-                                error: Some(error_msg.clone()),
-                            },
-                        );
-                        anyhow::anyhow!(error_msg)
-                    })?;
+                    .map_err(|e| emit_load_failure("moonshine streaming", &e))?;
                 LoadedEngine::MoonshineStreaming(engine)
             }
             EngineType::SenseVoice => {
                 let mut engine = SenseVoiceEngine::new();
                 engine
                     .load_model_with_params(&model_path, SenseVoiceModelParams::int8())
-                    .map_err(|e| {
-                        let error_msg =
-                            format!("Failed to load SenseVoice model {}: {}", model_id, e);
-                        let _ = self.app_handle.emit(
-                            "model-state-changed",
-                            ModelStateEvent {
-                                event_type: "loading_failed".to_string(),
-                                model_id: Some(model_id.to_string()),
-                                model_name: Some(model_info.name.clone()),
-                                error: Some(error_msg.clone()),
-                            },
-                        );
-                        anyhow::anyhow!(error_msg)
-                    })?;
+                    .map_err(|e| emit_load_failure("SenseVoice", &e))?;
                 LoadedEngine::SenseVoice(engine)
             }
         };
