@@ -348,6 +348,7 @@ export const CloudProviderConfigCard: React.FC<
       active={effectiveStatus === "active"}
       clickable={!expanded}
       compact={compact}
+      className={expanded && effectiveStatus === "active" ? "!bg-accent/5" : ""}
       onClick={() => {
         if (isClickable) {
           onSelect?.(provider.id);
