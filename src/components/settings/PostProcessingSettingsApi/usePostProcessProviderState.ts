@@ -67,10 +67,17 @@ export const usePostProcessProviderState = (): PostProcessProviderState => {
   const model = settings?.post_process_models?.[selectedProviderId] ?? "";
 
   const providerOptions = useMemo<DropdownOption[]>(() => {
-    return providers.map((provider) => ({
-      value: provider.id,
-      label: provider.label,
-    }));
+    return [...providers]
+      .sort((a, b) => {
+        // "custom" always last
+        if (a.id === "custom") return 1;
+        if (b.id === "custom") return -1;
+        return 0;
+      })
+      .map((provider) => ({
+        value: provider.id,
+        label: provider.label,
+      }));
   }, [providers]);
 
   const handleProviderSelect = useCallback(
