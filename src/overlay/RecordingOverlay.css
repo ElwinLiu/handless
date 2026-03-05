@@ -105,6 +105,16 @@
   box-sizing: border-box;
 }
 
+/* When overlay is at top, flip scroll direction so text grows downward */
+.streaming-text.reversed {
+  transform: scaleY(-1);
+}
+
+.streaming-text.reversed span {
+  display: inline-block;
+  transform: scaleY(-1);
+}
+
 /* Word-by-word appear animation */
 .word-appear {
   animation: word-appear 200ms ease-out;

@@ -233,7 +233,10 @@ const RecordingOverlay: React.FC = () => {
       >
         {state === "recording" &&
           (hasStreamingText ? (
-            <div ref={streamingTextRef} className="streaming-text">
+            <div
+              ref={streamingTextRef}
+              className={`streaming-text ${overlayPosition === "top" ? "reversed" : ""}`}
+            >
               {words.map((w, i) => (
                 <React.Fragment key={i}>
                   {i > 0 && " "}
