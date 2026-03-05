@@ -561,7 +561,6 @@ export const useSettingsStore = create<SettingsStore>()(
     },
 
     updatePostProcessModel: async (providerId, model) => {
-      get()._invalidatePostProcessVerified(providerId);
       return get().updatePostProcessSetting("model", providerId, model);
     },
 
