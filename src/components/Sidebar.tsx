@@ -24,7 +24,6 @@ import {
   ModelsSettings,
 } from "./settings";
 import { spring, tapScale } from "@/lib/motion";
-import { SimpleTooltip } from "./ui/Tooltip";
 
 export type SidebarSection = keyof typeof SECTIONS_CONFIG;
 
@@ -119,33 +118,32 @@ export const Sidebar: React.FC<SidebarProps> = ({
             const isActive = activeSection === section.id;
 
             return (
-              <SimpleTooltip key={section.id} content={t(section.labelKey)} side="right">
-                <motion.div
-                  className="relative flex gap-2 items-center py-1 px-2 w-full rounded-lg cursor-pointer"
-                  onClick={() => onSectionChange(section.id)}
-                  whileHover={{ backgroundColor: isActive ? undefined : "rgba(255,255,255,0.05)" }}
-                  whileTap={tapScale}
-                  transition={spring.snappy}
-                >
-                  {isActive && (
-                    <motion.div
-                      layoutId="sidebar-active-indicator"
-                      className="absolute inset-0 rounded-lg bg-accent/80"
-                      transition={spring.snappy}
-                    />
-                  )}
-                  <Icon
-                    size={18}
-                    weight="light"
-                    className={`shrink-0 relative z-10 ${!isActive ? "opacity-85" : ""}`}
+              <motion.div
+                key={section.id}
+                className="relative flex gap-2 items-center py-1 px-2 w-full rounded-lg cursor-pointer"
+                onClick={() => onSectionChange(section.id)}
+                whileHover={{ backgroundColor: isActive ? undefined : "rgba(255,255,255,0.05)" }}
+                whileTap={tapScale}
+                transition={spring.snappy}
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="sidebar-active-indicator"
+                    className="absolute inset-0 rounded-lg bg-accent/80"
+                    transition={spring.snappy}
                   />
-                  <p
-                    className={`text-sm font-medium truncate relative z-10 ${!isActive ? "opacity-85" : ""}`}
-                  >
-                    {t(section.labelKey)}
-                  </p>
-                </motion.div>
-              </SimpleTooltip>
+                )}
+                <Icon
+                  size={18}
+                  weight="light"
+                  className={`shrink-0 relative z-10 ${!isActive ? "opacity-85" : ""}`}
+                />
+                <p
+                  className={`text-sm font-medium truncate relative z-10 ${!isActive ? "opacity-85" : ""}`}
+                >
+                  {t(section.labelKey)}
+                </p>
+              </motion.div>
             );
           })}
         </div>
