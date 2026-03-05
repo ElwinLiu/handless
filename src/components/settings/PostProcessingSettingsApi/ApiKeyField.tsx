@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Copy, Check } from "lucide-react";
 import { Input } from "../../ui/Input";
+import { SimpleTooltip } from "../../ui/Tooltip";
 
 interface ApiKeyFieldProps {
   value: string;
@@ -55,18 +56,19 @@ export const ApiKeyField: React.FC<ApiKeyFieldProps> = React.memo(
           className={`w-full ${localValue ? "pr-7" : ""}`}
         />
         {localValue && (
-          <button
-            type="button"
-            onClick={handleCopy}
-            className="absolute right-1.5 top-1/2 -translate-y-1/2 text-text/50 hover:text-accent transition-colors cursor-pointer p-0.5"
-            title={t("settings.history.copyToClipboard")}
-          >
-            {showCopied ? (
-              <Check className="w-3.5 h-3.5" />
-            ) : (
-              <Copy className="w-3.5 h-3.5" />
-            )}
-          </button>
+          <SimpleTooltip content={t("settings.history.copyToClipboard")}>
+            <button
+              type="button"
+              onClick={handleCopy}
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 text-text/50 hover:text-accent transition-colors cursor-pointer p-0.5"
+            >
+              {showCopied ? (
+                <Check className="w-3.5 h-3.5" />
+              ) : (
+                <Copy className="w-3.5 h-3.5" />
+              )}
+            </button>
+          </SimpleTooltip>
         )}
       </div>
     );

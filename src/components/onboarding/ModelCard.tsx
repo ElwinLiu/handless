@@ -18,6 +18,7 @@ import {
 import Badge from "../ui/Badge";
 import { Button } from "../ui/Button";
 import { SelectableCard } from "../ui/SelectableCard";
+import { SimpleTooltip } from "../ui/Tooltip";
 
 export type ModelCardStatus =
   | "downloadable"
@@ -175,32 +176,34 @@ const ModelCard: React.FC<ModelCardProps> = ({
         className={`flex items-center gap-2 w-full ${compact ? "" : "-mb-0.5 mt-0.5"}`}
       >
         {provider.supported_languages.length > 0 && (
-          <div
-            className={`flex items-center gap-1 text-xs px-1.5 py-0.5 rounded ${
-              provider.supported_languages.length === 1
-                ? "text-text/50 bg-muted/10"
-                : "text-blue-400/80 bg-blue-400/10"
-            }`}
-            title={
+          <SimpleTooltip content={
               provider.supported_languages.length === 1
                 ? t("modelSelector.capabilities.singleLanguage")
                 : t("modelSelector.capabilities.languageSelection")
-            }
-          >
-            <Globe className="w-3 h-3" />
-            <span>
-              {getLanguageDisplayText(provider.supported_languages, t)}
-            </span>
-          </div>
+            }>
+            <div
+              className={`flex items-center gap-1 text-xs px-1.5 py-0.5 rounded ${
+                provider.supported_languages.length === 1
+                  ? "text-text/50 bg-muted/10"
+                  : "text-blue-400/80 bg-blue-400/10"
+              }`}
+            >
+              <Globe className="w-3 h-3" />
+              <span>
+                {getLanguageDisplayText(provider.supported_languages, t)}
+              </span>
+            </div>
+          </SimpleTooltip>
         )}
         {provider.supports_translation && (
-          <div
-            className="flex items-center gap-1 text-xs text-purple-400/80 bg-purple-400/10 px-1.5 py-0.5 rounded"
-            title={t("modelSelector.capabilities.translation")}
-          >
-            <Languages className="w-3 h-3" />
-            <span>{t("modelSelector.capabilities.translate")}</span>
-          </div>
+          <SimpleTooltip content={t("modelSelector.capabilities.translation")}>
+            <div
+              className="flex items-center gap-1 text-xs text-purple-400/80 bg-purple-400/10 px-1.5 py-0.5 rounded"
+            >
+              <Languages className="w-3 h-3" />
+              <span>{t("modelSelector.capabilities.translate")}</span>
+            </div>
+          </SimpleTooltip>
         )}
         {provider.backend.type === "Local" && status === "downloadable" && (
           <span className="flex items-center gap-1.5 ml-auto text-xs text-text/50 bg-muted/10 px-1.5 py-0.5 rounded">
@@ -211,18 +214,19 @@ const ModelCard: React.FC<ModelCardProps> = ({
         {isLocal &&
           onDelete &&
           (status === "available" || status === "active") && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleDelete}
-              title={t("modelSelector.deleteModel", {
+            <SimpleTooltip content={t("modelSelector.deleteModel", {
                 modelName: displayName,
-              })}
-              className="flex items-center gap-1.5 ml-auto text-accent/85 hover:text-accent hover:bg-accent/10"
-            >
-              <Trash2 className="w-3.5 h-3.5" />
-              <span>{t("common.delete")}</span>
-            </Button>
+              })}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleDelete}
+                className="flex items-center gap-1.5 ml-auto text-accent/85 hover:text-accent hover:bg-accent/10"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>{t("common.delete")}</span>
+              </Button>
+            </SimpleTooltip>
           )}
       </div>
 

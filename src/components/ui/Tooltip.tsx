@@ -44,9 +44,12 @@ export const SimpleTooltip: React.FC<SimpleTooltipProps> = ({
   children,
   open,
   onOpenChange,
-}) => (
-  <TooltipRoot open={open} onOpenChange={onOpenChange}>
-    <TooltipTrigger asChild>{children}</TooltipTrigger>
-    <TooltipContent side={side}>{content}</TooltipContent>
-  </TooltipRoot>
-);
+}) => {
+  if (!content) return <>{children}</>;
+  return (
+    <TooltipRoot open={open} onOpenChange={onOpenChange}>
+      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      <TooltipContent side={side}>{content}</TooltipContent>
+    </TooltipRoot>
+  );
+};

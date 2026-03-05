@@ -20,6 +20,7 @@ import type { ModelCardStatus } from "@/components/onboarding/ModelCard";
 import { LANGUAGES } from "@/lib/constants/languages";
 import { getLanguageDisplayText } from "@/lib/utils/modelTranslation";
 import { openUrl } from "@tauri-apps/plugin-opener";
+import { SimpleTooltip } from "@/components/ui/Tooltip";
 
 type LangOption = { value: string; label: string };
 
@@ -542,32 +543,34 @@ export const CloudProviderConfigCard: React.FC<
       {/* Language/translation tags */}
       <div className="flex items-center gap-2">
         {provider.supported_languages.length > 0 && (
-          <div
-            className={`flex items-center gap-1 text-xs px-1.5 py-0.5 rounded ${
-              provider.supported_languages.length === 1
-                ? "text-text/50 bg-muted/10"
-                : "text-blue-400/80 bg-blue-400/10"
-            }`}
-            title={
+          <SimpleTooltip content={
               provider.supported_languages.length === 1
                 ? t("modelSelector.capabilities.singleLanguage")
                 : t("modelSelector.capabilities.languageSelection")
-            }
-          >
-            <Globe className="w-3 h-3" />
-            <span>
-              {getLanguageDisplayText(provider.supported_languages, t)}
-            </span>
-          </div>
+            }>
+            <div
+              className={`flex items-center gap-1 text-xs px-1.5 py-0.5 rounded ${
+                provider.supported_languages.length === 1
+                  ? "text-text/50 bg-muted/10"
+                  : "text-blue-400/80 bg-blue-400/10"
+              }`}
+            >
+              <Globe className="w-3 h-3" />
+              <span>
+                {getLanguageDisplayText(provider.supported_languages, t)}
+              </span>
+            </div>
+          </SimpleTooltip>
         )}
         {provider.supports_translation && (
-          <div
-            className="flex items-center gap-1 text-xs text-purple-400/80 bg-purple-400/10 px-1.5 py-0.5 rounded"
-            title={t("modelSelector.capabilities.translation")}
-          >
-            <Languages className="w-3 h-3" />
-            <span>{t("modelSelector.capabilities.translate")}</span>
-          </div>
+          <SimpleTooltip content={t("modelSelector.capabilities.translation")}>
+            <div
+              className="flex items-center gap-1 text-xs text-purple-400/80 bg-purple-400/10 px-1.5 py-0.5 rounded"
+            >
+              <Languages className="w-3 h-3" />
+              <span>{t("modelSelector.capabilities.translate")}</span>
+            </div>
+          </SimpleTooltip>
         )}
       </div>
     </SelectableCard>

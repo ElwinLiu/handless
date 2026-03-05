@@ -1,10 +1,12 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "../ui/Button";
 import { Dropdown, DropdownOption } from "../ui/Dropdown";
 import { PlayIcon } from "lucide-react";
 import { SettingContainer } from "../ui/SettingContainer";
 import { useSettingsStore } from "../../stores/settingsStore";
 import { useSettings } from "../../hooks/useSettings";
+import { SimpleTooltip } from "../ui/Tooltip";
 
 interface SoundPickerProps {
   label: string;
@@ -15,6 +17,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
   label,
   description,
 }) => {
+  const { t } = useTranslation();
   const { getSetting, updateSetting } = useSettings();
   const playTestSound = useSettingsStore((state) => state.playTestSound);
   const customSounds = useSettingsStore((state) => state.customSounds);
@@ -51,14 +54,15 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
           }
           options={options}
         />
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={handlePlayBothSounds}
-          title="Preview sound theme (plays start then stop)"
-        >
-          <PlayIcon className="h-4 w-4" />
-        </Button>
+        <SimpleTooltip content={t("settings.advanced.soundTheme.preview")}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handlePlayBothSounds}
+          >
+            <PlayIcon className="h-4 w-4" />
+          </Button>
+        </SimpleTooltip>
       </div>
     </SettingContainer>
   );

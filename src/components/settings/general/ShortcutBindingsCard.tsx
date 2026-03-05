@@ -8,6 +8,7 @@ import { useSettings } from "../../../hooks/useSettings";
 import { commands } from "@/bindings";
 import type { ShortcutBinding } from "@/bindings";
 import { toast } from "sonner";
+import { SimpleTooltip } from "../../ui/Tooltip";
 
 const NONE_VALUE = "__none__";
 
@@ -119,36 +120,32 @@ export const ShortcutBindingsCard: React.FC = () => {
               />
             </div>
             {showStrategyColumn && (
-              <div
-                className="py-1.5"
-                title={
-                  !isPostProcessReady
-                    ? t("settings.general.shortcuts.postProcessNotReady")
-                    : undefined
-                }
-              >
-                <Dropdown
-                  options={strategyOptions}
-                  selectedValue={
-                    binding.post_process_prompt_id || NONE_VALUE
-                  }
-                  onSelect={(value) =>
-                    handleStrategyChange(binding.id, value)
-                  }
-                  disabled={!isPostProcessReady}
-                  className="w-full"
-                />
-              </div>
+              <SimpleTooltip content={!isPostProcessReady ? t("settings.general.shortcuts.postProcessNotReady") : undefined}>
+                <div className="py-1.5">
+                  <Dropdown
+                    options={strategyOptions}
+                    selectedValue={
+                      binding.post_process_prompt_id || NONE_VALUE
+                    }
+                    onSelect={(value) =>
+                      handleStrategyChange(binding.id, value)
+                    }
+                    disabled={!isPostProcessReady}
+                    className="w-full"
+                  />
+                </div>
+              </SimpleTooltip>
             )}
             <div className="px-3 py-1.5 flex justify-center">
               {canDelete(binding.id) ? (
-                <button
-                  onClick={() => handleRemove(binding.id)}
-                  className="p-1 text-muted/40 hover:text-red-400 transition-colors rounded hover:bg-red-400/10"
-                  title={t("settings.general.shortcuts.remove")}
-                >
-                  <X size={14} />
-                </button>
+                <SimpleTooltip content={t("settings.general.shortcuts.remove")}>
+                  <button
+                    onClick={() => handleRemove(binding.id)}
+                    className="p-1 text-muted/40 hover:text-red-400 transition-colors rounded hover:bg-red-400/10"
+                  >
+                    <X size={14} />
+                  </button>
+                </SimpleTooltip>
               ) : (
                 <div className="w-6" />
               )}

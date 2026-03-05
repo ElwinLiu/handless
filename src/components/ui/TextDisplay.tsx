@@ -1,5 +1,7 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { SettingContainer } from "./SettingContainer";
+import { SimpleTooltip } from "./Tooltip";
 
 interface TextDisplayProps {
   label: string;
@@ -24,6 +26,7 @@ export const TextDisplay: React.FC<TextDisplayProps> = ({
   monospace = false,
   onCopy,
 }) => {
+  const { t } = useTranslation();
   const [showCopied, setShowCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -61,31 +64,32 @@ export const TextDisplay: React.FC<TextDisplayProps> = ({
           </div>
         </div>
         {copyable && value && (
-          <button
-            onClick={handleCopy}
-            className="flex items-center justify-center px-2 py-1 w-12 min-h-8 text-xs font-semibold bg-glass-bg hover:bg-accent/10 border border-glass-border hover:border-accent hover:text-accent rounded-lg backdrop-blur-sm transition-all duration-150 flex-shrink-0 cursor-pointer"
-            title="Copy to clipboard"
-          >
-            {showCopied ? (
-              <div className="flex items-center space-x-1">
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              </div>
-            ) : (
-              "Copy"
-            )}
-          </button>
+          <SimpleTooltip content={t("common.copyToClipboard")}>
+            <button
+              onClick={handleCopy}
+              className="flex items-center justify-center px-2 py-1 w-12 min-h-8 text-xs font-semibold bg-glass-bg hover:bg-accent/10 border border-glass-border hover:border-accent hover:text-accent rounded-lg backdrop-blur-sm transition-all duration-150 flex-shrink-0 cursor-pointer"
+            >
+              {showCopied ? (
+                <div className="flex items-center space-x-1">
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+              ) : (
+                "Copy"
+              )}
+            </button>
+          </SimpleTooltip>
         )}
       </div>
     </SettingContainer>

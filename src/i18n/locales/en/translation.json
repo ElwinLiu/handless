@@ -486,7 +486,8 @@
       },
       "soundTheme": {
         "label": "Sound Theme",
-        "description": "Choose a sound theme for recording start and stop feedback"
+        "description": "Choose a sound theme for recording start and stop feedback",
+        "preview": "Preview sound theme (plays start then stop)"
       },
       "wordCorrectionThreshold": {
         "title": "Word Correction Threshold",
@@ -606,7 +607,8 @@
     "off": "Off",
     "yes": "Yes",
     "no": "No",
-    "noOptionsFound": "No options found"
+    "noOptionsFound": "No options found",
+    "copyToClipboard": "Copy to clipboard"
   },
   "accessibility": {
     "permissionsRequired": "Accessibility Permissions Required",

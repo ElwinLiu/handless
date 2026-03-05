@@ -17,6 +17,7 @@ import { readFile } from "@tauri-apps/plugin-fs";
 import { commands, type HistoryEntry } from "@/bindings";
 import { formatRelativeTime, formatDateTime } from "@/utils/dateFormat";
 import { useOsType } from "@/hooks/useOsType";
+import { SimpleTooltip } from "../../ui/Tooltip";
 
 interface OpenRecordingsButtonProps {
   onClick: () => void;
@@ -278,47 +279,52 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
     <div className="group bg-background-translucent border border-muted/20 rounded hover:border-muted/30 transition-colors px-3 py-2 flex flex-col gap-1.5">
       {/* Header: timestamp + actions */}
       <div className="flex justify-between items-center">
-        <span className="text-[11px] text-muted" title={fullDate}>
-          {relativeTime}
-        </span>
+        <SimpleTooltip content={fullDate}>
+          <span className="text-[11px] text-muted">
+            {relativeTime}
+          </span>
+        </SimpleTooltip>
         <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button
-            onClick={handleCopyText}
-            className="p-1 rounded text-text/50 hover:text-accent transition-colors cursor-pointer"
-            title={t("settings.history.copyToClipboard")}
-          >
-            {showCopied ? (
-              <Check width={12} height={12} />
-            ) : (
-              <Copy width={12} height={12} />
-            )}
-          </button>
-          <button
-            onClick={onToggleSaved}
-            className={`p-1 rounded transition-colors cursor-pointer ${
-              entry.saved
-                ? "text-accent hover:text-accent/80"
-                : "text-text/50 hover:text-accent"
-            }`}
-            title={
+          <SimpleTooltip content={t("settings.history.copyToClipboard")}>
+            <button
+              onClick={handleCopyText}
+              className="p-1 rounded text-text/50 hover:text-accent transition-colors cursor-pointer"
+            >
+              {showCopied ? (
+                <Check width={12} height={12} />
+              ) : (
+                <Copy width={12} height={12} />
+              )}
+            </button>
+          </SimpleTooltip>
+          <SimpleTooltip content={
               entry.saved
                 ? t("settings.history.unsave")
                 : t("settings.history.save")
-            }
-          >
-            <Star
-              width={12}
-              height={12}
-              fill={entry.saved ? "currentColor" : "none"}
-            />
-          </button>
-          <button
-            onClick={handleDeleteEntry}
-            className="p-1 rounded text-text/50 hover:text-red-400 transition-colors cursor-pointer"
-            title={t("settings.history.delete")}
-          >
-            <Trash2 width={12} height={12} />
-          </button>
+            }>
+            <button
+              onClick={onToggleSaved}
+              className={`p-1 rounded transition-colors cursor-pointer ${
+                entry.saved
+                  ? "text-accent hover:text-accent/80"
+                  : "text-text/50 hover:text-accent"
+              }`}
+            >
+              <Star
+                width={12}
+                height={12}
+                fill={entry.saved ? "currentColor" : "none"}
+              />
+            </button>
+          </SimpleTooltip>
+          <SimpleTooltip content={t("settings.history.delete")}>
+            <button
+              onClick={handleDeleteEntry}
+              className="p-1 rounded text-text/50 hover:text-red-400 transition-colors cursor-pointer"
+            >
+              <Trash2 width={12} height={12} />
+            </button>
+          </SimpleTooltip>
         </div>
       </div>
 
