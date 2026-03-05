@@ -18,6 +18,8 @@ type PostProcessProviderState = {
   handleApiKeyChange: (value: string) => void;
   isApiKeyUpdating: boolean;
   isVerified: boolean;
+  fetchError: string | undefined;
+  clearFetchError: () => void;
   model: string;
   handleModelChange: (value: string) => void;
   modelOptions: ModelOption[];
@@ -41,6 +43,8 @@ export const usePostProcessProviderState = (): PostProcessProviderState => {
     updatePostProcessModel,
     fetchPostProcessModels,
     postProcessModelOptions,
+    postProcessFetchErrors,
+    clearPostProcessFetchError,
   } = useSettings();
 
   // Settings are guaranteed to have providers after migration
@@ -84,6 +88,7 @@ export const usePostProcessProviderState = (): PostProcessProviderState => {
     async (providerId: string) => {
       // Clear error state on any selection attempt (allows dismissing the error)
       setAppleIntelligenceUnavailable(false);
+      clearPostProcessFetchError(selectedProviderId);
 
       if (providerId === selectedProviderId) return;
 
@@ -119,6 +124,7 @@ export const usePostProcessProviderState = (): PostProcessProviderState => {
       selectedProviderId,
       setPostProcessProvider,
       fetchPostProcessModels,
+      clearPostProcessFetchError,
       providers,
       settings,
     ],
@@ -219,6 +225,12 @@ export const usePostProcessProviderState = (): PostProcessProviderState => {
     settings?.post_process_verified_providers?.includes(selectedProviderId) ??
     false;
 
+  const fetchError = postProcessFetchErrors[selectedProviderId];
+  const clearFetchError = useCallback(
+    () => clearPostProcessFetchError(selectedProviderId),
+    [clearPostProcessFetchError, selectedProviderId],
+  );
+
   // No automatic fetching - user must click refresh button
 
   return {
@@ -235,6 +247,8 @@ export const usePostProcessProviderState = (): PostProcessProviderState => {
     handleApiKeyChange,
     isApiKeyUpdating,
     isVerified,
+    fetchError,
+    clearFetchError,
     model,
     handleModelChange,
     modelOptions,

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Check, RefreshCcw } from "lucide-react";
+import { Check, RefreshCcw, X } from "lucide-react";
 import { commands } from "@/bindings";
 
 import { Alert } from "../../ui/Alert";
@@ -120,6 +120,22 @@ const PostProcessingSettingsApiComponent: React.FC = () => {
             </div>
           </SettingContainer>
         </>
+      )}
+
+      {state.fetchError && !state.isAppleProvider && (
+        <Alert variant="destructive" contained className="select-text cursor-text">
+          <div className="flex items-start justify-between gap-2">
+            <span>{state.fetchError}</span>
+            <button
+              type="button"
+              onClick={state.clearFetchError}
+              className="shrink-0 select-none cursor-pointer opacity-60 hover:opacity-100 transition-opacity"
+              aria-label={t("accessibility.dismiss")}
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        </Alert>
       )}
 
       {!state.isAppleProvider && (

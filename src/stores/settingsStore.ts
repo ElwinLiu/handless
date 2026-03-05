@@ -16,6 +16,7 @@ interface SettingsStore {
   outputDevices: AudioDevice[];
   customSounds: { start: boolean; stop: boolean };
   postProcessModelOptions: Record<string, string[]>;
+  postProcessFetchErrors: Record<string, string>;
 
   // Actions
   initialize: () => Promise<void>;
@@ -53,6 +54,7 @@ interface SettingsStore {
   updatePostProcessModel: (providerId: string, model: string) => Promise<void>;
   fetchPostProcessModels: (providerId: string) => Promise<string[]>;
   setPostProcessModelOptions: (providerId: string, models: string[]) => void;
+  clearPostProcessFetchError: (providerId: string) => void;
 
   // STT provider helpers
   setSttProvider: (providerId: string) => Promise<void>;
@@ -177,6 +179,7 @@ export const useSettingsStore = create<SettingsStore>()(
     outputDevices: [],
     customSounds: { start: false, stop: false },
     postProcessModelOptions: {},
+    postProcessFetchErrors: {},
 
     // Internal setters
     setSettings: (settings) => set({ settings }),
@@ -564,7 +567,14 @@ export const useSettingsStore = create<SettingsStore>()(
 
     fetchPostProcessModels: async (providerId) => {
       const updateKey = `post_process_models_fetch:${providerId}`;
-      const { setUpdating, setPostProcessModelOptions } = get();
+      const { setUpdating, setPostProcessModelOptions, clearPostProcessFetchError } = get();
+      const setFetchError = (msg: string) =>
+        set((state) => ({
+          postProcessFetchErrors: {
+            ...state.postProcessFetchErrors,
+            [providerId]: msg,
+          },
+        }));
 
       setUpdating(updateKey, true);
 
@@ -573,6 +583,7 @@ export const useSettingsStore = create<SettingsStore>()(
         const result = await commands.fetchPostProcessModels(providerId);
         if (result.status === "ok") {
           setPostProcessModelOptions(providerId, result.data);
+          clearPostProcessFetchError(providerId);
           // Backend marks the provider as verified on success — update
           // the local store directly to avoid an extra IPC round-trip.
           set((state) => {
@@ -590,11 +601,12 @@ export const useSettingsStore = create<SettingsStore>()(
           return result.data;
         } else {
           console.error("Failed to fetch models:", result.error);
+          setFetchError(result.error);
           return [];
         }
       } catch (error) {
         console.error("Failed to fetch models:", error);
-        // Don't cache empty array on error - let user retry
+        setFetchError(String(error));
         return [];
       } finally {
         setUpdating(updateKey, false);
@@ -608,6 +620,12 @@ export const useSettingsStore = create<SettingsStore>()(
           [providerId]: models,
         },
       })),
+
+    clearPostProcessFetchError: (providerId) =>
+      set((state) => {
+        const { [providerId]: _, ...rest } = state.postProcessFetchErrors;
+        return { postProcessFetchErrors: rest };
+      }),
 
     setSttProvider: async (providerId) => {
       const { settings, setUpdating, refreshSettings } = get();
