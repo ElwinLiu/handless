@@ -118,7 +118,7 @@ fn create_audio_recorder(
     vad_path: &str,
     app_handle: &tauri::AppHandle,
 ) -> Result<AudioRecorder, anyhow::Error> {
-    let silero = SileroVad::new(vad_path, 0.3)
+    let silero = SileroVad::new(vad_path, 0.15)
         .map_err(|e| anyhow::anyhow!("Failed to create SileroVad: {}", e))?;
     let smoothed_vad = SmoothedVad::new(Box::new(silero), 15, 15, 2);
 
