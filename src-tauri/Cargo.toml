@@ -58,7 +58,7 @@ tokio = "1.50.0"
 vad-rs = { git = "https://github.com/cjpais/vad-rs", default-features = false }
 enigo = "0.6.1"
 rodio = { git = "https://github.com/cjpais/rodio.git" }
-reqwest = { version = "0.12", features = ["json", "stream", "multipart"] }
+reqwest = { version = "0.13", features = ["json", "stream", "multipart"] }
 tokio-tungstenite = { version = "0.28", features = ["native-tls"] }
 base64 = "0.22"
 percent-encoding = "2"
