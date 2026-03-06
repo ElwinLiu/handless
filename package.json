@@ -1,7 +1,7 @@
 {
   "name": "handless-app",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "description": "Cross-platform desktop speech-to-text. Private, offline, open-source.",
   "keywords": [
