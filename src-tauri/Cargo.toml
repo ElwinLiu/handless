@@ -75,8 +75,8 @@ transcribe-rs = { version = "0.2.9", features = ["whisper", "parakeet", "moonshi
 handy-keys = "0.2.2"
 ferrous-opencc = "0.3.0"
 clap = { version = "4", features = ["derive"] }
-specta = "=2.0.0-rc.23"
-specta-typescript = "0.0.10"
+specta = "=2.0.0-rc.22"
+specta-typescript = "0.0.9"
 tauri-specta = { version = "=2.0.0-rc.21", features = ["derive", "typescript"] }
 tauri-plugin-dialog = "2"
 window-vibrancy = "0.7"
