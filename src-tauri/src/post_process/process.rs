@@ -26,12 +26,14 @@ impl PostProcessResult {
             text,
             stats: PostProcessStats {
                 elapsed_ms: elapsed.as_millis() as u64,
-                tokens_per_second: usage
-                    .and_then(|u| u.completion_tokens)
-                    .and_then(|tokens| {
-                        let secs = elapsed.as_secs_f64();
-                        if secs > 0.0 { Some(tokens as f64 / secs) } else { None }
-                    }),
+                tokens_per_second: usage.and_then(|u| u.completion_tokens).and_then(|tokens| {
+                    let secs = elapsed.as_secs_f64();
+                    if secs > 0.0 {
+                        Some(tokens as f64 / secs)
+                    } else {
+                        None
+                    }
+                }),
                 model,
             },
         }
@@ -249,8 +251,13 @@ pub async fn post_process_transcription(
     debug!("Processed prompt length: {} chars", processed_prompt.len());
 
     let start = Instant::now();
-    match crate::post_process::client::send_chat_completion(&provider, api_key, &model, processed_prompt)
-        .await
+    match crate::post_process::client::send_chat_completion(
+        &provider,
+        api_key,
+        &model,
+        processed_prompt,
+    )
+    .await
     {
         Ok((Some(content), usage)) => {
             let content = strip_invisible_chars(&content);
@@ -259,7 +266,12 @@ pub async fn post_process_transcription(
                 provider.id,
                 content.len()
             );
-            Some(PostProcessResult::new(content, start, usage.as_ref(), model))
+            Some(PostProcessResult::new(
+                content,
+                start,
+                usage.as_ref(),
+                model,
+            ))
         }
         Ok((None, _)) => {
             error!("LLM API response has no content");

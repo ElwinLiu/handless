@@ -103,6 +103,16 @@
         "checkFailed": "権限の確認に失敗しました。もう一度お試しください。",
         "requestFailed": "権限のリクエストに失敗しました。もう一度お試しください。"
       }
+    },
+    "cloud": {
+      "openai_stt": {
+        "name": "OpenAI",
+        "description": "OpenAI's cloud speech-to-text API. Fast and accurate with support for 57+ languages."
+      },
+      "soniox": {
+        "name": "Soniox",
+        "description": "Soniox cloud speech-to-text. High accuracy with async transcription."
+      }
     }
   },
   "modelSelector": {
@@ -132,7 +142,8 @@
       "languageOnly": "{{language}}のみ"
     },
     "cancel": "キャンセル",
-    "cancelDownload": "ダウンロードをキャンセル"
+    "cancelDownload": "ダウンロードをキャンセル",
+    "notAvailable": "Not Available"
   },
   "settings": {
     "modelSettings": {
@@ -155,7 +166,63 @@
       },
       "noModelsMatch": "このフィルターに一致するモデルがありません。",
       "yourModels": "ダウンロード済みモデル",
-      "availableModels": "ダウンロード可能"
+      "availableModels": "ダウンロード可能",
+      "tabs": {
+        "myModels": "My Models",
+        "library": "Library"
+      },
+      "cloudProviders": {
+        "title": "Cloud Providers",
+        "badge": "Cloud",
+        "notConfigured": "Not configured",
+        "verify": "Verify",
+        "verifying": "Verifying...",
+        "verified": "Verified",
+        "verifyFailed": "Verification failed",
+        "verifyFirst": "Verify your API key first",
+        "apiKey": {
+          "title": "API Key",
+          "placeholder": "sk-..."
+        },
+        "model": {
+          "title": "Model",
+          "placeholder": "Enter model name"
+        },
+        "baseUrl": {
+          "title": "Base URL"
+        },
+        "getApiKey": "Get API key",
+        "realtimeTranscription": "Real-time transcription",
+        "realtimeDescription": "Uses a WebSocket connection instead of file upload for lower latency",
+        "options": {
+          "language": "Language",
+          "selectLanguage": "Auto detect",
+          "selectLanguageHint": "Leave empty to auto detect",
+          "selectLanguages": "Select languages...",
+          "selectTranslate": "Select languages...",
+          "prompt": "Prompt",
+          "promptDescription": "Optional text to guide the model's style or continue a previous segment. Not supported by gpt-4o-transcribe-diarize.",
+          "temperature": "Temperature",
+          "temperatureDescription": "Higher values produce more random results (0-1). Only supported by whisper-1.",
+          "languageHints": "Language Hints",
+          "languageHintsStrict": "Strict Language Hints",
+          "languageHintsStrictDescription": "Only transcribe in the specified languages",
+          "contextTerms": "Context Terms",
+          "contextTermsDescription": "Comma-separated terms to improve recognition accuracy",
+          "contextDescription": "Context Description",
+          "contextDescriptionDescription": "Freeform text providing general context about the audio content",
+          "enableSpeakerDiarization": "Speaker Diarization",
+          "enableSpeakerDiarizationDescription": "Identify and separate different speakers",
+          "enableLanguageIdentification": "Language Identification",
+          "enableLanguageIdentificationDescription": "Detect language for each segment"
+        }
+      },
+      "localModels": {
+        "title": "Local Models"
+      },
+      "myModels": {
+        "noModelsConfigured": "No models configured. Visit the Library to download models or set up cloud providers."
+      }
     },
     "general": {
       "title": "一般",
@@ -197,6 +264,13 @@
       "pushToTalk": {
         "label": "プッシュトゥトーク",
         "description": "押し続けて録音、離して停止"
+      },
+      "shortcuts": {
+        "title": "Shortcuts",
+        "strategyNone": "None",
+        "addNew": "Add Shortcut",
+        "remove": "Remove shortcut",
+        "postProcessNotReady": "Configure a post-processing provider first"
       }
     },
     "sound": {
@@ -228,7 +302,8 @@
         "app": "アプリ",
         "output": "出力",
         "transcription": "文字起こし",
-        "history": "履歴"
+        "history": "履歴",
+        "data": "Data"
       },
       "startHidden": {
         "label": "非表示で起動",
@@ -316,6 +391,42 @@
         "add": "追加",
         "remove": "{{word}}を削除",
         "duplicate": "「{{word}}」は既に存在します"
+      },
+      "exportData": {
+        "title": "Export Data",
+        "description": "Export your settings, history, and recordings to a file",
+        "button": "Export...",
+        "includeSettings": "Settings",
+        "includeHistory": "Transcription History",
+        "includeRecordings": "Audio Recordings",
+        "success": "Data exported successfully",
+        "error": "Failed to export data"
+      },
+      "importData": {
+        "title": "Import Data",
+        "description": "Import settings and data from a previously exported file",
+        "button": "Import...",
+        "previewTitle": "Import Preview",
+        "exportDate": "Exported on {{date}}",
+        "appVersion": "App version: {{version}}",
+        "historyCount": "{{count}} history entries",
+        "recordingsCount": "{{count}} recordings",
+        "statsCount": "{{count}} speaking stats",
+        "importSettings": "Settings",
+        "importRecordings": "Recordings",
+        "warning": "Importing settings will overwrite your current configuration. The export file may contain API keys.",
+        "success": "Data imported successfully",
+        "error": "Failed to import data",
+        "invalidFile": "The selected file is not a valid Handless export"
+      },
+      "theme": {
+        "title": "Theme",
+        "description": "Choose the app color theme",
+        "options": {
+          "dark": "Dark",
+          "light": "Light",
+          "system": "System"
+        }
       }
     },
     "postProcessing": {
@@ -418,7 +529,8 @@
       },
       "soundTheme": {
         "label": "サウンドテーマ",
-        "description": "録音開始・停止フィードバックのサウンドテーマを選択"
+        "description": "録音開始・停止フィードバックのサウンドテーマを選択",
+        "preview": "Preview sound theme (plays start then stop)"
       },
       "wordCorrectionThreshold": {
         "title": "単語修正しきい値",
@@ -534,7 +646,9 @@
     "off": "オフ",
     "yes": "はい",
     "no": "いいえ",
-    "noOptionsFound": "オプションが見つかりません"
+    "noOptionsFound": "オプションが見つかりません",
+    "copyToClipboard": "Copy to clipboard",
+    "search": "Search..."
   },
   "accessibility": {
     "permissionsRequired": "アクセシビリティ権限が必要です",

@@ -29,7 +29,9 @@ const DropdownItem: React.FC<DropdownItemProps> = ({
     >
       <div className="flex items-center justify-between gap-2">
         <div className="min-w-0 flex-1">{children}</div>
-        {active && <Check weight="bold" className="w-3.5 h-3.5 text-accent shrink-0" />}
+        {active && (
+          <Check weight="bold" className="w-3.5 h-3.5 text-accent shrink-0" />
+        )}
       </div>
     </button>
   );

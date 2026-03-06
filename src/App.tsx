@@ -34,8 +34,13 @@ function App() {
   );
   const [currentSection, setCurrentSection] =
     useState<SidebarSection>("general");
-  const { settings, updateSetting, refreshAudioDevices, refreshOutputDevices, setupDeviceWatcher } =
-    useSettings();
+  const {
+    settings,
+    updateSetting,
+    refreshAudioDevices,
+    refreshOutputDevices,
+    setupDeviceWatcher,
+  } = useSettings();
   const resolvedTheme = useTheme();
   const direction = getLanguageDirection(i18n.language);
   const hasCompletedPostOnboardingInit = useRef(false);
@@ -63,7 +68,12 @@ function App() {
       setupDeviceWatcher();
       refreshOutputDevices();
     }
-  }, [onboardingStep, refreshAudioDevices, setupDeviceWatcher, refreshOutputDevices]);
+  }, [
+    onboardingStep,
+    refreshAudioDevices,
+    setupDeviceWatcher,
+    refreshOutputDevices,
+  ]);
 
   // Handle keyboard shortcuts for debug mode toggle
   useEffect(() => {

@@ -280,9 +280,7 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
       {/* Header: timestamp + actions */}
       <div className="flex justify-between items-center">
         <SimpleTooltip content={fullDate}>
-          <span className="text-[11px] text-muted">
-            {relativeTime}
-          </span>
+          <span className="text-[11px] text-muted">{relativeTime}</span>
         </SimpleTooltip>
         <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
           <SimpleTooltip content={t("settings.history.copyToClipboard")}>
@@ -290,18 +288,16 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
               onClick={handleCopyText}
               className="p-1 rounded text-text/50 hover:text-accent transition-colors cursor-pointer"
             >
-              {showCopied ? (
-                <Check size={12} />
-              ) : (
-                <Copy size={12} />
-              )}
+              {showCopied ? <Check size={12} /> : <Copy size={12} />}
             </button>
           </SimpleTooltip>
-          <SimpleTooltip content={
+          <SimpleTooltip
+            content={
               entry.saved
                 ? t("settings.history.unsave")
                 : t("settings.history.save")
-            }>
+            }
+          >
             <button
               onClick={onToggleSaved}
               className={`p-1 rounded transition-colors cursor-pointer ${
@@ -310,10 +306,7 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
                   : "text-text/50 hover:text-accent"
               }`}
             >
-              <Star
-                size={12}
-                weight={entry.saved ? "fill" : "light"}
-              />
+              <Star size={12} weight={entry.saved ? "fill" : "light"} />
             </button>
           </SimpleTooltip>
           <SimpleTooltip content={t("settings.history.delete")}>

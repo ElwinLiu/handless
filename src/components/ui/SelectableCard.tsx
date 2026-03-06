@@ -58,7 +58,13 @@ export const SelectableCard: React.FC<SelectableCardProps> = ({
       whileHover={clickable && !disabled ? hoverLift : undefined}
       whileTap={clickable && !disabled ? tapScale : undefined}
       transition={spring.gentle}
-      className={[baseClasses, variantClasses, interactiveClasses, "select-text", className]
+      className={[
+        baseClasses,
+        variantClasses,
+        interactiveClasses,
+        "select-text",
+        className,
+      ]
         .filter(Boolean)
         .join(" ")}
     >

@@ -249,19 +249,23 @@ impl TranscriptionManager {
         let model_path = self.model_manager.get_model_path(model_id)?;
 
         // Helper to emit a loading_failed event and return an error.
-        let emit_load_failure = |engine_label: &str, err: &dyn std::fmt::Display| -> anyhow::Error {
-            let error_msg = format!("Failed to load {} model {}: {}", engine_label, model_id, err);
-            let _ = self.app_handle.emit(
-                "model-state-changed",
-                ModelStateEvent {
-                    event_type: "loading_failed".to_string(),
-                    model_id: Some(model_id.to_string()),
-                    model_name: Some(model_info.name.clone()),
-                    error: Some(error_msg.clone()),
-                },
-            );
-            anyhow::anyhow!(error_msg)
-        };
+        let emit_load_failure =
+            |engine_label: &str, err: &dyn std::fmt::Display| -> anyhow::Error {
+                let error_msg = format!(
+                    "Failed to load {} model {}: {}",
+                    engine_label, model_id, err
+                );
+                let _ = self.app_handle.emit(
+                    "model-state-changed",
+                    ModelStateEvent {
+                        event_type: "loading_failed".to_string(),
+                        model_id: Some(model_id.to_string()),
+                        model_name: Some(model_info.name.clone()),
+                        error: Some(error_msg.clone()),
+                    },
+                );
+                anyhow::anyhow!(error_msg)
+            };
 
         // Create appropriate engine based on model type
         let loaded_engine = match model_info.engine_type {

@@ -817,7 +817,9 @@ pub fn load_or_create_app_settings(app: &AppHandle) -> AppSettings {
                         let prompt_id = settings
                             .post_process_selected_prompt_id
                             .clone()
-                            .unwrap_or_else(|| crate::post_process::BUILTIN_PROMPT_CORRECT.to_string());
+                            .unwrap_or_else(|| {
+                                crate::post_process::BUILTIN_PROMPT_CORRECT.to_string()
+                            });
                         debug!(
                             "Migrating transcribe_with_post_process prompt_id to '{}'",
                             prompt_id

@@ -21,6 +21,7 @@ Audio (CPAL) -> VAD (Silero) -> STT Provider (local Whisper/Parakeet/Moonshine/S
 ## Backend (`src-tauri/src/`)
 
 ### Core Orchestration
+
 - `lib.rs` - App entry point, Tauri setup, plugin registration
 - `main.rs` - CLI arg parsing, launches `run()`
 - `actions.rs` - Transcription pipeline action handlers, streaming sessions, drop guards
@@ -28,12 +29,14 @@ Audio (CPAL) -> VAD (Silero) -> STT Provider (local Whisper/Parakeet/Moonshine/S
 - `settings.rs` - AppSettings struct, persistence, custom deserializers
 
 ### Managers (`managers/`)
+
 - `audio.rs` - Recording, VAD integration, system audio mute/unmute, clamshell detection
 - `model.rs` - Model download/extraction, engine types, state tracking
 - `transcription.rs` - STT coordination, provider integration
 - `history.rs` - SQLite history DB, migrations, audio file storage
 
 ### Commands (`commands/`)
+
 - `mod.rs` - Core commands (cancel, settings, shortcuts, enigo init)
 - `audio.rs` - Device listing, audio settings
 - `models.rs` - Model management commands
@@ -41,16 +44,19 @@ Audio (CPAL) -> VAD (Silero) -> STT Provider (local Whisper/Parakeet/Moonshine/S
 - `history.rs` - History CRUD
 
 ### Audio (`audio_toolkit/`)
+
 - `audio/` - CPAL-based recording, device enumeration
 - `vad/` - Silero VAD with smoothing wrapper
 - `text.rs` - Output filtering, custom word replacement
 
 ### STT Providers
+
 - `stt_provider.rs` - Provider abstraction (local vs cloud)
 - `cloud_stt/` - Cloud integrations (OpenAI, Soniox realtime via WebSocket)
 - `apple_intelligence.rs` - macOS ARM64 Apple Intelligence provider
 
 ### Post-Processing (`post_process/`)
+
 - `client.rs` - HTTP client for LLM calls
 - `process.rs` - Post-processing pipeline
 - `prompts.rs` - Builtin correction/prefix prompts
@@ -58,6 +64,7 @@ Audio (CPAL) -> VAD (Silero) -> STT Provider (local Whisper/Parakeet/Moonshine/S
 - `commands.rs` - Post-process Tauri commands
 
 ### Platform & UI
+
 - `overlay.rs` - Platform-specific overlay (NSPanel/GTK layer shell/WebviewWindow)
 - `shortcut/` - Global shortcuts + HandyKeys library
 - `input.rs` - Keyboard/mouse simulation via Enigo
@@ -71,10 +78,12 @@ Audio (CPAL) -> VAD (Silero) -> STT Provider (local Whisper/Parakeet/Moonshine/S
 ## Frontend (`src/`)
 
 ### State Management
+
 - `stores/settingsStore.ts` - Core settings (Zustand)
 - `stores/modelStore.ts` - Model state, download progress
 
 ### Components (`components/`)
+
 - `Sidebar.tsx` - Navigation with section-based routing
 - `settings/general/` - Core settings (language, theme, devices)
 - `settings/models/` - Model selection, downloads
@@ -91,9 +100,11 @@ Audio (CPAL) -> VAD (Silero) -> STT Provider (local Whisper/Parakeet/Moonshine/S
 - `ui/` - 25+ base components (Radix UI + Tailwind)
 
 ### Overlay (`overlay/`)
+
 - `RecordingOverlay.tsx` - Streaming transcription display, position-aware
 
 ### Utilities
+
 - `bindings.ts` - Auto-generated Tauri command types (specta)
 - `lib/utils/` - Formatting, keyboard display, RTL support
 - `hooks/` - useSettings, useModelActions, useOsType, useTheme, usePostProcessStats

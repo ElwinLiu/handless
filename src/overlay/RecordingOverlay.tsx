@@ -193,10 +193,7 @@ const RecordingOverlay: React.FC = () => {
           clearProgressInterval();
           setProgress(1);
           // Delay hide slightly so the user sees 100%
-          hideTimeoutRef.current = setTimeout(
-            () => setIsVisible(false),
-            200,
-          );
+          hideTimeoutRef.current = setTimeout(() => setIsVisible(false), 200);
         }),
       );
 
@@ -233,10 +230,7 @@ const RecordingOverlay: React.FC = () => {
       >
         {state === "recording" &&
           (hasStreamingText ? (
-            <div
-              ref={streamingTextRef}
-              className="streaming-text"
-            >
+            <div ref={streamingTextRef} className="streaming-text">
               {words.map((w, i) => (
                 <React.Fragment key={i}>
                   {i > 0 && " "}

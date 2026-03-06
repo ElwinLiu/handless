@@ -61,9 +61,7 @@ export const ExportImportSettings: React.FC = () => {
   const handleImportSelect = async () => {
     const path = await open({
       multiple: false,
-      filters: [
-        { name: "Handless Export", extensions: ["json", "gz", "tgz"] },
-      ],
+      filters: [{ name: "Handless Export", extensions: ["json", "gz", "tgz"] }],
     });
 
     if (!path) return;

@@ -317,7 +317,9 @@ export const CloudProviderConfigCard: React.FC<
               type="text"
               value={localModel}
               onChange={(e) => setLocalModel(e.target.value)}
-              onBlur={() => { if (localModel !== cloudModel) onModelChange(localModel); }}
+              onBlur={() => {
+                if (localModel !== cloudModel) onModelChange(localModel);
+              }}
               placeholder={t(
                 "settings.models.cloudProviders.model.placeholder",
               )}
@@ -334,7 +336,12 @@ export const CloudProviderConfigCard: React.FC<
                 onClick={async () => {
                   setVerifyError(null);
                   try {
-                    await onVerify(provider.id, localApiKey, localModel, realtimeEnabled);
+                    await onVerify(
+                      provider.id,
+                      localApiKey,
+                      localModel,
+                      realtimeEnabled,
+                    );
                   } catch (e) {
                     setVerifyError(
                       e instanceof Error
@@ -363,7 +370,10 @@ export const CloudProviderConfigCard: React.FC<
                   type="button"
                   className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-md text-text/60 hover:text-text hover:bg-muted/20 transition-colors"
                   onClick={() => {
-                    if (provider.backend.type === "Cloud" && provider.backend.console_url) {
+                    if (
+                      provider.backend.type === "Cloud" &&
+                      provider.backend.console_url
+                    ) {
                       openUrl(provider.backend.console_url);
                     }
                   }}
@@ -433,11 +443,13 @@ export const CloudProviderConfigCard: React.FC<
       {/* Language/translation tags */}
       <div className="flex items-center gap-2">
         {provider.supported_languages.length > 0 && (
-          <SimpleTooltip content={
+          <SimpleTooltip
+            content={
               provider.supported_languages.length === 1
                 ? t("modelSelector.capabilities.singleLanguage")
                 : t("modelSelector.capabilities.languageSelection")
-            }>
+            }
+          >
             <div
               className={`flex items-center gap-1 text-xs px-1.5 py-0.5 rounded ${
                 provider.supported_languages.length === 1
@@ -454,9 +466,7 @@ export const CloudProviderConfigCard: React.FC<
         )}
         {provider.supports_translation && (
           <SimpleTooltip content={t("modelSelector.capabilities.translation")}>
-            <div
-              className="flex items-center gap-1 text-xs text-purple-400/80 bg-purple-400/10 px-1.5 py-0.5 rounded"
-            >
+            <div className="flex items-center gap-1 text-xs text-purple-400/80 bg-purple-400/10 px-1.5 py-0.5 rounded">
               <Translate className="w-3 h-3" />
               <span>{t("modelSelector.capabilities.translate")}</span>
             </div>

@@ -20,6 +20,13 @@ export { Badge } from "./Badge";
 export { Input } from "./Input";
 export { NumberInput } from "./NumberInput";
 export { Alert, AlertTitle, AlertDescription } from "./Alert";
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from "./Card";
+export {
+  Card,
+  CardHeader,
+  CardFooter,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "./Card";
 export { Switch } from "./Switch";
 export { Label } from "./Label";

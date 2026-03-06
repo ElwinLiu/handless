@@ -21,7 +21,10 @@ const stepBtnCn = (side: "l" | "r") =>
   );
 
 const NumberInput = React.forwardRef<HTMLDivElement, NumberInputProps>(
-  ({ value, onChange, min = 0, max = Infinity, step = 1, disabled, className }, ref) => {
+  (
+    { value, onChange, min = 0, max = Infinity, step = 1, disabled, className },
+    ref,
+  ) => {
     const clamp = (v: number) => Math.min(max, Math.max(min, v));
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

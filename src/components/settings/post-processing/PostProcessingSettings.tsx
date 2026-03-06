@@ -28,9 +28,7 @@ const BUILTIN_PROMPT_PREFIX = "default_";
 const FIELD_WIDTH = "w-[260px]";
 
 /** Trailing slot matching the ResetButton width to keep fields aligned across rows. */
-const FieldAlignmentSpacer = ({
-  children,
-}: { children?: React.ReactNode }) => (
+const FieldAlignmentSpacer = ({ children }: { children?: React.ReactNode }) => (
   <div
     className="w-[26px] shrink-0 flex items-center justify-center"
     {...(!children && { "aria-hidden": true })}
@@ -125,7 +123,11 @@ const PostProcessingSettingsApiComponent: React.FC = () => {
       )}
 
       {state.fetchError && !state.isAppleProvider && (
-        <Alert variant="destructive" contained className="select-text cursor-text">
+        <Alert
+          variant="destructive"
+          contained
+          className="select-text cursor-text"
+        >
           <div className="flex items-start justify-between gap-2">
             <span>{state.fetchError}</span>
             <button

@@ -469,8 +469,7 @@ export const useSettingsStore = create<SettingsStore>()(
     /** Optimistically remove a provider from the verified set. */
     _invalidatePostProcessVerified: (providerId: string) => {
       set((state) => {
-        const current =
-          state.settings?.post_process_verified_providers ?? [];
+        const current = state.settings?.post_process_verified_providers ?? [];
         if (!state.settings || !current.includes(providerId)) return state;
         return {
           settings: {
@@ -566,7 +565,11 @@ export const useSettingsStore = create<SettingsStore>()(
 
     fetchPostProcessModels: async (providerId) => {
       const updateKey = `post_process_models_fetch:${providerId}`;
-      const { setUpdating, setPostProcessModelOptions, clearPostProcessFetchError } = get();
+      const {
+        setUpdating,
+        setPostProcessModelOptions,
+        clearPostProcessFetchError,
+      } = get();
       const setFetchError = (msg: string) =>
         set((state) => ({
           postProcessFetchErrors: {
@@ -588,8 +591,7 @@ export const useSettingsStore = create<SettingsStore>()(
           set((state) => {
             const current =
               state.settings?.post_process_verified_providers ?? [];
-            if (!state.settings || current.includes(providerId))
-              return state;
+            if (!state.settings || current.includes(providerId)) return state;
             return {
               settings: {
                 ...state.settings,
@@ -732,7 +734,12 @@ export const useSettingsStore = create<SettingsStore>()(
       setUpdating(updateKey, true);
 
       try {
-        const result = await commands.testSttApiKey(providerId, apiKey, model, realtime);
+        const result = await commands.testSttApiKey(
+          providerId,
+          apiKey,
+          model,
+          realtime,
+        );
         if (result.status === "error") {
           throw new Error(result.error);
         }

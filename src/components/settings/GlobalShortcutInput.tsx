@@ -223,7 +223,7 @@ export const GlobalShortcutInput: React.FC<GlobalShortcutInputProps> = ({
     if (autoRecord && !editingShortcutId && bindings[shortcutId]) {
       startRecording(shortcutId);
     }
-  }, [autoRecord, shortcutId]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [autoRecord, shortcutId]);
 
   // Format the current shortcut keys being recorded
   const formatCurrentKeys = (): string => {

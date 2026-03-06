@@ -39,9 +39,7 @@ pub fn change_post_process_api_key_setting(
     settings
         .post_process_verified_providers
         .remove(&provider_id);
-    settings
-        .post_process_api_keys
-        .insert(provider_id, api_key);
+    settings.post_process_api_keys.insert(provider_id, api_key);
     settings::write_settings(&app, settings);
     Ok(())
 }
@@ -138,9 +136,7 @@ pub async fn fetch_post_process_models(
 
     // Mark provider as verified after successful model fetch
     let mut settings = settings::get_settings(&app);
-    settings
-        .post_process_verified_providers
-        .insert(provider_id);
+    settings.post_process_verified_providers.insert(provider_id);
     settings::write_settings(&app, settings);
 
     Ok(models)

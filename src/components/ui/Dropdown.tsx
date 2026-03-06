@@ -60,10 +60,19 @@ const SearchableDropdown: React.FC<DropdownProps> = ({
 }) => {
   const { t } = useTranslation();
   const {
-    isOpen, setIsOpen, search, setSearch,
-    highlightedIndex, setHighlightedIndex,
-    triggerRef, popoverRef, searchInputRef, listRef,
-    filteredOptions, handleKeyDown, close,
+    isOpen,
+    setIsOpen,
+    search,
+    setSearch,
+    highlightedIndex,
+    setHighlightedIndex,
+    triggerRef,
+    popoverRef,
+    searchInputRef,
+    listRef,
+    filteredOptions,
+    handleKeyDown,
+    close,
   } = useDropdownPopover(options);
 
   const showCreateOption = useMemo(() => {
@@ -112,7 +121,10 @@ const SearchableDropdown: React.FC<DropdownProps> = ({
     handleKeyDown(e, totalItems, () => {
       if (highlightedIndex >= 0 && highlightedIndex < filteredOptions.length) {
         handleSelect(filteredOptions[highlightedIndex].value);
-      } else if (showCreateOption && highlightedIndex === filteredOptions.length) {
+      } else if (
+        showCreateOption &&
+        highlightedIndex === filteredOptions.length
+      ) {
         handleCreate();
       }
     });
@@ -136,9 +148,7 @@ const SearchableDropdown: React.FC<DropdownProps> = ({
           className,
         )}
       >
-        <span className="truncate">
-          {selectedLabel || placeholder}
-        </span>
+        <span className="truncate">{selectedLabel || placeholder}</span>
         <span className="flex items-center">
           {clearable && selectedValue && (
             <button
@@ -150,8 +160,18 @@ const SearchableDropdown: React.FC<DropdownProps> = ({
               }}
               tabIndex={-1}
             >
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-3.5 h-3.5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           )}
@@ -219,7 +239,9 @@ const SearchableDropdown: React.FC<DropdownProps> = ({
                           ? "bg-primary/10"
                           : "hover:bg-primary/10",
                       )}
-                      onMouseEnter={() => setHighlightedIndex(filteredOptions.length)}
+                      onMouseEnter={() =>
+                        setHighlightedIndex(filteredOptions.length)
+                      }
                       onClick={handleCreate}
                     >
                       {formatCreateLabel

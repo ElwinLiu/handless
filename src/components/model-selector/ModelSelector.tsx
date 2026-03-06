@@ -181,7 +181,6 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({ onError }) => {
   const sttApiKeysKey = JSON.stringify(sttApiKeys);
   const myProviders = useMemo(
     () => filterMyProviders(providers, sttApiKeys),
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- stabilise on serialised value
     [providers, sttApiKeysKey],
   );
 
@@ -221,7 +220,9 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({ onError }) => {
     // If using a cloud provider, show its name only if it's in My Models
     if (sttProviderId !== "local") {
       const cloudProvider = myProviders.find((p) => p.id === sttProviderId);
-      return cloudProvider ? cloudProvider.name : t("modelSelector.notAvailable");
+      return cloudProvider
+        ? cloudProvider.name
+        : t("modelSelector.notAvailable");
     }
 
     const currentProvider = myProviders.find((p) => p.id === displayModelId);
@@ -254,7 +255,9 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({ onError }) => {
     if (Object.keys(extractingModels).length > 0) return "extracting";
     if (Object.keys(downloadProgress).length > 0) return "downloading";
     if (sttProviderId !== "local") {
-      return verifiedSttProviders.includes(sttProviderId) ? "ready" : "unloaded";
+      return verifiedSttProviders.includes(sttProviderId)
+        ? "ready"
+        : "unloaded";
     }
     return modelStatus;
   };

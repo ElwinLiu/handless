@@ -9,14 +9,14 @@ Handless supports CLI flags for integration with scripts, window managers, and a
 
 ## Flags
 
-| Flag | Description |
-|---|---|
+| Flag                     | Description                                   |
+| ------------------------ | --------------------------------------------- |
 | `--toggle-transcription` | Toggle recording on/off on a running instance |
-| `--toggle-post-process` | Toggle recording with post-processing on/off |
-| `--cancel` | Cancel current operation |
-| `--start-hidden` | Launch without showing main window |
-| `--no-tray` | Launch without system tray icon |
-| `--debug` | Enable verbose (Trace) logging |
+| `--toggle-post-process`  | Toggle recording with post-processing on/off  |
+| `--cancel`               | Cancel current operation                      |
+| `--start-hidden`         | Launch without showing main window            |
+| `--no-tray`              | Launch without system tray icon               |
+| `--debug`                | Enable verbose (Trace) logging                |
 
 ## Implementation
 

@@ -11,7 +11,12 @@ import { toast } from "sonner";
 import { motion, AnimatePresence } from "motion/react";
 import { commands } from "@/bindings";
 import { useSettingsStore } from "@/stores/settingsStore";
-import { Keyboard, Microphone, Check, CircleNotch } from "@phosphor-icons/react";
+import {
+  Keyboard,
+  Microphone,
+  Check,
+  CircleNotch,
+} from "@phosphor-icons/react";
 import { spring, tapScale } from "@/lib/motion";
 
 interface AccessibilityOnboardingProps {

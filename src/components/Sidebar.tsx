@@ -130,7 +130,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 key={section.id}
                 className="relative flex gap-2 items-center py-1 px-2 w-full rounded-lg cursor-pointer"
                 onClick={() => onSectionChange(section.id)}
-                whileHover={{ backgroundColor: isActive ? undefined : "rgba(255,255,255,0.05)" }}
+                whileHover={{
+                  backgroundColor: isActive
+                    ? undefined
+                    : "rgba(255,255,255,0.05)",
+                }}
                 whileTap={tapScale}
                 transition={spring.snappy}
               >

@@ -8,7 +8,14 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { ChatText, Clock, Speedometer, Trash, Hash, type Icon } from "@phosphor-icons/react";
+import {
+  ChatText,
+  Clock,
+  Speedometer,
+  Trash,
+  Hash,
+  type Icon,
+} from "@phosphor-icons/react";
 import { commands, type DailySpeakingStats } from "@/bindings";
 
 function formatDuration(ms: number): string {
@@ -25,10 +32,23 @@ function formatDuration(ms: number): string {
 function formatShortDate(dateStr: string, locale: string): string {
   const [year, month, day] = dateStr.split("-").map(Number);
   const date = new Date(year, month - 1, day);
-  return new Intl.DateTimeFormat(locale, { month: "numeric", day: "numeric" }).format(date);
+  return new Intl.DateTimeFormat(locale, {
+    month: "numeric",
+    day: "numeric",
+  }).format(date);
 }
 
-function StatCard({ icon: IconComponent, label, value, subLabel }: { icon: Icon; label: string; value: string; subLabel: string }) {
+function StatCard({
+  icon: IconComponent,
+  label,
+  value,
+  subLabel,
+}: {
+  icon: Icon;
+  label: string;
+  value: string;
+  subLabel: string;
+}) {
   return (
     <div className="bg-background-translucent backdrop-blur-sm border border-muted/20 rounded px-3 py-2.5">
       <div className="flex items-center gap-1.5 mb-1">
@@ -125,10 +145,30 @@ export const StatsSettings: React.FC = () => {
       <>
         {/* Today summary cards */}
         <div className="px-3 grid grid-cols-4 gap-2">
-          <StatCard icon={ChatText} label={t("settings.stats.wordsSpoken")} value={String(todayWords)} subLabel={todayLabel} />
-          <StatCard icon={Clock} label={t("settings.stats.recordingTime")} value={formatDuration(todayDuration)} subLabel={todayLabel} />
-          <StatCard icon={Speedometer} label={t("settings.stats.avgWpm")} value={todayWpm.toFixed(0)} subLabel={todayLabel} />
-          <StatCard icon={Hash} label={t("settings.stats.transcriptions")} value={String(todayTranscriptions)} subLabel={todayLabel} />
+          <StatCard
+            icon={ChatText}
+            label={t("settings.stats.wordsSpoken")}
+            value={String(todayWords)}
+            subLabel={todayLabel}
+          />
+          <StatCard
+            icon={Clock}
+            label={t("settings.stats.recordingTime")}
+            value={formatDuration(todayDuration)}
+            subLabel={todayLabel}
+          />
+          <StatCard
+            icon={Speedometer}
+            label={t("settings.stats.avgWpm")}
+            value={todayWpm.toFixed(0)}
+            subLabel={todayLabel}
+          />
+          <StatCard
+            icon={Hash}
+            label={t("settings.stats.transcriptions")}
+            value={String(todayTranscriptions)}
+            subLabel={todayLabel}
+          />
         </div>
 
         {/* Chart */}
@@ -185,7 +225,9 @@ export const StatsSettings: React.FC = () => {
             className="flex items-center gap-1.5 text-[11px] text-muted/70 hover:text-red-400 transition-colors"
           >
             <Trash size={12} />
-            {confirmClear ? t("settings.stats.confirmClear") : t("settings.stats.clearStats")}
+            {confirmClear
+              ? t("settings.stats.confirmClear")
+              : t("settings.stats.clearStats")}
           </button>
         </div>
       </>

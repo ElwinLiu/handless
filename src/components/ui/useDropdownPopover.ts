@@ -1,4 +1,11 @@
-import { useState, useRef, useEffect, useMemo, useCallback, useLayoutEffect } from "react";
+import {
+  useState,
+  useRef,
+  useEffect,
+  useMemo,
+  useCallback,
+  useLayoutEffect,
+} from "react";
 import type { DropdownOption } from "./Dropdown";
 
 export function useDropdownPopover(options: DropdownOption[]) {
@@ -18,9 +25,7 @@ export function useDropdownPopover(options: DropdownOption[]) {
       const popoverHeight = popoverRef.current.offsetHeight;
       const spaceBelow = window.innerHeight - rect.bottom - 4;
       const fitsBelow = spaceBelow >= popoverHeight;
-      const top = fitsBelow
-        ? rect.bottom + 4
-        : rect.top - 4 - popoverHeight;
+      const top = fitsBelow ? rect.bottom + 4 : rect.top - 4 - popoverHeight;
       Object.assign(popoverRef.current.style, {
         position: "fixed",
         top: `${top}px`,

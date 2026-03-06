@@ -97,7 +97,9 @@ impl ShortcutAction for TranscribeAction {
         debug!("TranscribeAction::start called for binding: {}", binding_id);
 
         // Record key-press time for speaking duration measurement
-        *app.state::<RecordingStartTime>().lock().unwrap_or_else(|e| e.into_inner()) = Some(start_time);
+        *app.state::<RecordingStartTime>()
+            .lock()
+            .unwrap_or_else(|e| e.into_inner()) = Some(start_time);
 
         // Load model in the background
         let tm = app.state::<Arc<TranscriptionManager>>();
@@ -350,12 +352,19 @@ impl ShortcutAction for TranscribeAction {
                                 show_processing_overlay(&ah);
                             }
                             let processed = if let Some(ref pid) = post_process_prompt_id {
-                                crate::post_process::post_process_transcription(&settings, &final_text, pid).await
+                                crate::post_process::post_process_transcription(
+                                    &settings,
+                                    &final_text,
+                                    pid,
+                                )
+                                .await
                             } else {
                                 None
                             };
                             if let Some(result) = processed {
-                                let tps_display = result.stats.tokens_per_second
+                                let tps_display = result
+                                    .stats
+                                    .tokens_per_second
                                     .map(|tps| format!("{:.1} tok/s", tps))
                                     .unwrap_or_else(|| "N/A".to_string());
                                 info!(
@@ -372,10 +381,8 @@ impl ShortcutAction for TranscribeAction {
                                 final_text = result.text;
 
                                 if let Some(ref pid) = post_process_prompt_id {
-                                    if let Some(prompt) = settings
-                                        .post_process_prompts
-                                        .iter()
-                                        .find(|p| p.id == *pid)
+                                    if let Some(prompt) =
+                                        settings.post_process_prompts.iter().find(|p| p.id == *pid)
                                     {
                                         post_process_prompt = Some(prompt.prompt.clone());
                                     }
@@ -390,15 +397,18 @@ impl ShortcutAction for TranscribeAction {
                             // words are not whitespace-delimited.
                             let word_count = {
                                 let ws_words = transcription.split_whitespace().count();
-                                let cjk_chars = transcription.chars().filter(|c| {
-                                    matches!(*c,
-                                        '\u{4E00}'..='\u{9FFF}'   // CJK Unified Ideographs
-                                        | '\u{3400}'..='\u{4DBF}' // CJK Extension A
-                                        | '\u{3040}'..='\u{309F}' // Hiragana
-                                        | '\u{30A0}'..='\u{30FF}' // Katakana
-                                        | '\u{AC00}'..='\u{D7AF}' // Hangul Syllables
-                                    )
-                                }).count();
+                                let cjk_chars = transcription
+                                    .chars()
+                                    .filter(|c| {
+                                        matches!(*c,
+                                            '\u{4E00}'..='\u{9FFF}'   // CJK Unified Ideographs
+                                            | '\u{3400}'..='\u{4DBF}' // CJK Extension A
+                                            | '\u{3040}'..='\u{309F}' // Hiragana
+                                            | '\u{30A0}'..='\u{30FF}' // Katakana
+                                            | '\u{AC00}'..='\u{D7AF}' // Hangul Syllables
+                                        )
+                                    })
+                                    .count();
                                 if cjk_chars > 0 {
                                     // For CJK-heavy text, each character ≈ one word.
                                     // Whitespace-split tokens that are purely CJK are

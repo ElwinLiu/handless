@@ -65,7 +65,11 @@ export const ShortcutBindingsCard: React.FC = () => {
     try {
       // Create binding with empty key — user will record it next
       const result = await commands.addTranscribeBinding("", null);
-      if (result.status === "ok" && result.data.success && result.data.binding) {
+      if (
+        result.status === "ok" &&
+        result.data.success &&
+        result.data.binding
+      ) {
         await refreshSettings();
         // Enter recording mode for the new binding
         setRecordingNewId(result.data.binding.id);
@@ -120,13 +124,17 @@ export const ShortcutBindingsCard: React.FC = () => {
               />
             </div>
             {showStrategyColumn && (
-              <SimpleTooltip content={!isPostProcessReady ? t("settings.general.shortcuts.postProcessNotReady") : undefined}>
+              <SimpleTooltip
+                content={
+                  !isPostProcessReady
+                    ? t("settings.general.shortcuts.postProcessNotReady")
+                    : undefined
+                }
+              >
                 <div className="py-1.5">
                   <Dropdown
                     options={strategyOptions}
-                    selectedValue={
-                      binding.post_process_prompt_id || NONE_VALUE
-                    }
+                    selectedValue={binding.post_process_prompt_id || NONE_VALUE}
                     onSelect={(value) =>
                       handleStrategyChange(binding.id, value)
                     }

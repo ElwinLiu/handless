@@ -219,8 +219,8 @@ pub fn get_effective_microphone_name(app: AppHandle) -> Result<String, String> {
     let settings = get_settings(&app);
 
     // Clamshell override
-    let use_clamshell = clamshell::is_clamshell().unwrap_or(false)
-        && settings.clamshell_microphone.is_some();
+    let use_clamshell =
+        clamshell::is_clamshell().unwrap_or(false) && settings.clamshell_microphone.is_some();
     if use_clamshell {
         return Ok(settings.clamshell_microphone.unwrap());
     }

@@ -79,7 +79,15 @@ export const HandyKeysShortcutInput: React.FC<HandyKeysShortcutInputProps> = ({
     setCurrentKeys("");
     currentKeysRef.current = "";
     setOriginalBinding("");
-  }, [isRecording, originalBinding, shortcutId, updateBinding, t, autoRecord, onAutoRecordEnd]);
+  }, [
+    isRecording,
+    originalBinding,
+    shortcutId,
+    updateBinding,
+    t,
+    autoRecord,
+    onAutoRecordEnd,
+  ]);
 
   // Set up event listener for handy-keys events
   useEffect(() => {
@@ -221,7 +229,7 @@ export const HandyKeysShortcutInput: React.FC<HandyKeysShortcutInputProps> = ({
     if (autoRecord && !isRecording && bindings[shortcutId]) {
       startRecording();
     }
-  }, [autoRecord, shortcutId]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [autoRecord, shortcutId]);
 
   // Format the current shortcut keys being recorded
   const formatCurrentKeys = (): string => {

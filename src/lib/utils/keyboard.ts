@@ -224,7 +224,9 @@ export const formatKeyCombination = (
   osType: OSType,
 ): string => {
   if (!combination) return "";
-  const parts = combination.split("+").map((part) => formatKeyPart(part, osType));
+  const parts = combination
+    .split("+")
+    .map((part) => formatKeyPart(part, osType));
   return osType === "macos" ? parts.join("") : parts.join(" + ");
 };
 

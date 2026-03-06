@@ -1,4 +1,6 @@
-use crate::settings::{AppSettings, APPLE_INTELLIGENCE_DEFAULT_MODEL_ID, APPLE_INTELLIGENCE_PROVIDER_ID};
+use crate::settings::{
+    AppSettings, APPLE_INTELLIGENCE_DEFAULT_MODEL_ID, APPLE_INTELLIGENCE_PROVIDER_ID,
+};
 use log::debug;
 use serde::{Deserialize, Serialize};
 use specta::Type;

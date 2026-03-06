@@ -103,6 +103,16 @@
         "checkFailed": "Error al verificar permisos. Por favor, inténtalo de nuevo.",
         "requestFailed": "Error al solicitar permiso. Por favor, inténtalo de nuevo."
       }
+    },
+    "cloud": {
+      "openai_stt": {
+        "name": "OpenAI",
+        "description": "OpenAI's cloud speech-to-text API. Fast and accurate with support for 57+ languages."
+      },
+      "soniox": {
+        "name": "Soniox",
+        "description": "Soniox cloud speech-to-text. High accuracy with async transcription."
+      }
     }
   },
   "modelSelector": {
@@ -132,7 +142,8 @@
       "languageOnly": "Solo {{language}}"
     },
     "cancel": "Cancelar",
-    "cancelDownload": "Cancelar descarga"
+    "cancelDownload": "Cancelar descarga",
+    "notAvailable": "Not Available"
   },
   "settings": {
     "modelSettings": {
@@ -155,7 +166,63 @@
       },
       "noModelsMatch": "Ningún modelo coincide con este filtro.",
       "yourModels": "Modelos descargados",
-      "availableModels": "Disponibles para descargar"
+      "availableModels": "Disponibles para descargar",
+      "tabs": {
+        "myModels": "My Models",
+        "library": "Library"
+      },
+      "cloudProviders": {
+        "title": "Cloud Providers",
+        "badge": "Cloud",
+        "notConfigured": "Not configured",
+        "verify": "Verify",
+        "verifying": "Verifying...",
+        "verified": "Verified",
+        "verifyFailed": "Verification failed",
+        "verifyFirst": "Verify your API key first",
+        "apiKey": {
+          "title": "API Key",
+          "placeholder": "sk-..."
+        },
+        "model": {
+          "title": "Model",
+          "placeholder": "Enter model name"
+        },
+        "baseUrl": {
+          "title": "Base URL"
+        },
+        "getApiKey": "Get API key",
+        "realtimeTranscription": "Real-time transcription",
+        "realtimeDescription": "Uses a WebSocket connection instead of file upload for lower latency",
+        "options": {
+          "language": "Language",
+          "selectLanguage": "Auto detect",
+          "selectLanguageHint": "Leave empty to auto detect",
+          "selectLanguages": "Select languages...",
+          "selectTranslate": "Select languages...",
+          "prompt": "Prompt",
+          "promptDescription": "Optional text to guide the model's style or continue a previous segment. Not supported by gpt-4o-transcribe-diarize.",
+          "temperature": "Temperature",
+          "temperatureDescription": "Higher values produce more random results (0-1). Only supported by whisper-1.",
+          "languageHints": "Language Hints",
+          "languageHintsStrict": "Strict Language Hints",
+          "languageHintsStrictDescription": "Only transcribe in the specified languages",
+          "contextTerms": "Context Terms",
+          "contextTermsDescription": "Comma-separated terms to improve recognition accuracy",
+          "contextDescription": "Context Description",
+          "contextDescriptionDescription": "Freeform text providing general context about the audio content",
+          "enableSpeakerDiarization": "Speaker Diarization",
+          "enableSpeakerDiarizationDescription": "Identify and separate different speakers",
+          "enableLanguageIdentification": "Language Identification",
+          "enableLanguageIdentificationDescription": "Detect language for each segment"
+        }
+      },
+      "localModels": {
+        "title": "Local Models"
+      },
+      "myModels": {
+        "noModelsConfigured": "No models configured. Visit the Library to download models or set up cloud providers."
+      }
     },
     "general": {
       "title": "General",
@@ -197,6 +264,13 @@
       "pushToTalk": {
         "label": "Presionar para Hablar",
         "description": "Mantén presionado para grabar, suelta para detener"
+      },
+      "shortcuts": {
+        "title": "Shortcuts",
+        "strategyNone": "None",
+        "addNew": "Add Shortcut",
+        "remove": "Remove shortcut",
+        "postProcessNotReady": "Configure a post-processing provider first"
       }
     },
     "sound": {
@@ -228,7 +302,8 @@
         "app": "Aplicación",
         "output": "Salida",
         "transcription": "Transcripción",
-        "history": "Historial"
+        "history": "Historial",
+        "data": "Data"
       },
       "startHidden": {
         "label": "Iniciar Oculto",
@@ -316,6 +391,42 @@
         "add": "Agregar",
         "remove": "Eliminar {{word}}",
         "duplicate": "\"{{word}}\" ya existe"
+      },
+      "exportData": {
+        "title": "Export Data",
+        "description": "Export your settings, history, and recordings to a file",
+        "button": "Export...",
+        "includeSettings": "Settings",
+        "includeHistory": "Transcription History",
+        "includeRecordings": "Audio Recordings",
+        "success": "Data exported successfully",
+        "error": "Failed to export data"
+      },
+      "importData": {
+        "title": "Import Data",
+        "description": "Import settings and data from a previously exported file",
+        "button": "Import...",
+        "previewTitle": "Import Preview",
+        "exportDate": "Exported on {{date}}",
+        "appVersion": "App version: {{version}}",
+        "historyCount": "{{count}} history entries",
+        "recordingsCount": "{{count}} recordings",
+        "statsCount": "{{count}} speaking stats",
+        "importSettings": "Settings",
+        "importRecordings": "Recordings",
+        "warning": "Importing settings will overwrite your current configuration. The export file may contain API keys.",
+        "success": "Data imported successfully",
+        "error": "Failed to import data",
+        "invalidFile": "The selected file is not a valid Handless export"
+      },
+      "theme": {
+        "title": "Theme",
+        "description": "Choose the app color theme",
+        "options": {
+          "dark": "Dark",
+          "light": "Light",
+          "system": "System"
+        }
       }
     },
     "postProcessing": {
@@ -418,7 +529,8 @@
       },
       "soundTheme": {
         "label": "Tema de Sonido",
-        "description": "Elige un tema de sonido para la retroalimentación de inicio y parada de grabación"
+        "description": "Elige un tema de sonido para la retroalimentación de inicio y parada de grabación",
+        "preview": "Preview sound theme (plays start then stop)"
       },
       "wordCorrectionThreshold": {
         "title": "Umbral de Corrección de Palabras",
@@ -534,7 +646,9 @@
     "off": "Desactivado",
     "yes": "Sí",
     "no": "No",
-    "noOptionsFound": "No se encontraron opciones"
+    "noOptionsFound": "No se encontraron opciones",
+    "copyToClipboard": "Copy to clipboard",
+    "search": "Search..."
   },
   "accessibility": {
     "permissionsRequired": "Se Requieren Permisos de Accesibilidad",

@@ -94,8 +94,8 @@ interface MicrophoneSelectorProps {
   grouped?: boolean;
 }
 
-export const MicrophoneSelector: React.FC<MicrophoneSelectorProps> =
-  React.memo(({ descriptionMode = "tooltip", grouped = false }) => {
+export const MicrophoneSelector: React.FC<MicrophoneSelectorProps> = React.memo(
+  ({ descriptionMode = "tooltip", grouped = false }) => {
     const { t } = useTranslation();
     const {
       getSetting,
@@ -114,10 +114,7 @@ export const MicrophoneSelector: React.FC<MicrophoneSelectorProps> =
     );
 
     const rawPriority = getSetting("microphone_priority");
-    const priority: string[] = useMemo(
-      () => rawPriority ?? [],
-      [rawPriority],
-    );
+    const priority: string[] = useMemo(() => rawPriority ?? [], [rawPriority]);
 
     const availableDeviceNames = useMemo(
       () => new Set(audioDevices.map((d) => d.name)),
@@ -229,6 +226,7 @@ export const MicrophoneSelector: React.FC<MicrophoneSelectorProps> =
         </div>
       </SettingContainer>
     );
-  });
+  },
+);
 
 MicrophoneSelector.displayName = "MicrophoneSelector";

@@ -147,12 +147,14 @@ For building from source on Ubuntu/Debian, you may also need `libgtk-layer-shell
 On Wayland, system-level shortcuts must be configured through your desktop environment or window manager. Use the [CLI flags](#cli-parameters) as the command.
 
 **GNOME:**
+
 1. Open **Settings > Keyboard > Keyboard Shortcuts > Custom Shortcuts**
 2. Click **+**, set **Name** to `Toggle Handless Transcription`
 3. Set **Command** to `handless --toggle-transcription`
 4. Click **Set Shortcut** and press your desired key combination
 
 **KDE Plasma:**
+
 1. Open **System Settings > Shortcuts > Custom Shortcuts**
 2. Click **Edit > New > Global Shortcut > Command/URL**
 3. Set your desired key combination and command `handless --toggle-transcription`
@@ -190,7 +192,6 @@ bindsym $mod+p exec pkill -USR1 -n handless
 ### Debug Mode
 
 Press `Cmd+Shift+D` (macOS) or `Ctrl+Shift+D` (Windows/Linux) to open the debug panel.
-
 
 ## Contributing
 

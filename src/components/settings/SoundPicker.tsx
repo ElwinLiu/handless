@@ -55,11 +55,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
           options={options}
         />
         <SimpleTooltip content={t("settings.advanced.soundTheme.preview")}>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handlePlayBothSounds}
-          >
+          <Button variant="ghost" size="sm" onClick={handlePlayBothSounds}>
             <PlayIcon className="h-4 w-4" />
           </Button>
         </SimpleTooltip>

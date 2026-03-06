@@ -55,8 +55,7 @@ pub fn ensure_prompt_defaults(settings: &mut AppSettings) -> bool {
             .find(|p| p.id == default_prompt.id)
         {
             Some(existing) => {
-                if existing.prompt != default_prompt.prompt
-                    || existing.name != default_prompt.name
+                if existing.prompt != default_prompt.prompt || existing.name != default_prompt.name
                 {
                     existing.prompt = default_prompt.prompt.clone();
                     existing.name = default_prompt.name.clone();

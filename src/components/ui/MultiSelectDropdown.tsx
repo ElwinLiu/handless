@@ -27,10 +27,18 @@ export const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
 }) => {
   const { t } = useTranslation();
   const {
-    isOpen, setIsOpen, search, setSearch,
-    highlightedIndex, setHighlightedIndex,
-    triggerRef, popoverRef, searchInputRef, listRef,
-    filteredOptions, handleKeyDown,
+    isOpen,
+    setIsOpen,
+    search,
+    setSearch,
+    highlightedIndex,
+    setHighlightedIndex,
+    triggerRef,
+    popoverRef,
+    searchInputRef,
+    listRef,
+    filteredOptions,
+    handleKeyDown,
   } = useDropdownPopover(options);
 
   useEffect(() => {
@@ -104,8 +112,18 @@ export const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
                   onClick={(e) => removeValue(opt.value, e)}
                   tabIndex={-1}
                 >
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <svg
+                    className="w-3 h-3"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               </span>
@@ -174,8 +192,18 @@ export const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
                         )}
                       >
                         {isSelected && (
-                          <svg className="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                          <svg
+                            className="w-2.5 h-2.5 text-white"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={3}
+                              d="M5 13l4 4L19 7"
+                            />
                           </svg>
                         )}
                       </span>

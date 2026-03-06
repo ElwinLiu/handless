@@ -242,7 +242,6 @@ impl HistoryManager {
         Ok(())
     }
 
-
     pub fn cleanup_old_entries(&self) -> Result<()> {
         let retention_period = crate::settings::get_recording_retention_period(&self.app_handle);
 
@@ -475,10 +474,8 @@ impl HistoryManager {
         )?;
 
         for entry in entries {
-            let exists: bool = check_stmt.query_row(
-                params![entry.file_name, entry.timestamp],
-                |row| row.get(0),
-            )?;
+            let exists: bool = check_stmt
+                .query_row(params![entry.file_name, entry.timestamp], |row| row.get(0))?;
 
             if !exists {
                 insert_stmt.execute(params![

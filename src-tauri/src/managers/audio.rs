@@ -189,7 +189,10 @@ impl AudioRecordingManager {
 
     fn find_device_by_name(name: &str) -> Option<cpal::Device> {
         match list_input_devices() {
-            Ok(devices) => devices.into_iter().find(|d| d.name == name).map(|d| d.device),
+            Ok(devices) => devices
+                .into_iter()
+                .find(|d| d.name == name)
+                .map(|d| d.device),
             Err(e) => {
                 debug!("Failed to list devices, using default: {}", e);
                 None

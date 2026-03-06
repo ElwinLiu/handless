@@ -2,12 +2,12 @@ pub(crate) mod actions;
 #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
 mod apple_intelligence;
 mod audio_feedback;
-mod device_watcher;
 pub mod audio_toolkit;
 pub mod cli;
 mod clipboard;
 mod cloud_stt;
 mod commands;
+mod device_watcher;
 mod helpers;
 mod input;
 mod managers;

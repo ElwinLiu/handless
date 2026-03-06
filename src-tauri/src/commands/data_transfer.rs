@@ -61,7 +61,10 @@ fn is_archive(path: &str) -> bool {
     path.ends_with(".tar.gz") || path.ends_with(".tgz")
 }
 
-fn validate_and_preview(data: &ExportData, recording_files_count: usize) -> Result<ImportPreview, String> {
+fn validate_and_preview(
+    data: &ExportData,
+    recording_files_count: usize,
+) -> Result<ImportPreview, String> {
     if data.manifest.export_version > CURRENT_EXPORT_VERSION {
         return Err(format!(
             "Export file version {} is newer than supported version {}. Please update the app.",
@@ -160,11 +163,15 @@ pub async fn export_app_data(
     };
 
     if include_recordings {
-        write_tar_gz_export(&export_path, &export_data, history_manager.get_recordings_dir())
-            .map_err(|e| format!("Failed to write export archive: {}", e))?;
+        write_tar_gz_export(
+            &export_path,
+            &export_data,
+            history_manager.get_recordings_dir(),
+        )
+        .map_err(|e| format!("Failed to write export archive: {}", e))?;
     } else {
-        let json =
-            serde_json::to_string_pretty(&export_data).map_err(|e| format!("Failed to serialize export data: {}", e))?;
+        let json = serde_json::to_string_pretty(&export_data)
+            .map_err(|e| format!("Failed to serialize export data: {}", e))?;
         fs::write(&export_path, json).map_err(|e| format!("Failed to write export file: {}", e))?;
     }
 
@@ -193,7 +200,9 @@ fn write_tar_gz_export(
     // Add recording files (skip missing files gracefully)
     for entry in &data.history {
         let file_path = recordings_dir.join(&entry.file_name);
-        if let Err(e) = tar.append_path_with_name(&file_path, format!("recordings/{}", entry.file_name)) {
+        if let Err(e) =
+            tar.append_path_with_name(&file_path, format!("recordings/{}", entry.file_name))
+        {
             warn!("Skipping recording {}: {}", entry.file_name, e);
         }
     }
@@ -217,8 +226,7 @@ pub async fn validate_import_file(import_path: String) -> Result<ImportPreview, 
 fn read_json_export(path: &str) -> Result<ExportData, String> {
     let content =
         fs::read_to_string(path).map_err(|e| format!("Failed to read import file: {}", e))?;
-    serde_json::from_str(&content)
-        .map_err(|e| format!("Invalid export file format: {}", e))
+    serde_json::from_str(&content).map_err(|e| format!("Invalid export file format: {}", e))
 }
 
 fn validate_json_import(path: &str) -> Result<ImportPreview, String> {
@@ -227,8 +235,7 @@ fn validate_json_import(path: &str) -> Result<ImportPreview, String> {
 }
 
 fn validate_tar_gz_import(path: &str) -> Result<ImportPreview, String> {
-    let file =
-        fs::File::open(path).map_err(|e| format!("Failed to open import file: {}", e))?;
+    let file = fs::File::open(path).map_err(|e| format!("Failed to open import file: {}", e))?;
     let dec = GzDecoder::new(file);
     let mut archive = Archive::new(dec);
 
@@ -320,8 +327,7 @@ fn import_from_tar_gz(
     import_history: bool,
     import_recordings: bool,
 ) -> Result<(), String> {
-    let file =
-        fs::File::open(path).map_err(|e| format!("Failed to open import file: {}", e))?;
+    let file = fs::File::open(path).map_err(|e| format!("Failed to open import file: {}", e))?;
     let dec = GzDecoder::new(file);
     let mut archive = Archive::new(dec);
 
@@ -356,7 +362,9 @@ fn import_from_tar_gz(
                     error!("Skipping suspicious path in archive: {}", path_str);
                     continue;
                 }
-                let entry_size = entry.header().size()
+                let entry_size = entry
+                    .header()
+                    .size()
                     .map_err(|e| format!("Failed to read entry size: {}", e))?;
                 if entry_size > MAX_RECORDING_FILE_SIZE {
                     warn!(

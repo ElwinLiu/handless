@@ -176,11 +176,13 @@ const ModelCard: React.FC<ModelCardProps> = ({
         className={`flex items-center gap-2 w-full ${compact ? "" : "-mb-0.5 mt-0.5"}`}
       >
         {provider.supported_languages.length > 0 && (
-          <SimpleTooltip content={
+          <SimpleTooltip
+            content={
               provider.supported_languages.length === 1
                 ? t("modelSelector.capabilities.singleLanguage")
                 : t("modelSelector.capabilities.languageSelection")
-            }>
+            }
+          >
             <div
               className={`flex items-center gap-1 text-xs px-1.5 py-0.5 rounded ${
                 provider.supported_languages.length === 1
@@ -197,9 +199,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
         )}
         {provider.supports_translation && (
           <SimpleTooltip content={t("modelSelector.capabilities.translation")}>
-            <div
-              className="flex items-center gap-1 text-xs text-purple-400/80 bg-purple-400/10 px-1.5 py-0.5 rounded"
-            >
+            <div className="flex items-center gap-1 text-xs text-purple-400/80 bg-purple-400/10 px-1.5 py-0.5 rounded">
               <Translate className="w-3 h-3" />
               <span>{t("modelSelector.capabilities.translate")}</span>
             </div>
@@ -214,9 +214,11 @@ const ModelCard: React.FC<ModelCardProps> = ({
         {isLocal &&
           onDelete &&
           (status === "available" || status === "active") && (
-            <SimpleTooltip content={t("modelSelector.deleteModel", {
+            <SimpleTooltip
+              content={t("modelSelector.deleteModel", {
                 modelName: displayName,
-              })}>
+              })}
+            >
               <Button
                 variant="ghost"
                 size="sm"

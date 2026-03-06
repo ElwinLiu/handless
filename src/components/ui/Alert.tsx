@@ -1,6 +1,11 @@
 import React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { WarningCircle, Warning, Info, CheckCircle } from "@phosphor-icons/react";
+import {
+  WarningCircle,
+  Warning,
+  Info,
+  CheckCircle,
+} from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
 const alertVariants = cva(
@@ -39,7 +44,10 @@ interface AlertProps
 }
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
-  ({ className, variant = "default", contained = false, children, ...props }, ref) => {
+  (
+    { className, variant = "default", contained = false, children, ...props },
+    ref,
+  ) => {
     const Icon = variantIcons[variant ?? "default"];
 
     return (

@@ -103,6 +103,16 @@
         "checkFailed": "권한 확인에 실패했습니다. 다시 시도해주세요.",
         "requestFailed": "권한 요청에 실패했습니다. 다시 시도해주세요."
       }
+    },
+    "cloud": {
+      "openai_stt": {
+        "name": "OpenAI",
+        "description": "OpenAI's cloud speech-to-text API. Fast and accurate with support for 57+ languages."
+      },
+      "soniox": {
+        "name": "Soniox",
+        "description": "Soniox cloud speech-to-text. High accuracy with async transcription."
+      }
     }
   },
   "modelSelector": {
@@ -132,7 +142,8 @@
       "languageOnly": "{{language}} 전용",
       "translation": "영어로 번역 가능",
       "translate": "영어로 번역"
-    }
+    },
+    "notAvailable": "Not Available"
   },
   "settings": {
     "modelSettings": {
@@ -179,6 +190,13 @@
       "pushToTalk": {
         "label": "녹음 중 단축키 홀딩",
         "description": "누르고 있으면 녹음, 놓으면 정지"
+      },
+      "shortcuts": {
+        "title": "Shortcuts",
+        "strategyNone": "None",
+        "addNew": "Add Shortcut",
+        "remove": "Remove shortcut",
+        "postProcessNotReady": "Configure a post-processing provider first"
       }
     },
     "sound": {
@@ -220,7 +238,63 @@
         "translation": "번역",
         "allLanguages": "모든 언어"
       },
-      "noModelsMatch": "이 필터에 맞는 모델이 없습니다."
+      "noModelsMatch": "이 필터에 맞는 모델이 없습니다.",
+      "tabs": {
+        "myModels": "My Models",
+        "library": "Library"
+      },
+      "cloudProviders": {
+        "title": "Cloud Providers",
+        "badge": "Cloud",
+        "notConfigured": "Not configured",
+        "verify": "Verify",
+        "verifying": "Verifying...",
+        "verified": "Verified",
+        "verifyFailed": "Verification failed",
+        "verifyFirst": "Verify your API key first",
+        "apiKey": {
+          "title": "API Key",
+          "placeholder": "sk-..."
+        },
+        "model": {
+          "title": "Model",
+          "placeholder": "Enter model name"
+        },
+        "baseUrl": {
+          "title": "Base URL"
+        },
+        "getApiKey": "Get API key",
+        "realtimeTranscription": "Real-time transcription",
+        "realtimeDescription": "Uses a WebSocket connection instead of file upload for lower latency",
+        "options": {
+          "language": "Language",
+          "selectLanguage": "Auto detect",
+          "selectLanguageHint": "Leave empty to auto detect",
+          "selectLanguages": "Select languages...",
+          "selectTranslate": "Select languages...",
+          "prompt": "Prompt",
+          "promptDescription": "Optional text to guide the model's style or continue a previous segment. Not supported by gpt-4o-transcribe-diarize.",
+          "temperature": "Temperature",
+          "temperatureDescription": "Higher values produce more random results (0-1). Only supported by whisper-1.",
+          "languageHints": "Language Hints",
+          "languageHintsStrict": "Strict Language Hints",
+          "languageHintsStrictDescription": "Only transcribe in the specified languages",
+          "contextTerms": "Context Terms",
+          "contextTermsDescription": "Comma-separated terms to improve recognition accuracy",
+          "contextDescription": "Context Description",
+          "contextDescriptionDescription": "Freeform text providing general context about the audio content",
+          "enableSpeakerDiarization": "Speaker Diarization",
+          "enableSpeakerDiarizationDescription": "Identify and separate different speakers",
+          "enableLanguageIdentification": "Language Identification",
+          "enableLanguageIdentificationDescription": "Detect language for each segment"
+        }
+      },
+      "localModels": {
+        "title": "Local Models"
+      },
+      "myModels": {
+        "noModelsConfigured": "No models configured. Visit the Library to download models or set up cloud providers."
+      }
     },
     "advanced": {
       "title": "고급",
@@ -228,7 +302,8 @@
         "app": "앱",
         "output": "출력",
         "transcription": "전사",
-        "history": "히스토리"
+        "history": "히스토리",
+        "data": "Data"
       },
       "startHidden": {
         "label": "숨김으로 시작",
@@ -316,6 +391,42 @@
         "add": "추가",
         "remove": "{{word}} 제거",
         "duplicate": "\"{{word}}\"이(가) 이미 존재합니다"
+      },
+      "exportData": {
+        "title": "Export Data",
+        "description": "Export your settings, history, and recordings to a file",
+        "button": "Export...",
+        "includeSettings": "Settings",
+        "includeHistory": "Transcription History",
+        "includeRecordings": "Audio Recordings",
+        "success": "Data exported successfully",
+        "error": "Failed to export data"
+      },
+      "importData": {
+        "title": "Import Data",
+        "description": "Import settings and data from a previously exported file",
+        "button": "Import...",
+        "previewTitle": "Import Preview",
+        "exportDate": "Exported on {{date}}",
+        "appVersion": "App version: {{version}}",
+        "historyCount": "{{count}} history entries",
+        "recordingsCount": "{{count}} recordings",
+        "statsCount": "{{count}} speaking stats",
+        "importSettings": "Settings",
+        "importRecordings": "Recordings",
+        "warning": "Importing settings will overwrite your current configuration. The export file may contain API keys.",
+        "success": "Data imported successfully",
+        "error": "Failed to import data",
+        "invalidFile": "The selected file is not a valid Handless export"
+      },
+      "theme": {
+        "title": "Theme",
+        "description": "Choose the app color theme",
+        "options": {
+          "dark": "Dark",
+          "light": "Light",
+          "system": "System"
+        }
       }
     },
     "postProcessing": {
@@ -418,7 +529,8 @@
       },
       "soundTheme": {
         "label": "사운드 테마",
-        "description": "녹음 시작 및 정지 피드백을 위한 사운드 테마를 선택하세요"
+        "description": "녹음 시작 및 정지 피드백을 위한 사운드 테마를 선택하세요",
+        "preview": "Preview sound theme (plays start then stop)"
       },
       "wordCorrectionThreshold": {
         "title": "단어 수정 임계값",
@@ -534,7 +646,9 @@
     "off": "꺼짐",
     "yes": "예",
     "no": "아니오",
-    "noOptionsFound": "옵션을 찾을 수 없습니다"
+    "noOptionsFound": "옵션을 찾을 수 없습니다",
+    "copyToClipboard": "Copy to clipboard",
+    "search": "Search..."
   },
   "accessibility": {
     "permissionsRequired": "접근성 권한 필요",

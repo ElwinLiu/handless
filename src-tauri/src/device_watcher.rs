@@ -8,9 +8,8 @@ use tauri::{AppHandle, Emitter};
 #[cfg(target_os = "macos")]
 pub fn start(app: &AppHandle) {
     use coreaudio_sys::{
+        kAudioHardwarePropertyDevices, kAudioObjectPropertyScopeGlobal, kAudioObjectSystemObject,
         AudioObjectAddPropertyListener, AudioObjectPropertyAddress,
-        kAudioHardwarePropertyDevices, kAudioObjectPropertyScopeGlobal,
-        kAudioObjectSystemObject,
     };
     use std::ffi::c_void;
 
