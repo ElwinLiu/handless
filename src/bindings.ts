@@ -580,14 +580,6 @@ async getTranscriptionModelStatus() : Promise<Result<string | null, string>> {
     else return { status: "error", error: e  as any };
 }
 },
-async hasAnyModelsAvailable() : Promise<Result<boolean, string>> {
-    try {
-    return { status: "ok", data: await TAURI_INVOKE("has_any_models_available") };
-} catch (e) {
-    if(e instanceof Error) throw e;
-    else return { status: "error", error: e  as any };
-}
-},
 async getAllSttProviders() : Promise<Result<SttProviderInfo[], string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("get_all_stt_providers") };

@@ -7,6 +7,7 @@ import { SettingsGroup } from "../../ui/SettingsGroup";
 import { StartHidden } from "../StartHidden";
 import { AutostartToggle } from "../AutostartToggle";
 import { ShowTrayIcon } from "../ShowTrayIcon";
+import { OutputDeviceSelector } from "../OutputDeviceSelector";
 import { ThemeSelector } from "../ThemeSelector";
 import { PasteMethodSetting } from "../PasteMethod";
 import { TypingToolSetting } from "../TypingTool";
@@ -15,9 +16,11 @@ import { AutoSubmit } from "../AutoSubmit";
 import { AppendTrailingSpace } from "../AppendTrailingSpace";
 import { RecordingRetentionPeriodSelector } from "../RecordingRetentionPeriod";
 import { KeyboardImplementationSelector } from "../debug/KeyboardImplementationSelector";
+import { useSettings } from "../../../hooks/useSettings";
 
 export const AdvancedSettings: React.FC = () => {
   const { t } = useTranslation();
+  const { audioFeedbackEnabled } = useSettings();
 
   return (
     <div className="max-w-3xl w-full mx-auto space-y-4">
@@ -38,6 +41,11 @@ export const AdvancedSettings: React.FC = () => {
         <PasteMethodSetting descriptionMode="tooltip" grouped={true} />
         <TypingToolSetting descriptionMode="tooltip" grouped={true} />
         <ClipboardHandlingSetting descriptionMode="tooltip" grouped={true} />
+        <OutputDeviceSelector
+          descriptionMode="tooltip"
+          grouped={true}
+          disabled={!audioFeedbackEnabled}
+        />
         <AutoSubmit descriptionMode="tooltip" grouped={true} />
       </SettingsGroup>
 

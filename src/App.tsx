@@ -11,7 +11,7 @@ import {
 import "./App.css";
 import AccessibilityPermissions from "./components/AccessibilityPermissions";
 import Footer from "./components/footer";
-import Onboarding, { AccessibilityOnboarding } from "./components/onboarding";
+import { AccessibilityOnboarding } from "./components/onboarding";
 import { Sidebar, SidebarSection, SECTIONS_CONFIG } from "./components/Sidebar";
 import { useSettings } from "./hooks/useSettings";
 import { useTheme } from "./hooks/useTheme";
@@ -19,7 +19,7 @@ import { commands } from "@/bindings";
 import { getLanguageDirection, initializeRTL } from "@/lib/utils/rtl";
 import { pageVariants, pageTransition } from "@/lib/motion";
 
-type OnboardingStep = "accessibility" | "model" | "done";
+type OnboardingStep = "accessibility" | "done";
 
 const renderSettingsContent = (section: SidebarSection) => {
   const ActiveComponent =
@@ -32,9 +32,6 @@ function App() {
   const [onboardingStep, setOnboardingStep] = useState<OnboardingStep | null>(
     null,
   );
-  // Track if this is a returning user who just needs to grant permissions
-  // (vs a new user who needs full onboarding including model selection)
-  const [isReturningUser, setIsReturningUser] = useState(false);
   const [currentSection, setCurrentSection] =
     useState<SidebarSection>("general");
   const { settings, updateSetting, refreshAudioDevices, refreshOutputDevices, setupDeviceWatcher } =
@@ -94,50 +91,24 @@ function App() {
   }, [settings?.debug_mode, updateSetting]);
 
   const checkOnboardingStatus = async () => {
-    try {
-      // Check if they have any models available
-      const result = await commands.hasAnyModelsAvailable();
-      const hasModels = result.status === "ok" && result.data;
-
-      if (hasModels) {
-        // Returning user - but check if they need to grant permissions on macOS
-        setIsReturningUser(true);
-        if (platform() === "macos") {
-          try {
-            const [hasAccessibility, hasMicrophone] = await Promise.all([
-              checkAccessibilityPermission(),
-              checkMicrophonePermission(),
-            ]);
-            if (!hasAccessibility || !hasMicrophone) {
-              // Missing permissions - show accessibility onboarding
-              setOnboardingStep("accessibility");
-              return;
-            }
-          } catch (e) {
-            console.warn("Failed to check permissions:", e);
-            // If we can't check, proceed to main app and let them fix it there
-          }
+    if (platform() === "macos") {
+      try {
+        const [hasAccessibility, hasMicrophone] = await Promise.all([
+          checkAccessibilityPermission(),
+          checkMicrophonePermission(),
+        ]);
+        if (!hasAccessibility || !hasMicrophone) {
+          setOnboardingStep("accessibility");
+          return;
         }
-        setOnboardingStep("done");
-      } else {
-        // New user - start full onboarding
-        setIsReturningUser(false);
-        setOnboardingStep("accessibility");
+      } catch (e) {
+        console.warn("Failed to check permissions:", e);
       }
-    } catch (error) {
-      console.error("Failed to check onboarding status:", error);
-      setOnboardingStep("accessibility");
     }
+    setOnboardingStep("done");
   };
 
   const handleAccessibilityComplete = () => {
-    // Returning users already have models, skip to main app
-    // New users need to select a model
-    setOnboardingStep(isReturningUser ? "done" : "model");
-  };
-
-  const handleModelSelected = () => {
-    // Transition to main app - user has started a download
     setOnboardingStep("done");
   };
 
@@ -159,19 +130,6 @@ function App() {
             transition={pageTransition}
           >
             <AccessibilityOnboarding onComplete={handleAccessibilityComplete} />
-          </motion.div>
-        )}
-
-        {onboardingStep === "model" && (
-          <motion.div
-            key="model"
-            variants={pageVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            transition={pageTransition}
-          >
-            <Onboarding onModelSelected={handleModelSelected} />
           </motion.div>
         )}
 

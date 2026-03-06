@@ -107,15 +107,6 @@ pub async fn get_transcription_model_status(
 
 #[tauri::command]
 #[specta::specta]
-pub async fn has_any_models_available(
-    model_manager: State<'_, Arc<ModelManager>>,
-) -> Result<bool, String> {
-    let models = model_manager.get_available_models();
-    Ok(models.iter().any(|m| m.is_downloaded))
-}
-
-#[tauri::command]
-#[specta::specta]
 pub async fn cancel_download(
     model_manager: State<'_, Arc<ModelManager>>,
     model_id: String,

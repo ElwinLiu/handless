@@ -28,15 +28,12 @@ interface ModelsStore {
   downloadStats: Record<string, DownloadStats>;
   loading: boolean;
   error: string | null;
-  hasAnyModels: boolean;
-  isFirstRun: boolean;
   initialized: boolean;
 
   // Actions
   initialize: () => Promise<void>;
   loadProviders: () => Promise<void>;
   loadCurrentModel: () => Promise<void>;
-  checkFirstRun: () => Promise<boolean>;
   selectModel: (modelId: string) => Promise<boolean>;
   downloadModel: (modelId: string) => Promise<boolean>;
   cancelDownload: (modelId: string) => Promise<boolean>;
@@ -61,8 +58,6 @@ export const useModelStore = create<ModelsStore>()(
     downloadStats: {},
     loading: true,
     error: null,
-    hasAnyModels: false,
-    isFirstRun: false,
     initialized: false,
 
     // Internal setters
@@ -123,21 +118,6 @@ export const useModelStore = create<ModelsStore>()(
       }
     },
 
-    checkFirstRun: async () => {
-      try {
-        const result = await commands.hasAnyModelsAvailable();
-        if (result.status === "ok") {
-          const hasModels = result.data;
-          set({ hasAnyModels: hasModels, isFirstRun: !hasModels });
-          return !hasModels;
-        }
-        return false;
-      } catch (err) {
-        console.error("Failed to check model availability:", err);
-        return false;
-      }
-    },
-
     selectModel: async (modelId: string) => {
       try {
         set({ error: null });
@@ -145,8 +125,6 @@ export const useModelStore = create<ModelsStore>()(
         if (result.status === "ok") {
           set({
             currentModel: modelId,
-            isFirstRun: false,
-            hasAnyModels: true,
           });
           return true;
         } else {
@@ -255,10 +233,10 @@ export const useModelStore = create<ModelsStore>()(
     initialize: async () => {
       if (get().initialized) return;
 
-      const { loadProviders, loadCurrentModel, checkFirstRun } = get();
+      const { loadProviders, loadCurrentModel } = get();
 
       // Load initial data
-      await Promise.all([loadProviders(), loadCurrentModel(), checkFirstRun()]);
+      await Promise.all([loadProviders(), loadCurrentModel()]);
 
       const reloadModelData = () => {
         get().loadProviders();
@@ -267,16 +245,12 @@ export const useModelStore = create<ModelsStore>()(
       // Set up event listeners
       listen<DownloadProgress>("model-download-progress", (event) => {
         const progress = event.payload;
-        set(
-          produce((state) => {
-            state.downloadProgress[progress.model_id] = progress;
-          }),
-        );
-
-        // Update download stats for speed calculation
         const now = Date.now();
         set(
           produce((state) => {
+            state.downloadProgress[progress.model_id] = progress;
+
+            // Update download stats for speed calculation
             const current = state.downloadStats[progress.model_id];
 
             if (!current) {

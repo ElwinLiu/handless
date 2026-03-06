@@ -2,7 +2,6 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Dropdown } from "../ui/Dropdown";
 import { SettingContainer } from "../ui/SettingContainer";
-import { ResetButton } from "../ui/ResetButton";
 import { useSettings } from "../../hooks/useSettings";
 import type { AudioDevice } from "@/bindings";
 
@@ -19,7 +18,6 @@ export const OutputDeviceSelector: React.FC<OutputDeviceSelectorProps> =
       const {
         getSetting,
         updateSetting,
-        resetSetting,
         isUpdating,
         isLoading,
         outputDevices,
@@ -32,10 +30,6 @@ export const OutputDeviceSelector: React.FC<OutputDeviceSelectorProps> =
 
       const handleOutputDeviceSelect = async (deviceName: string) => {
         await updateSetting("selected_output_device", deviceName);
-      };
-
-      const handleReset = async () => {
-        await resetSetting("selected_output_device");
       };
 
       const outputDeviceOptions = outputDevices.map((device: AudioDevice) => ({
@@ -51,30 +45,22 @@ export const OutputDeviceSelector: React.FC<OutputDeviceSelectorProps> =
           grouped={grouped}
           disabled={disabled}
         >
-          <div className="flex items-center space-x-1">
-            <Dropdown
-              options={outputDeviceOptions}
-              selectedValue={selectedOutputDevice}
-              onSelect={handleOutputDeviceSelect}
-              placeholder={
-                isLoading || outputDevices.length === 0
-                  ? t("settings.sound.outputDevice.loading")
-                  : t("settings.sound.outputDevice.placeholder")
-              }
-              disabled={
-                disabled ||
-                isUpdating("selected_output_device") ||
-                isLoading ||
-                outputDevices.length === 0
-              }
-            />
-            <ResetButton
-              onClick={handleReset}
-              disabled={
-                disabled || isUpdating("selected_output_device") || isLoading
-              }
-            />
-          </div>
+          <Dropdown
+            options={outputDeviceOptions}
+            selectedValue={selectedOutputDevice}
+            onSelect={handleOutputDeviceSelect}
+            placeholder={
+              isLoading || outputDevices.length === 0
+                ? t("settings.sound.outputDevice.loading")
+                : t("settings.sound.outputDevice.placeholder")
+            }
+            disabled={
+              disabled ||
+              isUpdating("selected_output_device") ||
+              isLoading ||
+              outputDevices.length === 0
+            }
+          />
         </SettingContainer>
       );
     },
