@@ -88,9 +88,9 @@ pub async fn test_api_key(api_key: &str, model: &str) -> Result<()> {
         .map_err(|e| anyhow::anyhow!("Soniox RT connection failed: {}", e))?;
     let (mut write, mut read) = ws_stream.split();
 
-    write.send(Message::Text(config.to_string())).await?;
+    write.send(Message::Text(config.to_string().into())).await?;
     // Send empty string to signal end-of-audio so the server responds quickly
-    write.send(Message::Text(String::new())).await?;
+    write.send(Message::Text(String::new().into())).await?;
 
     // Read the first response to check for auth/model errors
     let msg = tokio::time::timeout(WS_READ_TIMEOUT, read.next()).await;
@@ -133,14 +133,14 @@ pub async fn transcribe(
         .map_err(|e| anyhow::anyhow!("Soniox RT connection failed: {}", e))?;
     let (mut write, mut read) = ws_stream.split();
 
-    write.send(Message::Text(config.to_string())).await?;
+    write.send(Message::Text(config.to_string().into())).await?;
 
     for chunk in audio_wav.chunks(CHUNK_SIZE) {
-        write.send(Message::Binary(chunk.to_vec())).await?;
+        write.send(Message::Binary(chunk.to_vec().into())).await?;
     }
 
     // Empty string signals end of audio
-    write.send(Message::Text(String::new())).await?;
+    write.send(Message::Text(String::new().into())).await?;
 
     let mut final_text = String::new();
 
@@ -218,7 +218,7 @@ pub async fn start_streaming(
         .map_err(|e| anyhow::anyhow!("Soniox RT connection failed: {}", e))?;
     let (mut write, mut read) = ws_stream.split();
 
-    write.send(Message::Text(config.to_string())).await?;
+    write.send(Message::Text(config.to_string().into())).await?;
 
     // Sender task: reads audio frames from the channel, converts to i16 LE bytes, sends as binary
     let sender_handle = tokio::spawn(async move {
@@ -233,13 +233,13 @@ pub async fn start_streaming(
                 .collect();
 
             for chunk in bytes.chunks(CHUNK_SIZE) {
-                write.send(Message::Binary(chunk.to_vec())).await?;
+                write.send(Message::Binary(chunk.to_vec().into())).await?;
             }
         }
         // Signal end of audio — don't send Close here; let the reader
         // side finish after receiving the final response, otherwise the
         // server may shut down before sending all results.
-        write.send(Message::Text(String::new())).await?;
+        write.send(Message::Text(String::new().into())).await?;
         Ok(())
     });
 
