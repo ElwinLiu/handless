@@ -53,7 +53,7 @@ anyhow = "1.0.95"
 rubato = "1.0.0"
 hound = "3.5.1"
 log = "0.4.29"
-env_filter = "0.1.0"
+env_filter = "1.0.0"
 tokio = "1.50.0"
 vad-rs = { git = "https://github.com/cjpais/vad-rs", default-features = false }
 enigo = "0.6.1"
