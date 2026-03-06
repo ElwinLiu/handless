@@ -15,6 +15,7 @@ import { AutoSubmit } from "../AutoSubmit";
 import { RecordingRetentionPeriodSelector } from "../RecordingRetentionPeriod";
 import { KeyboardImplementationSelector } from "../debug/KeyboardImplementationSelector";
 import { useSettings } from "../../../hooks/useSettings";
+import { ExportImportSettings } from "./ExportImportSettings";
 
 export const AdvancedSettings: React.FC = () => {
   const { t } = useTranslation();
@@ -52,6 +53,10 @@ export const AdvancedSettings: React.FC = () => {
           descriptionMode="tooltip"
           grouped={true}
         />
+      </SettingsGroup>
+
+      <SettingsGroup title={t("settings.advanced.groups.data")}>
+        <ExportImportSettings />
       </SettingsGroup>
     </div>
   );

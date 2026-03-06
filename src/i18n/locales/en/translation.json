@@ -302,7 +302,35 @@
         "app": "App",
         "output": "Output",
         "transcription": "Transcription",
-        "history": "History"
+        "history": "History",
+        "data": "Data"
+      },
+      "exportData": {
+        "title": "Export Data",
+        "description": "Export your settings, history, and recordings to a file",
+        "button": "Export...",
+        "includeSettings": "Settings",
+        "includeHistory": "Transcription History",
+        "includeRecordings": "Audio Recordings",
+        "success": "Data exported successfully",
+        "error": "Failed to export data"
+      },
+      "importData": {
+        "title": "Import Data",
+        "description": "Import settings and data from a previously exported file",
+        "button": "Import...",
+        "previewTitle": "Import Preview",
+        "exportDate": "Exported on {{date}}",
+        "appVersion": "App version: {{version}}",
+        "historyCount": "{{count}} history entries",
+        "recordingsCount": "{{count}} recordings",
+        "statsCount": "{{count}} speaking stats",
+        "importSettings": "Settings",
+        "importRecordings": "Recordings",
+        "warning": "Importing settings will overwrite your current configuration. The export file may contain API keys.",
+        "success": "Data imported successfully",
+        "error": "Failed to import data",
+        "invalidFile": "The selected file is not a valid Handless export"
       },
       "theme": {
         "title": "Theme",

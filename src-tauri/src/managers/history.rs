@@ -452,6 +452,88 @@ impl HistoryManager {
         self.recordings_dir.join(file_name)
     }
 
+    pub fn get_recordings_dir(&self) -> &PathBuf {
+        &self.recordings_dir
+    }
+
+    pub fn get_all_speaking_stats(&self) -> Result<Vec<DailySpeakingStats>> {
+        // 253402300799 = Unix timestamp for 9999-12-31T23:59:59Z
+        self.get_speaking_stats(0, 253402300799)
+    }
+
+    pub fn import_history_entries(&self, entries: &[HistoryEntry]) -> Result<usize> {
+        let conn = self.get_connection()?;
+        let tx = conn.unchecked_transaction()?;
+        let mut imported = 0;
+
+        let mut check_stmt = tx.prepare(
+            "SELECT COUNT(*) > 0 FROM transcription_history WHERE file_name = ?1 AND timestamp = ?2",
+        )?;
+        let mut insert_stmt = tx.prepare(
+            "INSERT INTO transcription_history (file_name, timestamp, saved, title, transcription_text, post_processed_text, post_process_prompt)
+             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
+        )?;
+
+        for entry in entries {
+            let exists: bool = check_stmt.query_row(
+                params![entry.file_name, entry.timestamp],
+                |row| row.get(0),
+            )?;
+
+            if !exists {
+                insert_stmt.execute(params![
+                    entry.file_name,
+                    entry.timestamp,
+                    entry.saved,
+                    entry.title,
+                    entry.transcription_text,
+                    entry.post_processed_text,
+                    entry.post_process_prompt,
+                ])?;
+                imported += 1;
+            }
+        }
+
+        drop(check_stmt);
+        drop(insert_stmt);
+        tx.commit()?;
+        Ok(imported)
+    }
+
+    pub fn import_speaking_stats(&self, stats: &[DailySpeakingStats]) -> Result<usize> {
+        let conn = self.get_connection()?;
+        let tx = conn.unchecked_transaction()?;
+
+        // Use MAX to make re-imports idempotent: importing the same data twice
+        // won't inflate counts. This means cross-device merges take the higher value
+        // rather than summing, which is acceptable for this use case.
+        let mut stmt = tx.prepare(
+            "INSERT INTO daily_speaking_stats (date, total_word_count, total_duration_ms, transcription_count)
+             VALUES (?1, ?2, ?3, ?4)
+             ON CONFLICT(date) DO UPDATE SET
+               total_word_count = MAX(total_word_count, excluded.total_word_count),
+               total_duration_ms = MAX(total_duration_ms, excluded.total_duration_ms),
+               transcription_count = MAX(transcription_count, excluded.transcription_count)",
+        )?;
+
+        let mut imported = 0;
+        for stat in stats {
+            let changes = stmt.execute(params![
+                stat.date,
+                stat.total_word_count,
+                stat.total_duration_ms,
+                stat.transcription_count,
+            ])?;
+            if changes > 0 {
+                imported += 1;
+            }
+        }
+
+        drop(stmt);
+        tx.commit()?;
+        Ok(imported)
+    }
+
     pub async fn get_entry_by_id(&self, id: i64) -> Result<Option<HistoryEntry>> {
         let conn = self.get_connection()?;
         let mut stmt = conn.prepare(

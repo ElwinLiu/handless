@@ -378,6 +378,9 @@ pub fn run(cli_args: CliArgs) {
         commands::history::update_recording_retention_period,
         commands::history::get_speaking_stats,
         commands::history::clear_speaking_stats,
+        commands::data_transfer::export_app_data,
+        commands::data_transfer::validate_import_file,
+        commands::data_transfer::import_app_data,
         helpers::clamshell::is_laptop,
     ]);
 

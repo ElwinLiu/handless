@@ -796,6 +796,30 @@ async clearSpeakingStats() : Promise<Result<null, string>> {
     else return { status: "error", error: e  as any };
 }
 },
+async exportAppData(exportPath: string, includeSettings: boolean, includeHistory: boolean, includeRecordings: boolean) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("export_app_data", { exportPath, includeSettings, includeHistory, includeRecordings }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async validateImportFile(importPath: string) : Promise<Result<ImportPreview, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("validate_import_file", { importPath }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async importAppData(importPath: string, importSettings: boolean, importHistory: boolean, importRecordings: boolean) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("import_app_data", { importPath, importSettings, importHistory, importRecordings }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 /**
  * Checks if the Mac is a laptop by detecting battery presence
  * 
@@ -842,6 +866,7 @@ export type ImplementationChangeResult = { success: boolean;
  * List of binding IDs that were reset to defaults due to incompatibility
  */
 reset_bindings: string[] }
+export type ImportPreview = { export_version: number; app_version: string; platform: string; timestamp: number; has_settings: boolean; includes_recordings: boolean; history_count: number; stats_count: number; recording_files_count: number }
 export type KeyboardImplementation = "tauri" | "handy_keys"
 export type LLMPrompt = { id: string; name: string; prompt: string }
 export type LogLevel = "trace" | "debug" | "info" | "warn" | "error"

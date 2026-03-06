@@ -1,4 +1,5 @@
 pub mod audio;
+pub mod data_transfer;
 pub mod history;
 pub mod models;
 pub mod transcription;
