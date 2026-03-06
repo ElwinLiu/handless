@@ -23,6 +23,7 @@
     "url": "https://github.com/ElwinLiu/handless/issues"
   },
   "author": "Elwin Liu",
+  "packageManager": "bun@1.3.10",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
