@@ -29,7 +29,7 @@
   align-items: center;
   justify-content: center;
   padding: 6px;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgb(0, 0, 0);
   backdrop-filter: blur(32px);
   -webkit-backdrop-filter: blur(32px);
   border: 1px solid rgba(255, 255, 255, 0.1);
