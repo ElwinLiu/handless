@@ -9,7 +9,7 @@
 <h1 align="center">Handless</h1>
 
 <p align="center">
-  <strong>A free, open source, and extensible speech-to-text application that works completely offline.</strong>
+  <strong>A free, open source, and extensible speech-to-text application with local and cloud options.</strong>
 </p>
 
 <p align="center">
@@ -18,15 +18,29 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT" /></a>
 </p>
 
-Handless is a cross-platform desktop application that provides simple, privacy-focused speech transcription. Press a shortcut, speak, and have your words appear in any text field. This happens on your own computer without sending any information to the cloud.
+Handless is a cross-platform desktop application for speech transcription. Press a shortcut, speak, and have your words appear in any text field. Run everything locally for full privacy, or use cloud APIs for convenience -- your choice.
 
 Forked from [Handy](https://github.com/cjpais/Handy) v0.7.8.
+
+## Table of Contents
+
+- [Why Handless?](#why-handless)
+- [How It Works](#how-it-works)
+- [Features](#features)
+- [Getting Started](#getting-started)
+- [CLI Parameters](#cli-parameters)
+- [Known Issues](#known-issues)
+- [Linux Notes](#linux-notes)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
 
 ## Why Handless?
 
 - **Free**: Accessibility tooling belongs in everyone's hands, not behind a paywall
 - **Open Source**: Together we can build further. Extend Handless for yourself and contribute to something bigger
-- **Private**: Your voice stays on your computer. Get transcriptions without sending audio to the cloud
+- **Private by default**: Transcribe entirely on-device with local models, or opt in to cloud APIs when you prefer
 - **Simple**: One tool, one job. Transcribe what you say and put it into a text box
 
 Handless isn't trying to be the best speech-to-text app -- it's trying to be the most forkable one.
@@ -38,23 +52,16 @@ Handless isn't trying to be the best speech-to-text app -- it's trying to be the
 3. **Release** and Handless processes your speech using your chosen model
 4. **Get** your transcribed text pasted directly into whatever app you're using
 
-The process is entirely local:
+## Features
 
-- Silence is filtered using VAD (Voice Activity Detection) with Silero
-- Transcription uses your choice of models:
-  - **Whisper** (Small/Medium/Turbo/Large) - GPU acceleration when available
-  - **Parakeet V2/V3** - CPU-optimized with excellent performance; V3 supports 25 languages with automatic detection
-  - **Moonshine** (Tiny/Small/Medium/Base) - lightweight, fast English-only models
-  - **SenseVoice** - Chinese, English, Japanese, Korean, and Cantonese
-  - **Breeze ASR** - optimized for Taiwanese Mandarin with code-switching support
-- Optional **cloud STT** via OpenAI or Soniox for users who prefer cloud processing
-- Optional **LLM post-processing** to clean up, reformat, or restructure transcriptions
-- Works on Windows, macOS, and Linux
-- Available in 17 languages
+- **Local transcription** with a variety of built-in models -- browse and download them in Settings
+- **Voice Activity Detection** to filter silence (local models only)
+- **Cloud STT** support via OpenAI or Soniox
+- **LLM post-processing** to clean up, reformat, or restructure transcriptions
+- **Cross-platform**: macOS (Intel & Apple Silicon), Windows (x64), Linux (x64)
+- **Available in 17 languages**
 
-## Quick Start
-
-### Installation
+## Getting Started
 
 1. Download the latest release from the [releases page](https://github.com/elwin/handless/releases)
 2. Install the application
@@ -62,36 +69,13 @@ The process is entirely local:
 4. Configure your preferred keyboard shortcuts in Settings
 5. Start transcribing!
 
-### Development Setup
+To build from source, see [BUILD.md](BUILD.md).
 
-For detailed build instructions including platform-specific requirements, see [BUILD.md](BUILD.md).
+## CLI Parameters
 
-## Architecture
+Handless supports command-line flags for controlling a running instance and customizing startup behavior.
 
-Handless is built as a Tauri application combining:
-
-- **Frontend**: React + TypeScript with Tailwind CSS for the settings UI
-- **Backend**: Rust for system integration, audio processing, and ML inference
-- **Core Libraries**:
-  - `transcribe-rs`: Local speech recognition (Whisper, Parakeet, Moonshine, SenseVoice)
-  - `cpal`: Cross-platform audio I/O
-  - `vad-rs`: Voice Activity Detection (Silero)
-  - `rdev`: Global keyboard/mouse events
-  - `handy-keys`: Keyboard shortcut management
-  - `rubato`: Audio resampling
-
-### Debug Mode
-
-Handless includes an advanced debug mode for development and troubleshooting. Access it by pressing:
-
-- **macOS**: `Cmd+Shift+D`
-- **Windows/Linux**: `Ctrl+Shift+D`
-
-### CLI Parameters
-
-Handless supports command-line flags for controlling a running instance and customizing startup behavior. These work on all platforms (macOS, Windows, Linux).
-
-**Remote control flags** (sent to an already-running instance via the single-instance plugin):
+**Remote control flags** (sent to an already-running instance):
 
 ```bash
 handless --toggle-transcription    # Toggle recording on/off
@@ -108,38 +92,26 @@ handless --debug                   # Enable debug mode with verbose logging
 handless --help                    # Show all available flags
 ```
 
-Flags can be combined for autostart scenarios:
+Flags can be combined: `handless --start-hidden --no-tray`
 
-```bash
-handless --start-hidden --no-tray
-```
-
-> **macOS tip:** When Handless is installed as an app bundle, invoke the binary directly:
+> **macOS tip:** When installed as an app bundle, invoke the binary directly:
 >
 > ```bash
 > /Applications/Handless.app/Contents/MacOS/Handless --toggle-transcription
 > ```
 
-## Known Issues & Current Limitations
+## Known Issues
 
-This project is actively being developed and has some [known issues](https://github.com/elwin/handless/issues). We believe in transparency about the current state:
-
-### Major Issues (Help Wanted)
-
-**Whisper Model Crashes:**
-
-- Whisper models crash on certain system configurations (Windows and Linux)
-- Does not affect all systems - issue is configuration-dependent
-  - If you experience crashes and are a developer, please help to fix and provide debug logs!
+This project is actively being developed. See all [known issues](https://github.com/elwin/handless/issues).
 
 **Wayland Support (Linux):**
 
 - Limited support for Wayland display server
-- Requires [`wtype`](https://github.com/atx/wtype) or [`dotool`](https://sr.ht/~geb/dotool/) for text input to work correctly (see [Linux Notes](#linux-notes) below for installation)
+- Requires [`wtype`](https://github.com/atx/wtype) or [`dotool`](https://sr.ht/~geb/dotool/) for text input (see [Linux Notes](#linux-notes))
 
-### Linux Notes
+## Linux Notes
 
-**Text Input Tools:**
+### Text Input Tools
 
 For reliable text input on Linux, install the appropriate tool for your display server:
 
@@ -149,263 +121,95 @@ For reliable text input on Linux, install the appropriate tool for your display 
 | Wayland        | `wtype`          | `sudo apt install wtype`                           |
 | Both           | `dotool`         | `sudo apt install dotool` (requires `input` group) |
 
-- **X11**: Install `xdotool` for both direct typing and clipboard paste shortcuts
-- **Wayland**: Install `wtype` (preferred) or `dotool` for text input to work correctly
-- **dotool setup**: Requires adding your user to the `input` group: `sudo usermod -aG input $USER` (then log out and back in)
+- **dotool setup**: Add your user to the `input` group: `sudo usermod -aG input $USER` (then log out and back in)
 
 Without these tools, Handless falls back to enigo which may have limited compatibility, especially on Wayland.
 
-**Other Notes:**
+### Runtime Dependencies
 
-- **Runtime library dependency (`libgtk-layer-shell.so.0`)**:
-  - Handless links `gtk-layer-shell` on Linux. If startup fails with `error while loading shared libraries: libgtk-layer-shell.so.0`, install the runtime package for your distro:
+Handless links `gtk-layer-shell` on Linux. If startup fails with `error while loading shared libraries: libgtk-layer-shell.so.0`:
 
-    | Distro        | Package to install    | Example command                        |
-    | ------------- | --------------------- | -------------------------------------- |
-    | Ubuntu/Debian | `libgtk-layer-shell0` | `sudo apt install libgtk-layer-shell0` |
-    | Fedora/RHEL   | `gtk-layer-shell`     | `sudo dnf install gtk-layer-shell`     |
-    | Arch Linux    | `gtk-layer-shell`     | `sudo pacman -S gtk-layer-shell`       |
+| Distro        | Package               | Command                                |
+| ------------- | --------------------- | -------------------------------------- |
+| Ubuntu/Debian | `libgtk-layer-shell0` | `sudo apt install libgtk-layer-shell0` |
+| Fedora/RHEL   | `gtk-layer-shell`     | `sudo dnf install gtk-layer-shell`     |
+| Arch Linux    | `gtk-layer-shell`     | `sudo pacman -S gtk-layer-shell`       |
 
-  - For building from source on Ubuntu/Debian, you may also need `libgtk-layer-shell-dev`.
+For building from source on Ubuntu/Debian, you may also need `libgtk-layer-shell-dev`.
 
-- The recording overlay is disabled by default on Linux (`Overlay Position: None`) because certain compositors treat it as the active window. When the overlay is visible it can steal focus, which prevents Handless from pasting back into the application that triggered transcription. If you enable the overlay anyway, be aware that clipboard-based pasting might fail or end up in the wrong window.
-- If you are having trouble with the app, running with the environment variable `WEBKIT_DISABLE_DMABUF_RENDERER=1` may help
-- **Global keyboard shortcuts (Wayland):** On Wayland, system-level shortcuts must be configured through your desktop environment or window manager. Use the [CLI flags](#cli-parameters) as the command for your custom shortcut.
+### Other Notes
 
-  **GNOME:**
-  1. Open **Settings > Keyboard > Keyboard Shortcuts > Custom Shortcuts**
-  2. Click the **+** button to add a new shortcut
-  3. Set the **Name** to `Toggle Handless Transcription`
-  4. Set the **Command** to `handless --toggle-transcription`
-  5. Click **Set Shortcut** and press your desired key combination (e.g., `Super+O`)
+- The recording overlay is disabled by default (`Overlay Position: None`) because certain compositors treat it as the active window, which can steal focus and prevent pasting.
+- Running with `WEBKIT_DISABLE_DMABUF_RENDERER=1` may help if you experience issues.
 
-  **KDE Plasma:**
-  1. Open **System Settings > Shortcuts > Custom Shortcuts**
-  2. Click **Edit > New > Global Shortcut > Command/URL**
-  3. Name it `Toggle Handless Transcription`
-  4. In the **Trigger** tab, set your desired key combination
-  5. In the **Action** tab, set the command to `handless --toggle-transcription`
+### Global Keyboard Shortcuts (Wayland)
 
-  **Sway / i3:**
+On Wayland, system-level shortcuts must be configured through your desktop environment or window manager. Use the [CLI flags](#cli-parameters) as the command.
 
-  Add to your config file (`~/.config/sway/config` or `~/.config/i3/config`):
+**GNOME:**
+1. Open **Settings > Keyboard > Keyboard Shortcuts > Custom Shortcuts**
+2. Click **+**, set **Name** to `Toggle Handless Transcription`
+3. Set **Command** to `handless --toggle-transcription`
+4. Click **Set Shortcut** and press your desired key combination
 
-  ```ini
-  bindsym $mod+o exec handless --toggle-transcription
-  ```
+**KDE Plasma:**
+1. Open **System Settings > Shortcuts > Custom Shortcuts**
+2. Click **Edit > New > Global Shortcut > Command/URL**
+3. Set your desired key combination and command `handless --toggle-transcription`
 
-  **Hyprland:**
+**Sway / i3:**
 
-  Add to your config file (`~/.config/hypr/hyprland.conf`):
+```ini
+bindsym $mod+o exec handless --toggle-transcription
+```
 
-  ```ini
-  bind = $mainMod, O, exec, handless --toggle-transcription
-  ```
+**Hyprland:**
 
-- You can also manage global shortcuts outside of Handless via Unix signals, which lets Wayland window managers or other hotkey daemons keep ownership of keybindings:
+```ini
+bind = $mainMod, O, exec, handless --toggle-transcription
+```
 
-  | Signal    | Action                                    | Example                   |
-  | --------- | ----------------------------------------- | ------------------------- |
-  | `SIGUSR2` | Toggle transcription                      | `pkill -USR2 -n handless` |
-  | `SIGUSR1` | Toggle transcription with post-processing | `pkill -USR1 -n handless` |
+### Unix Signals
 
-  Example Sway config:
+You can also control Handless via Unix signals:
 
-  ```ini
-  bindsym $mod+o exec pkill -USR2 -n handless
-  bindsym $mod+p exec pkill -USR1 -n handless
-  ```
+| Signal    | Action                                    | Example                   |
+| --------- | ----------------------------------------- | ------------------------- |
+| `SIGUSR2` | Toggle transcription                      | `pkill -USR2 -n handless` |
+| `SIGUSR1` | Toggle transcription with post-processing | `pkill -USR1 -n handless` |
 
-  `pkill` here simply delivers the signal -- it does not terminate the process.
+Example Sway config:
 
-### Platform Support
-
-- **macOS (both Intel and Apple Silicon)**
-- **x64 Windows**
-- **x64 Linux**
-
-### System Requirements/Recommendations
-
-The following are recommendations for running Handless on your own machine. If you don't meet the system requirements, the performance of the application may be degraded. We are working on improving the performance across all kinds of computers and hardware.
-
-**For Whisper Models (including Breeze ASR):**
-
-- **macOS**: M series Mac, Intel Mac
-- **Windows**: Intel, AMD, or NVIDIA GPU
-- **Linux**: Intel, AMD, or NVIDIA GPU
-  - Ubuntu 22.04, 24.04
-
-**For Parakeet Models:**
-
-- **CPU-only operation** - runs on a wide variety of hardware
-- **Minimum**: Intel Skylake (6th gen) or equivalent AMD processors
-- **Performance**: ~5x real-time speed on mid-range hardware (tested on i5)
-- **Parakeet V3**: Automatic language detection across 25 languages
-- **Parakeet V2**: English only
-
-**For Moonshine Models:**
-
-- **CPU-only operation** - lightweight and fast
-- Smallest model (Tiny) is only 31 MB -- ideal for resource-constrained systems
-- English only
-
-**For SenseVoice:**
-
-- **CPU-only operation**
-- Supports Chinese, English, Japanese, Korean, and Cantonese
+```ini
+bindsym $mod+o exec pkill -USR2 -n handless
+bindsym $mod+p exec pkill -USR1 -n handless
+```
 
 ## Troubleshooting
 
-### Manual Model Installation (For Proxy Users or Network Restrictions)
+### Debug Mode
 
-If you're behind a proxy, firewall, or in a restricted network environment where Handless cannot download models automatically, you can manually download and install them. The URLs are publicly accessible from any browser.
+Press `Cmd+Shift+D` (macOS) or `Ctrl+Shift+D` (Windows/Linux) to open the debug panel.
 
-#### Step 1: Find Your App Data Directory
 
-1. Open Handless settings
-2. Navigate to the **About** section
-3. Copy the "App Data Directory" path shown there, or use the shortcuts:
-   - **macOS**: `Cmd+Shift+D` to open debug menu
-   - **Windows/Linux**: `Ctrl+Shift+D` to open debug menu
+## Contributing
 
-The typical paths are:
-
-- **macOS**: `~/Library/Application Support/com.handless.app/`
-- **Windows**: `C:\Users\{username}\AppData\Roaming\com.handless.app\`
-- **Linux**: `~/.config/com.handless.app/`
-
-#### Step 2: Create Models Directory
-
-Inside your app data directory, create a `models` folder if it doesn't already exist:
-
-```bash
-# macOS/Linux
-mkdir -p ~/Library/Application\ Support/com.handless.app/models
-
-# Windows (PowerShell)
-New-Item -ItemType Directory -Force -Path "$env:APPDATA\com.handless.app\models"
-```
-
-#### Step 3: Download Model Files
-
-Download the models you want from below
-
-**Whisper Models (single .bin files):**
-
-- Small (487 MB): `https://blob.handy.computer/ggml-small.bin`
-- Medium (492 MB): `https://blob.handy.computer/whisper-medium-q4_1.bin`
-- Turbo (1600 MB): `https://blob.handy.computer/ggml-large-v3-turbo.bin`
-- Large (1100 MB): `https://blob.handy.computer/ggml-large-v3-q5_0.bin`
-- Breeze ASR (1080 MB): `https://blob.handy.computer/breeze-asr-q5_k.bin`
-
-**Parakeet Models (compressed archives):**
-
-- V2 (473 MB): `https://blob.handy.computer/parakeet-v2-int8.tar.gz`
-- V3 (478 MB): `https://blob.handy.computer/parakeet-v3-int8.tar.gz`
-
-**Moonshine Models (compressed archives):**
-
-- Base (58 MB): `https://blob.handy.computer/moonshine-base.tar.gz`
-- Tiny Streaming (31 MB): `https://blob.handy.computer/moonshine-tiny-streaming-en.tar.gz`
-- Small Streaming (100 MB): `https://blob.handy.computer/moonshine-small-streaming-en.tar.gz`
-- Medium Streaming (192 MB): `https://blob.handy.computer/moonshine-medium-streaming-en.tar.gz`
-
-**SenseVoice (compressed archive):**
-
-- SenseVoice (160 MB): `https://blob.handy.computer/sense-voice-int8.tar.gz`
-
-#### Step 4: Install Models
-
-**For Whisper Models (.bin files):**
-
-Simply place the `.bin` file directly into the `models` directory:
-
-```
-{app_data_dir}/models/
-├── ggml-small.bin
-├── whisper-medium-q4_1.bin
-├── ggml-large-v3-turbo.bin
-├── ggml-large-v3-q5_0.bin
-└── breeze-asr-q5_k.bin
-```
-
-**For Parakeet, Moonshine, and SenseVoice Models (.tar.gz archives):**
-
-1. Extract the `.tar.gz` file
-2. Place the **extracted directory** into the `models` folder
-3. The directory must be named exactly as follows:
-   - **Parakeet V2**: `parakeet-tdt-0.6b-v2-int8`
-   - **Parakeet V3**: `parakeet-tdt-0.6b-v3-int8`
-   - **Moonshine Base**: `moonshine-base`
-   - **Moonshine Tiny**: `moonshine-tiny-streaming-en`
-   - **Moonshine Small**: `moonshine-small-streaming-en`
-   - **Moonshine Medium**: `moonshine-medium-streaming-en`
-   - **SenseVoice**: `sense-voice-int8`
-
-Final structure should look like:
-
-```
-{app_data_dir}/models/
-├── parakeet-tdt-0.6b-v3-int8/     (directory with model files inside)
-├── moonshine-base/
-├── moonshine-tiny-streaming-en/
-├── sense-voice-int8/
-└── ...
-```
-
-**Important Notes:**
-
-- For archive-based models, the extracted directory name **must** match exactly as shown above
-- Do not rename the `.bin` files for Whisper models -- use the exact filenames from the download URLs
-- After placing the files, restart Handless to detect the new models
-
-#### Step 5: Verify Installation
-
-1. Restart Handless
-2. Open Settings -> Models
-3. Your manually installed models should now appear as "Downloaded"
-4. Select the model you want to use and test transcription
-
-### Custom Whisper Models
-
-Handless can auto-discover custom Whisper GGML models placed in the `models` directory. This is useful for users who want to use fine-tuned or community models not included in the default model list.
-
-**How to use:**
-
-1. Obtain a Whisper model in GGML `.bin` format (e.g., from [Hugging Face](https://huggingface.co/models?search=whisper%20ggml))
-2. Place the `.bin` file in your `models` directory (see paths above)
-3. Restart Handless to discover the new model
-4. The model will appear in the "Custom Models" section of the Models settings page
-
-**Important:**
-
-- Community models are user-provided and may not receive troubleshooting assistance
-- The model must be a valid Whisper GGML format (`.bin` file)
-- Model name is derived from the filename (e.g., `my-custom-model.bin` -> "My Custom Model")
-
-### How to Contribute
-
-1. **Check existing issues** at [github.com/elwin/handless/issues](https://github.com/elwin/handless/issues)
-2. **Fork the repository** and create a feature branch
-3. **Test thoroughly** on your target platform
-4. **Submit a pull request** with clear description of changes
-
-The goal is to create both a useful tool and a foundation for others to build upon -- a well-patterned, simple codebase that serves the community.
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, workflow, and guidelines. For translations, see [CONTRIBUTING_TRANSLATIONS.md](CONTRIBUTING_TRANSLATIONS.md).
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) file for details.
+MIT License -- see [LICENSE](LICENSE) for details.
 
 ## Acknowledgments
 
 - **Whisper** by OpenAI for the speech recognition model
-- **whisper.cpp and ggml** for amazing cross-platform whisper inference/acceleration
+- **whisper.cpp and ggml** for cross-platform whisper inference/acceleration
 - **NVIDIA NeMo** for the Parakeet speech recognition models
 - **Moonshine** by Useful Sensors for lightweight speech recognition
 - **SenseVoice** by FunAudioLLM for multilingual speech recognition
-- **Silero** for great lightweight VAD
-- **Tauri** team for the excellent Rust-based app framework
-- **[Handy](https://github.com/cjpais/Handy)** - the upstream project this was forked from
+- **Silero** for lightweight VAD
+- **Tauri** for the Rust-based app framework
+- **[Handy](https://github.com/cjpais/Handy)** -- the upstream project this was forked from
 - **Community contributors** helping make Handless better
 
 ---
