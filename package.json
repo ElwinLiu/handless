@@ -3,6 +3,26 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "description": "Cross-platform desktop speech-to-text. Private, offline, open-source.",
+  "keywords": [
+    "speech-to-text",
+    "voice-recognition",
+    "tauri",
+    "whisper",
+    "desktop",
+    "offline",
+    "accessibility",
+    "transcription"
+  ],
+  "homepage": "https://github.com/ElwinLiu/handless",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ElwinLiu/handless.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ElwinLiu/handless/issues"
+  },
+  "author": "Elwin Liu",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

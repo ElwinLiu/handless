@@ -1,6 +1,22 @@
-# Handless
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="svg/logo-5-dark-1024.png" />
+    <source media="(prefers-color-scheme: light)" srcset="svg/logo-5-light-1024.png" />
+    <img src="svg/logo-5-dark-1024.png" alt="Handless logo" width="128" height="128" />
+  </picture>
+</p>
 
-**A free, open source, and extensible speech-to-text application that works completely offline.**
+<h1 align="center">Handless</h1>
+
+<p align="center">
+  <strong>A free, open source, and extensible speech-to-text application that works completely offline.</strong>
+</p>
+
+<p align="center">
+  <a href="https://github.com/ElwinLiu/handless/actions/workflows/build-test.yml"><img src="https://github.com/ElwinLiu/handless/actions/workflows/build-test.yml/badge.svg" alt="Build" /></a>
+  <a href="https://github.com/ElwinLiu/handless/actions/workflows/lint.yml"><img src="https://github.com/ElwinLiu/handless/actions/workflows/lint.yml/badge.svg" alt="Lint" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT" /></a>
+</p>
 
 Handless is a cross-platform desktop application that provides simple, privacy-focused speech transcription. Press a shortcut, speak, and have your words appear in any text field. This happens on your own computer without sending any information to the cloud.
 
