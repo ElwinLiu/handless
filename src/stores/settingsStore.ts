@@ -259,6 +259,7 @@ export const useSettingsStore = create<SettingsStore>()(
       if (deviceWatcherUnlisten) return;
       deviceWatcherUnlisten = await listen("audio-devices-changed", () => {
         get().refreshAudioDevices();
+        get().refreshOutputDevices();
       });
     },
 

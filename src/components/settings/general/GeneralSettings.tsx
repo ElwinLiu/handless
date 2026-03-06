@@ -5,6 +5,7 @@ import { SettingsGroup } from "../../ui/SettingsGroup";
 import { AudioFeedback } from "../AudioFeedback";
 import { useSettings } from "../../../hooks/useSettings";
 import { VolumeSlider } from "../VolumeSlider";
+import { OutputDeviceSelector } from "../OutputDeviceSelector";
 import { MuteWhileRecording } from "../MuteWhileRecording";
 import { ModelSettingsCard } from "./ModelSettingsCard";
 
@@ -19,6 +20,11 @@ export const GeneralSettings: React.FC = () => {
         <MuteWhileRecording descriptionMode="tooltip" grouped={true} />
         <AudioFeedback descriptionMode="tooltip" grouped={true} />
         <VolumeSlider disabled={!audioFeedbackEnabled} />
+        <OutputDeviceSelector
+          descriptionMode="tooltip"
+          grouped={true}
+          disabled={!audioFeedbackEnabled}
+        />
       </SettingsGroup>
     </div>
   );
