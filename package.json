@@ -78,7 +78,7 @@
     "tailwindcss": "^4.1.16",
     "tailwindcss-animate": "^1.0.7",
     "tauri-plugin-macos-permissions-api": "2.3.0",
-    "zod": "^3.25.76",
+    "zod": "^4.0.0",
     "zustand": "^5.0.8"
   },
   "devDependencies": {
