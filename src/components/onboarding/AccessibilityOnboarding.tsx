@@ -8,11 +8,11 @@ import {
   requestMicrophonePermission,
 } from "tauri-plugin-macos-permissions-api";
 import { toast } from "sonner";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { commands } from "@/bindings";
 import { useSettingsStore } from "@/stores/settingsStore";
 import { Keyboard, Microphone, Check, CircleNotch } from "@phosphor-icons/react";
-import { staggerContainer, staggerItem, successScale, spring } from "@/lib/motion";
+import { spring, tapScale } from "@/lib/motion";
 
 interface AccessibilityOnboardingProps {
   onComplete: () => void;
@@ -24,6 +24,60 @@ interface PermissionsState {
   accessibility: PermissionStatus;
   microphone: PermissionStatus;
 }
+
+const PermissionRow: React.FC<{
+  icon: React.ReactNode;
+  label: string;
+  status: PermissionStatus;
+  onGrant: () => void;
+}> = ({ icon, label, status, onGrant }) => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex items-center justify-between gap-4 py-3">
+      <div className="flex items-center gap-3">
+        <span className="text-text/40">{icon}</span>
+        <span className="text-sm text-text/70">{label}</span>
+      </div>
+      <AnimatePresence mode="wait">
+        {status === "granted" ? (
+          <motion.span
+            key="granted"
+            className="text-xs text-success/80 flex items-center gap-1.5"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={spring.bouncy}
+          >
+            <Check weight="bold" className="w-3.5 h-3.5" />
+            {t("onboarding.permissions.granted")}
+          </motion.span>
+        ) : status === "waiting" ? (
+          <motion.span
+            key="waiting"
+            className="text-xs text-text/30 flex items-center gap-1.5"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <CircleNotch className="w-3.5 h-3.5 animate-spin" />
+            {t("onboarding.permissions.waiting")}
+          </motion.span>
+        ) : status === "needed" ? (
+          <motion.button
+            key="grant"
+            onClick={onGrant}
+            className="text-xs text-accent hover:text-accent/80 transition-colors cursor-pointer"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            whileTap={tapScale}
+          >
+            {t("onboarding.permissions.grant")}
+          </motion.button>
+        ) : null}
+      </AnimatePresence>
+    </div>
+  );
+};
 
 const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
   onComplete,
@@ -209,7 +263,7 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
   ) {
     return (
       <div className="h-screen w-screen flex items-center justify-center">
-        <CircleNotch className="w-8 h-8 animate-spin text-text/50" />
+        <CircleNotch className="w-5 h-5 animate-spin text-text/20" />
       </div>
     );
   }
@@ -217,129 +271,57 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
   // All permissions granted - show success briefly
   if (allGranted) {
     return (
-      <div className="h-screen w-screen flex flex-col items-center justify-center gap-4">
+      <div className="h-screen w-screen flex flex-col items-center justify-center gap-3">
         <motion.div
-          className="p-4 rounded-full bg-emerald-500/20"
-          variants={successScale}
-          initial="initial"
-          animate="animate"
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={spring.bouncy}
         >
-          <Check className="w-12 h-12 text-emerald-400" />
+          <Check weight="bold" className="w-8 h-8 text-success/70" />
         </motion.div>
-        <p className="text-lg font-medium text-text">
+        <motion.p
+          className="text-sm text-text/50"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.15 }}
+        >
           {t("onboarding.permissions.allGranted")}
-        </p>
+        </motion.p>
       </div>
     );
   }
 
   // Show permissions request screen
   return (
-    <div className="h-screen w-screen flex flex-col p-6 gap-6 items-center justify-center">
-      <div className="flex flex-col items-center gap-2">
-        <h1 className="text-3xl font-bold text-text">{t("appName")}</h1>
-      </div>
-
+    <div className="h-screen w-screen flex flex-col items-center justify-center px-8">
       <motion.div
-        className="max-w-md w-full flex flex-col items-center gap-4"
-        variants={staggerContainer}
-        initial="initial"
-        animate="animate"
+        className="flex flex-col items-center max-w-xs w-full"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
       >
-        <motion.div className="text-center mb-2" variants={staggerItem}>
-          <h2 className="text-xl font-semibold text-text mb-2">
-            {t("onboarding.permissions.title")}
-          </h2>
-          <p className="text-text/70">
-            {t("onboarding.permissions.description")}
-          </p>
-        </motion.div>
+        <h1 className="text-2xl font-semibold tracking-tight text-text mb-1">
+          {t("appName")}
+        </h1>
+        <p className="text-xs text-text/30 mb-10">
+          {t("onboarding.permissions.description")}
+        </p>
 
-        {/* Microphone Permission Card */}
-        <motion.div
-          className="w-full p-4 rounded-xl glass-panel"
-          variants={staggerItem}
-        >
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-full bg-accent/20 shrink-0">
-              <Microphone className="w-6 h-6 text-accent" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <h3 className="font-medium text-text">
-                {t("onboarding.permissions.microphone.title")}
-              </h3>
-              <p className="text-sm text-text/60 mb-3">
-                {t("onboarding.permissions.microphone.description")}
-              </p>
-              {permissions.microphone === "granted" ? (
-                <motion.div
-                  className="flex items-center gap-2 text-emerald-400 text-sm"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={spring.bouncy}
-                >
-                  <Check className="w-4 h-4" />
-                  {t("onboarding.permissions.granted")}
-                </motion.div>
-              ) : permissions.microphone === "waiting" ? (
-                <div className="flex items-center gap-2 text-text/50 text-sm">
-                  <CircleNotch className="w-4 h-4 animate-spin" />
-                  {t("onboarding.permissions.waiting")}
-                </div>
-              ) : (
-                <button
-                  onClick={handleGrantMicrophone}
-                  className="px-4 py-2 rounded-lg bg-accent hover:bg-accent/90 text-white text-sm font-medium transition-colors"
-                >
-                  {t("onboarding.permissions.grant")}
-                </button>
-              )}
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Accessibility Permission Card */}
-        <motion.div
-          className="w-full p-4 rounded-xl glass-panel"
-          variants={staggerItem}
-        >
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-full bg-accent/20 shrink-0">
-              <Keyboard className="w-6 h-6 text-accent" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <h3 className="font-medium text-text">
-                {t("onboarding.permissions.accessibility.title")}
-              </h3>
-              <p className="text-sm text-text/60 mb-3">
-                {t("onboarding.permissions.accessibility.description")}
-              </p>
-              {permissions.accessibility === "granted" ? (
-                <motion.div
-                  className="flex items-center gap-2 text-emerald-400 text-sm"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={spring.bouncy}
-                >
-                  <Check className="w-4 h-4" />
-                  {t("onboarding.permissions.granted")}
-                </motion.div>
-              ) : permissions.accessibility === "waiting" ? (
-                <div className="flex items-center gap-2 text-text/50 text-sm">
-                  <CircleNotch className="w-4 h-4 animate-spin" />
-                  {t("onboarding.permissions.waiting")}
-                </div>
-              ) : (
-                <button
-                  onClick={handleGrantAccessibility}
-                  className="px-4 py-2 rounded-lg bg-accent hover:bg-accent/90 text-white text-sm font-medium transition-colors"
-                >
-                  {t("onboarding.permissions.grant")}
-                </button>
-              )}
-            </div>
-          </div>
-        </motion.div>
+        <div className="w-full">
+          <PermissionRow
+            icon={<Microphone weight="regular" className="w-4 h-4" />}
+            label={t("onboarding.permissions.microphone.title")}
+            status={permissions.microphone}
+            onGrant={handleGrantMicrophone}
+          />
+          <div className="h-px bg-text/[0.04]" />
+          <PermissionRow
+            icon={<Keyboard weight="regular" className="w-4 h-4" />}
+            label={t("onboarding.permissions.accessibility.title")}
+            status={permissions.accessibility}
+            onGrant={handleGrantAccessibility}
+          />
+        </div>
       </motion.div>
     </div>
   );

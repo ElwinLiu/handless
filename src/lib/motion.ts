@@ -33,9 +33,3 @@ export const staggerItem: Variants = {
   initial: { opacity: 0, y: 8 },
   animate: { opacity: 1, y: 0, transition: spring.gentle },
 };
-
-// ── Success animation (e.g. checkmark scale-in) ────────────────────
-export const successScale: Variants = {
-  initial: { scale: 0, opacity: 0 },
-  animate: { scale: 1, opacity: 1, transition: spring.bouncy },
-};
