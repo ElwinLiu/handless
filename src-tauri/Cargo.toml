@@ -73,7 +73,7 @@ tar = "0.4.44"
 flate2 = "1.0"
 transcribe-rs = { version = "0.2.9", features = ["whisper", "parakeet", "moonshine", "sense_voice"] }
 handy-keys = "0.2.2"
-ferrous-opencc = "0.2.3"
+ferrous-opencc = "0.3.0"
 clap = { version = "4", features = ["derive"] }
 specta = "=2.0.0-rc.23"
 specta-typescript = "0.0.10"
