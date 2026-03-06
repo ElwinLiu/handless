@@ -62,18 +62,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "alsa"
-version = "0.10.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7c88dbbce13b232b26250e1e2e6ac18b6a891a646b8148285036ebce260ac5c3"
-dependencies = [
- "alsa-sys",
- "bitflags 2.10.0",
- "cfg-if",
- "libc",
-]
-
-[[package]]
 name = "alsa-sys"
 version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -381,43 +369,6 @@ name = "atomic-waker"
 version = "1.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1505bd5d3d116872e7271a6d4e16d81d0c8570876c8de68093a09ac269d8aac0"
-
-[[package]]
-name = "audio-core"
-version = "0.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f93ebbf82d06013f4c41fe71303feb980cddd78496d904d06be627972de51a24"
-
-[[package]]
-name = "audioadapter"
-version = "2.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e25c5bb54993ad4693d8b68b6f29f872c5fd9f92a6469d0acb0cbaf80a13d0f9"
-dependencies = [
- "audio-core",
- "num-traits",
-]
-
-[[package]]
-name = "audioadapter-buffers"
-version = "2.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a6af89882334c4e501faa08992888593ada468f9e1ab211635c32f9ada7786e0"
-dependencies = [
- "audioadapter",
- "audioadapter-sample",
- "num-traits",
-]
-
-[[package]]
-name = "audioadapter-sample"
-version = "2.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4e9a3d502fec0b21aa420febe0b110875cf8a7057c49e83a0cace1df6a73e03e"
-dependencies = [
- "audio-core",
- "num-traits",
-]
 
 [[package]]
 name = "auto-launch"
@@ -1201,13 +1152,13 @@ version = "0.16.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cbd307f43cc2a697e2d1f8bc7a1d824b5269e052209e28883e5bc04d095aaa3f"
 dependencies = [
- "alsa 0.9.1",
+ "alsa",
  "coreaudio-rs",
  "dasp_sample",
  "jni",
  "js-sys",
  "libc",
- "mach2 0.4.3",
+ "mach2",
  "ndk",
  "ndk-context",
  "num-derive",
@@ -1219,36 +1170,6 @@ dependencies = [
  "wasm-bindgen-futures",
  "web-sys",
  "windows 0.54.0",
-]
-
-[[package]]
-name = "cpal"
-version = "0.17.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5b1f9c7312f19fc2fa12fd7acaf38de54e8320ba10d1a02dcbe21038def51ccb"
-dependencies = [
- "alsa 0.10.0",
- "coreaudio-rs",
- "dasp_sample",
- "jni",
- "js-sys",
- "libc",
- "mach2 0.5.0",
- "ndk",
- "ndk-context",
- "num-derive",
- "num-traits",
- "objc2 0.6.3",
- "objc2-audio-toolbox",
- "objc2-avf-audio",
- "objc2-core-audio",
- "objc2-core-audio-types",
- "objc2-core-foundation",
- "objc2-foundation 0.3.2",
- "wasm-bindgen",
- "wasm-bindgen-futures",
- "web-sys",
- "windows 0.61.3",
 ]
 
 [[package]]
@@ -2593,7 +2514,7 @@ dependencies = [
  "chrono",
  "clap",
  "coreaudio-sys",
- "cpal 0.17.1",
+ "cpal",
  "enigo",
  "env_filter 1.0.0",
  "ferrous-opencc",
@@ -2873,7 +2794,7 @@ dependencies = [
  "js-sys",
  "log",
  "wasm-bindgen",
- "windows-core 0.61.2",
+ "windows-core 0.62.2",
 ]
 
 [[package]]
@@ -3410,15 +3331,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "mach2"
-version = "0.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6a1b95cd5421ec55b445b5ae102f5ea0e768de1f82bd3001e11f426c269c3aea"
-dependencies = [
- "libc",
-]
-
-[[package]]
 name = "macos-accessibility-client"
 version = "0.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3877,16 +3789,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "objc2-avf-audio"
-version = "0.3.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "13a380031deed8e99db00065c45937da434ca987c034e13b87e4441f9e4090be"
-dependencies = [
- "objc2 0.6.3",
- "objc2-foundation 0.3.2",
-]
-
-[[package]]
 name = "objc2-cloud-kit"
 version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3907,7 +3809,6 @@ dependencies = [
  "objc2 0.6.3",
  "objc2-core-audio-types",
  "objc2-core-foundation",
- "objc2-foundation 0.3.2",
 ]
 
 [[package]]
@@ -5296,7 +5197,7 @@ name = "rodio"
 version = "0.20.1"
 source = "git+https://github.com/cjpais/rodio.git#fed30292db417cb95305c118c0e1d804fb74cbff"
 dependencies = [
- "cpal 0.16.0",
+ "cpal",
  "dasp_sample",
  "num-rational",
  "symphonia",
@@ -5314,18 +5215,14 @@ dependencies = [
 
 [[package]]
 name = "rubato"
-version = "1.0.1"
+version = "0.16.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "90173154a8a14e6adb109ea641743bc95ec81c093d94e70c6763565f7108ebeb"
+checksum = "5258099699851cfd0082aeb645feb9c084d9a5e1f1b8d5372086b989fc5e56a1"
 dependencies = [
- "audioadapter",
- "audioadapter-buffers",
  "num-complex",
  "num-integer",
  "num-traits",
  "realfft",
- "visibility",
- "windowfunctions",
 ]
 
 [[package]]
@@ -7687,17 +7584,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "051eb1abcf10076295e815102942cc58f9d5e3b4560e46e53c21e8ff6f3af7b1"
 
 [[package]]
-name = "visibility"
-version = "0.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d674d135b4a8c1d7e813e2f8d1c9a58308aee4a680323066025e53132218bd91"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn 2.0.108",
-]
-
-[[package]]
 name = "vswhom"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -8115,15 +8001,6 @@ dependencies = [
  "raw-window-handle",
  "windows-sys 0.60.2",
  "windows-version",
-]
-
-[[package]]
-name = "windowfunctions"
-version = "0.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "90628d739333b7c5d2ee0b70210b97b8cddc38440c682c96fd9e2c24c2db5f3a"
-dependencies = [
- "num-traits",
 ]
 
 [[package]]
