@@ -515,6 +515,9 @@ async reloadSettings() : Promise<Result<null, string>> {
 async checkAppleIntelligenceAvailable() : Promise<boolean> {
     return await TAURI_INVOKE("check_apple_intelligence_available");
 },
+async isHomebrewInstall() : Promise<boolean> {
+    return await TAURI_INVOKE("is_homebrew_install");
+},
 /**
  * Try to initialize Enigo (keyboard/mouse simulation).
  * On macOS, this will return an error if accessibility permissions are not granted.

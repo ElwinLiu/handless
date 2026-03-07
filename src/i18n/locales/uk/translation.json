@@ -642,7 +642,8 @@
     "downloading": "Завантаження... {{progress}}%",
     "installing": "Встановлення...",
     "preparing": "Підготовка...",
-    "checkForUpdates": "Перевірити оновлення"
+    "checkForUpdates": "Перевірити оновлення",
+    "updateViaBrew": "Update via: brew upgrade --cask handless"
   },
   "common": {
     "loading": "Завантаження...",

@@ -642,7 +642,8 @@
     "downloading": "...جاري التنزيل {{progress}}%",
     "installing": "...جاري التثبيت",
     "preparing": "...جاري التحضير",
-    "checkForUpdates": "التحقق من وجود تحديثات"
+    "checkForUpdates": "التحقق من وجود تحديثات",
+    "updateViaBrew": "Update via: brew upgrade --cask handless"
   },
   "common": {
     "loading": "...جاري التحميل",

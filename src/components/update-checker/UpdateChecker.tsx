@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { check } from "@tauri-apps/plugin-updater";
 import { relaunch } from "@tauri-apps/plugin-process";
 import { listen } from "@tauri-apps/api/event";
+import { commands } from "@/bindings";
 import { ProgressBar } from "../shared";
 import { useSettings } from "../../hooks/useSettings";
 
@@ -18,6 +19,7 @@ const UpdateChecker: React.FC<UpdateCheckerProps> = ({ className = "" }) => {
   const [isInstalling, setIsInstalling] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
   const [showUpToDate, setShowUpToDate] = useState(false);
+  const [isHomebrew, setIsHomebrew] = useState(false);
 
   const { settings, isLoading } = useSettings();
   const settingsLoaded = !isLoading && settings !== null;
@@ -29,6 +31,10 @@ const UpdateChecker: React.FC<UpdateCheckerProps> = ({ className = "" }) => {
   const isManualCheckRef = useRef(false);
   const downloadedBytesRef = useRef(0);
   const contentLengthRef = useRef(0);
+
+  useEffect(() => {
+    commands.isHomebrewInstall().then(setIsHomebrew);
+  }, []);
 
   useEffect(() => {
     // Wait for settings to load before doing anything
@@ -157,13 +163,16 @@ const UpdateChecker: React.FC<UpdateCheckerProps> = ({ className = "" }) => {
     }
     if (isChecking) return t("footer.checkingUpdates");
     if (showUpToDate) return t("footer.upToDate");
-    if (updateAvailable) return t("footer.updateAvailableShort");
+    if (updateAvailable) {
+      if (isHomebrew) return t("footer.updateViaBrew");
+      return t("footer.updateAvailableShort");
+    }
     return t("footer.checkForUpdates");
   };
 
   const getUpdateStatusAction = () => {
     if (!updateChecksEnabled) return undefined;
-    if (updateAvailable && !isInstalling) return installUpdate;
+    if (updateAvailable && !isInstalling && !isHomebrew) return installUpdate;
     if (!isChecking && !isInstalling && !updateAvailable)
       return handleManualUpdateCheck;
     return undefined;
@@ -171,7 +180,8 @@ const UpdateChecker: React.FC<UpdateCheckerProps> = ({ className = "" }) => {
 
   const isUpdateDisabled = !updateChecksEnabled || isChecking || isInstalling;
   const isUpdateClickable =
-    !isUpdateDisabled && (updateAvailable || (!isChecking && !showUpToDate));
+    !isUpdateDisabled &&
+    ((updateAvailable && !isHomebrew) || (!isChecking && !showUpToDate && !updateAvailable));
 
   return (
     <div className={`flex items-center gap-3 ${className}`}>

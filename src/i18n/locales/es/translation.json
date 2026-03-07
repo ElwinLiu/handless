@@ -642,7 +642,8 @@
     "downloading": "Descargando... {{progress}}%",
     "installing": "Instalando...",
     "preparing": "Preparando...",
-    "checkForUpdates": "Buscar actualizaciones"
+    "checkForUpdates": "Buscar actualizaciones",
+    "updateViaBrew": "Update via: brew upgrade --cask handless"
   },
   "common": {
     "loading": "Cargando...",

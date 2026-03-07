@@ -342,6 +342,7 @@ pub fn run(cli_args: CliArgs) {
         commands::open_settings_file,
         commands::reload_settings,
         commands::check_apple_intelligence_available,
+        commands::is_homebrew_install,
         commands::initialize_enigo,
         commands::initialize_shortcuts,
         commands::models::get_available_models,

@@ -159,6 +159,23 @@ pub fn check_apple_intelligence_available() -> bool {
     }
 }
 
+#[specta::specta]
+#[tauri::command]
+pub fn is_homebrew_install() -> bool {
+    #[cfg(target_os = "macos")]
+    {
+        if let Ok(exe_path) = std::env::current_exe() {
+            let path_str = exe_path.to_string_lossy();
+            return path_str.contains("/Caskroom/");
+        }
+        false
+    }
+    #[cfg(not(target_os = "macos"))]
+    {
+        false
+    }
+}
+
 /// Try to initialize Enigo (keyboard/mouse simulation).
 /// On macOS, this will return an error if accessibility permissions are not granted.
 #[specta::specta]
