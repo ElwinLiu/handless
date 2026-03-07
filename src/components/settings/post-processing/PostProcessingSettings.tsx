@@ -25,6 +25,7 @@ import { CustomWords } from "../CustomWords";
 import { AppendTrailingSpace } from "../AppendTrailingSpace";
 
 const BUILTIN_PROMPT_PREFIX = "default_";
+const NONE_VALUE = "__none__";
 const FIELD_WIDTH = "w-[260px]";
 
 /** Trailing slot matching the ResetButton width to keep fields aligned across rows. */
@@ -217,9 +218,11 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
     selectedPrompt?.prompt,
   ]);
 
-  const handlePromptSelect = (promptId: string | null) => {
+  const handlePromptSelect = async (promptId: string | null) => {
     if (!promptId) return;
-    updateSetting("post_process_selected_prompt_id", promptId);
+    const value = promptId === NONE_VALUE ? null : promptId;
+    await updateSetting("post_process_selected_prompt_id", value);
+    await refreshSettings();
     setIsCreating(false);
   };
 
@@ -331,11 +334,14 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
       <div className="space-y-3">
         <div className="flex items-center gap-2">
           <Dropdown
-            selectedValue={selectedPromptId || null}
-            options={prompts.map((p) => ({
-              value: p.id,
-              label: p.name,
-            }))}
+            selectedValue={selectedPromptId || NONE_VALUE}
+            options={[
+              { value: NONE_VALUE, label: t("settings.general.shortcuts.strategyNone") },
+              ...prompts.map((p) => ({
+                value: p.id,
+                label: p.name,
+              })),
+            ]}
             onSelect={(value) => handlePromptSelect(value)}
             placeholder={
               prompts.length === 0

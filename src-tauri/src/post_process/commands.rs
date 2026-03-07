@@ -236,19 +236,28 @@ pub fn delete_post_process_prompt(app: AppHandle, id: String) -> Result<(), Stri
 
 #[tauri::command]
 #[specta::specta]
-pub fn set_post_process_selected_prompt(app: AppHandle, id: String) -> Result<(), String> {
+pub fn set_post_process_selected_prompt(
+    app: AppHandle,
+    id: Option<String>,
+) -> Result<(), String> {
     let mut settings = settings::get_settings(&app);
 
-    // Verify the prompt exists
-    if !settings.post_process_prompts.iter().any(|p| p.id == id) {
-        return Err(format!("Prompt with id '{}' not found", id));
+    // Verify the prompt exists when a prompt is selected
+    if let Some(ref prompt_id) = id {
+        if !settings
+            .post_process_prompts
+            .iter()
+            .any(|p| p.id == *prompt_id)
+        {
+            return Err(format!("Prompt with id '{}' not found", prompt_id));
+        }
     }
 
-    settings.post_process_selected_prompt_id = Some(id.clone());
+    settings.post_process_selected_prompt_id = id.clone();
 
     // Keep the default transcribe binding's prompt in sync
     if let Some(binding) = settings.bindings.get_mut("transcribe") {
-        binding.post_process_prompt_id = Some(id);
+        binding.post_process_prompt_id = id;
     }
 
     settings::write_settings(&app, settings);
