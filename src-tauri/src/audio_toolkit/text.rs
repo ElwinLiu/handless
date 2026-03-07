@@ -8,14 +8,15 @@ use strsim::levenshtein;
 /// Strips punctuation from each word, lowercases, and joins without spaces.
 /// This allows matching "Charge B" against "ChargeBee".
 fn build_ngram(words: &[&str]) -> String {
-    words
-        .iter()
-        .map(|w| {
-            w.trim_matches(|c: char| !c.is_alphanumeric())
-                .to_lowercase()
-        })
-        .collect::<Vec<_>>()
-        .concat()
+    let mut result = String::new();
+    for w in words {
+        for c in w.trim_matches(|c: char| !c.is_alphanumeric()).chars() {
+            for lc in c.to_lowercase() {
+                result.push(lc);
+            }
+        }
+    }
+    result
 }
 
 /// Finds the best matching custom word for a candidate string
@@ -159,12 +160,16 @@ pub fn apply_custom_words(text: &str, custom_words: &[String], threshold: f64) -
 fn preserve_case_pattern(original: &str, replacement: &str) -> String {
     if original.chars().all(|c| c.is_uppercase()) {
         replacement.to_uppercase()
-    } else if original.chars().next().map_or(false, |c| c.is_uppercase()) {
-        let mut chars: Vec<char> = replacement.chars().collect();
-        if let Some(first_char) = chars.get_mut(0) {
-            *first_char = first_char.to_uppercase().next().unwrap_or(*first_char);
+    } else if original.starts_with(|c: char| c.is_uppercase()) {
+        let mut result = String::with_capacity(replacement.len());
+        let mut chars = replacement.chars();
+        if let Some(first) = chars.next() {
+            for uc in first.to_uppercase() {
+                result.push(uc);
+            }
         }
-        chars.into_iter().collect()
+        result.extend(chars);
+        result
     } else {
         replacement.to_string()
     }
@@ -215,13 +220,12 @@ fn collapse_stutters(text: &str) -> String {
 
     while i < words.len() {
         let word = words[i];
-        let word_lower = word.to_lowercase();
 
-        // Only process 1-2 letter words
-        if word_lower.len() <= 2 && word_lower.chars().all(|c| c.is_alphabetic()) {
-            // Count consecutive repetitions (case-insensitive)
+        // Only process 1-2 letter ASCII alphabetic words
+        if word.len() <= 2 && word.chars().all(|c| c.is_alphabetic()) {
+            // Count consecutive repetitions (case-insensitive, zero-alloc)
             let mut count = 1;
-            while i + count < words.len() && words[i + count].to_lowercase() == word_lower {
+            while i + count < words.len() && words[i + count].eq_ignore_ascii_case(word) {
                 count += 1;
             }
 
@@ -266,21 +270,34 @@ static FILLER_PATTERNS: Lazy<Vec<Regex>> = Lazy::new(|| {
 /// # Returns
 /// The filtered text with filler words and stutters removed
 pub fn filter_transcription_output(text: &str) -> String {
-    let mut filtered = text.to_string();
+    use std::borrow::Cow;
 
-    // Remove filler words
+    let mut filtered = String::from(text);
+
+    // Remove filler words — only allocate when a pattern actually matches
     for pattern in FILLER_PATTERNS.iter() {
-        filtered = pattern.replace_all(&filtered, "").to_string();
+        match pattern.replace_all(&filtered, "") {
+            Cow::Owned(s) => filtered = s,
+            Cow::Borrowed(_) => {} // no match, no allocation
+        }
     }
 
     // Collapse repeated 1-2 letter words (stutter artifacts like "wh wh wh wh")
     filtered = collapse_stutters(&filtered);
 
-    // Clean up multiple spaces to single space
-    filtered = MULTI_SPACE_PATTERN.replace_all(&filtered, " ").to_string();
+    // Clean up multiple spaces to single space — skip allocation if unchanged
+    match MULTI_SPACE_PATTERN.replace_all(&filtered, " ") {
+        Cow::Owned(s) => filtered = s,
+        Cow::Borrowed(_) => {}
+    }
 
-    // Trim leading/trailing whitespace
-    filtered.trim().to_string()
+    // Trim in place to avoid a final allocation when possible
+    let trimmed = filtered.trim();
+    if trimmed.len() == filtered.len() {
+        filtered
+    } else {
+        trimmed.to_owned()
+    }
 }
 
 #[cfg(test)]

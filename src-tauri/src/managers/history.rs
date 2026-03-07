@@ -295,23 +295,19 @@ impl HistoryManager {
     fn cleanup_by_count(&self, limit: usize) -> Result<()> {
         let conn = self.get_connection()?;
 
-        // Get all entries that are not saved, ordered by timestamp desc
+        // Only fetch entries beyond the limit using SQL OFFSET
         let mut stmt = conn.prepare(
-            "SELECT id, file_name FROM transcription_history WHERE saved = 0 ORDER BY timestamp DESC"
+            "SELECT id, file_name FROM transcription_history WHERE saved = 0 ORDER BY timestamp DESC LIMIT -1 OFFSET ?1"
         )?;
 
-        let rows = stmt.query_map([], |row| {
+        let rows = stmt.query_map(params![limit as i64], |row| {
             Ok((row.get::<_, i64>("id")?, row.get::<_, String>("file_name")?))
         })?;
 
-        let mut entries: Vec<(i64, String)> = Vec::new();
-        for row in rows {
-            entries.push(row?);
-        }
+        let entries_to_delete: Vec<(i64, String)> = rows.collect::<std::result::Result<_, _>>()?;
 
-        if entries.len() > limit {
-            let entries_to_delete = &entries[limit..];
-            let deleted_count = self.delete_entries_and_files(entries_to_delete)?;
+        if !entries_to_delete.is_empty() {
+            let deleted_count = self.delete_entries_and_files(&entries_to_delete)?;
 
             if deleted_count > 0 {
                 debug!("Cleaned up {} old history entries by count", deleted_count);
