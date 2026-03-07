@@ -315,7 +315,13 @@ pub fn update_binding_prompt(
     let mut settings = settings::get_settings(&app);
 
     if let Some(binding) = settings.bindings.get_mut(&id) {
-        binding.post_process_prompt_id = prompt_id;
+        binding.post_process_prompt_id = prompt_id.clone();
+
+        // Keep the post-processing page selection in sync with the default shortcut
+        if id == "transcribe" {
+            settings.post_process_selected_prompt_id = prompt_id;
+        }
+
         settings::write_settings(&app, settings);
         Ok(())
     } else {

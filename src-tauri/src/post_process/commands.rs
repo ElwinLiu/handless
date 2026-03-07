@@ -222,6 +222,14 @@ pub fn delete_post_process_prompt(app: AppHandle, id: String) -> Result<(), Stri
             settings.post_process_prompts.first().map(|p| p.id.clone());
     }
 
+    // Update any bindings that referenced the deleted prompt
+    for binding in settings.bindings.values_mut() {
+        if binding.post_process_prompt_id.as_ref() == Some(&id) {
+            binding.post_process_prompt_id =
+                settings.post_process_selected_prompt_id.clone();
+        }
+    }
+
     settings::write_settings(&app, settings);
     Ok(())
 }
@@ -236,7 +244,13 @@ pub fn set_post_process_selected_prompt(app: AppHandle, id: String) -> Result<()
         return Err(format!("Prompt with id '{}' not found", id));
     }
 
-    settings.post_process_selected_prompt_id = Some(id);
+    settings.post_process_selected_prompt_id = Some(id.clone());
+
+    // Keep the default transcribe binding's prompt in sync
+    if let Some(binding) = settings.bindings.get_mut("transcribe") {
+        binding.post_process_prompt_id = Some(id);
+    }
+
     settings::write_settings(&app, settings);
     Ok(())
 }
