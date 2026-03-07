@@ -23,7 +23,9 @@ const UpdateChecker: React.FC<UpdateCheckerProps> = ({ className = "" }) => {
   const settingsLoaded = !isLoading && settings !== null;
   const updateChecksEnabled = settings?.update_checks_enabled ?? false;
 
-  const upToDateTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const upToDateTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
   const isManualCheckRef = useRef(false);
   const downloadedBytesRef = useRef(0);
   const contentLengthRef = useRef(0);
