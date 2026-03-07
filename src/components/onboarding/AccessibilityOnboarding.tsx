@@ -16,6 +16,7 @@ import {
   CircleNotch,
 } from "@phosphor-icons/react";
 import { spring, tapScale } from "@/lib/motion";
+import { DragRegion } from "@/components/ui/DragRegion";
 
 interface AccessibilityOnboardingProps {
   onComplete: () => void;
@@ -228,74 +229,83 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
     }
   };
 
-  // Still checking platform/initial permissions
-  if (
-    isMacOS === null ||
-    (permissions.accessibility === "checking" &&
-      permissions.microphone === "checking")
-  ) {
-    return (
-      <div className="h-screen w-screen flex items-center justify-center">
-        <CircleNotch className="w-5 h-5 animate-spin text-text/20" />
-      </div>
-    );
-  }
-
-  // All permissions granted - show success briefly
-  if (allGranted) {
-    return (
-      <div className="h-screen w-screen flex flex-col items-center justify-center gap-3">
-        <motion.div
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={spring.bouncy}
-        >
-          <Check weight="bold" className="w-8 h-8 text-success/70" />
-        </motion.div>
-        <motion.p
-          className="text-sm text-text/50"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.15 }}
-        >
-          {t("onboarding.permissions.allGranted")}
-        </motion.p>
-      </div>
-    );
-  }
-
-  // Show permissions request screen
-  return (
-    <div className="h-screen w-screen flex flex-col items-center justify-center px-8">
-      <motion.div
-        className="flex flex-col items-center max-w-xs w-full"
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
-      >
-        <h1 className="text-2xl font-semibold tracking-tight text-text mb-1">
-          {t("appName")}
-        </h1>
-        <p className="text-xs text-text/30 mb-10">
-          {t("onboarding.permissions.description")}
-        </p>
-
-        <div className="w-full">
-          <PermissionRow
-            icon={<Microphone weight="regular" className="w-4 h-4" />}
-            label={t("onboarding.permissions.microphone.title")}
-            status={permissions.microphone}
-            onGrant={handleGrantMicrophone}
-          />
-          <div className="h-px bg-text/[0.04]" />
-          <PermissionRow
-            icon={<Keyboard weight="regular" className="w-4 h-4" />}
-            label={t("onboarding.permissions.accessibility.title")}
-            status={permissions.accessibility}
-            onGrant={handleGrantAccessibility}
-          />
+  const content = (() => {
+    // Still checking platform/initial permissions
+    if (
+      isMacOS === null ||
+      (permissions.accessibility === "checking" &&
+        permissions.microphone === "checking")
+    ) {
+      return (
+        <div className="flex-1 flex items-center justify-center">
+          <CircleNotch className="w-5 h-5 animate-spin text-text/20" />
         </div>
-      </motion.div>
+      );
+    }
+
+    // All permissions granted - show success briefly
+    if (allGranted) {
+      return (
+        <div className="flex-1 flex flex-col items-center justify-center gap-3">
+          <motion.div
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={spring.bouncy}
+          >
+            <Check weight="bold" className="w-8 h-8 text-success/70" />
+          </motion.div>
+          <motion.p
+            className="text-sm text-text/50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.15 }}
+          >
+            {t("onboarding.permissions.allGranted")}
+          </motion.p>
+        </div>
+      );
+    }
+
+    // Show permissions request screen
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center px-8">
+        <motion.div
+          className="flex flex-col items-center max-w-xs w-full"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+        >
+          <h1 className="text-2xl font-semibold tracking-tight text-text mb-1">
+            {t("appName")}
+          </h1>
+          <p className="text-xs text-text/30 mb-10">
+            {t("onboarding.permissions.description")}
+          </p>
+
+          <div className="w-full">
+            <PermissionRow
+              icon={<Microphone weight="regular" className="w-4 h-4" />}
+              label={t("onboarding.permissions.microphone.title")}
+              status={permissions.microphone}
+              onGrant={handleGrantMicrophone}
+            />
+            <div className="h-px bg-text/[0.04]" />
+            <PermissionRow
+              icon={<Keyboard weight="regular" className="w-4 h-4" />}
+              label={t("onboarding.permissions.accessibility.title")}
+              status={permissions.accessibility}
+              onGrant={handleGrantAccessibility}
+            />
+          </div>
+        </motion.div>
+      </div>
+    );
+  })();
+
+  return (
+    <div className="h-screen w-screen flex flex-col">
+      <DragRegion />
+      {content}
     </div>
   );
 };

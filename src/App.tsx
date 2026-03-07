@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, useRef } from "react";
 import { toast, Toaster } from "sonner";
 import { useTranslation } from "react-i18next";
 import { platform } from "@tauri-apps/plugin-os";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import { MotionConfig, AnimatePresence, motion } from "motion/react";
 import { DragRegion } from "./components/ui/DragRegion";
 import {
@@ -132,6 +133,7 @@ function App() {
 
   const handleAccessibilityComplete = useCallback(() => {
     setOnboardingStep("done");
+    getCurrentWindow().setFocus();
   }, []);
 
   // Still checking onboarding status
