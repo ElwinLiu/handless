@@ -18,6 +18,7 @@ import { commands, type HistoryEntry } from "@/bindings";
 import { formatRelativeTime, formatDateTime } from "@/utils/dateFormat";
 import { useOsType } from "@/hooks/useOsType";
 import { SimpleTooltip } from "../../ui/Tooltip";
+import { RecordingRetentionPeriodSelector } from "../RecordingRetentionPeriod";
 
 interface OpenRecordingsButtonProps {
   onClick: () => void;
@@ -135,9 +136,17 @@ export const HistorySettings: React.FC = () => {
     }
   };
 
+  const retentionSection = (
+    <RecordingRetentionPeriodSelector
+      descriptionMode="inline"
+      grouped={false}
+    />
+  );
+
   if (loading) {
     return (
       <div className="max-w-3xl w-full mx-auto space-y-4">
+        {retentionSection}
         <div className="space-y-1.5">
           <div className="px-3 flex items-center justify-between">
             <div>
@@ -166,6 +175,7 @@ export const HistorySettings: React.FC = () => {
   if (historyEntries.length === 0) {
     return (
       <div className="max-w-3xl w-full mx-auto space-y-4">
+        {retentionSection}
         <div className="space-y-1.5">
           <div className="px-3 flex items-center justify-between">
             <div>
@@ -195,6 +205,7 @@ export const HistorySettings: React.FC = () => {
 
   return (
     <div className="max-w-3xl w-full mx-auto space-y-4">
+      {retentionSection}
       <div className="space-y-1.5">
         <div className="px-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
