@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { toast, Toaster } from "sonner";
 import { useTranslation } from "react-i18next";
 import { platform } from "@tauri-apps/plugin-os";
@@ -130,9 +130,9 @@ function App() {
     setOnboardingStep("done");
   };
 
-  const handleAccessibilityComplete = () => {
+  const handleAccessibilityComplete = useCallback(() => {
     setOnboardingStep("done");
-  };
+  }, []);
 
   // Still checking onboarding status
   if (onboardingStep === null) {

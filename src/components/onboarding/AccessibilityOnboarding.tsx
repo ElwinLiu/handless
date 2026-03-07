@@ -9,8 +9,6 @@ import {
 } from "tauri-plugin-macos-permissions-api";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "motion/react";
-import { commands } from "@/bindings";
-import { useSettingsStore } from "@/stores/settingsStore";
 import {
   Keyboard,
   Microphone,
@@ -88,12 +86,6 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
   onComplete,
 }) => {
   const { t } = useTranslation();
-  const refreshAudioDevices = useSettingsStore(
-    (state) => state.refreshAudioDevices,
-  );
-  const refreshOutputDevices = useSettingsStore(
-    (state) => state.refreshOutputDevices,
-  );
   const [isMacOS, setIsMacOS] = useState<boolean | null>(null);
   const [permissions, setPermissions] = useState<PermissionsState>({
     accessibility: "checking",
@@ -128,28 +120,13 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
           checkMicrophonePermission(),
         ]);
 
-        // If accessibility is granted, initialize Enigo and shortcuts
-        if (accessibilityGranted) {
-          try {
-            await Promise.all([
-              commands.initializeEnigo(),
-              commands.initializeShortcuts(),
-            ]);
-          } catch (e) {
-            console.warn("Failed to initialize after permission grant:", e);
-          }
-        }
-
-        const newState: PermissionsState = {
+        setPermissions({
           accessibility: accessibilityGranted ? "granted" : "needed",
           microphone: microphoneGranted ? "granted" : "needed",
-        };
+        });
 
-        setPermissions(newState);
-
-        // If both already granted, refresh audio devices and skip ahead
+        // If both already granted, skip ahead
         if (accessibilityGranted && microphoneGranted) {
-          await Promise.all([refreshAudioDevices(), refreshOutputDevices()]);
           timeoutRef.current = setTimeout(() => onComplete(), 300);
         }
       } catch (error) {
@@ -163,7 +140,7 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
     };
 
     checkInitial();
-  }, [onComplete, refreshAudioDevices, refreshOutputDevices, t]);
+  }, [onComplete, t]);
 
   // Polling for permissions after user clicks a button
   const startPolling = useCallback(() => {
@@ -181,13 +158,6 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
 
           if (accessibilityGranted && prev.accessibility !== "granted") {
             newState.accessibility = "granted";
-            // Initialize Enigo and shortcuts when accessibility is granted
-            Promise.all([
-              commands.initializeEnigo(),
-              commands.initializeShortcuts(),
-            ]).catch((e) => {
-              console.warn("Failed to initialize after permission grant:", e);
-            });
           }
 
           if (microphoneGranted && prev.microphone !== "granted") {
@@ -197,14 +167,12 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
           return newState;
         });
 
-        // If both granted, stop polling, refresh audio devices, and proceed
+        // If both granted, stop polling and proceed
         if (accessibilityGranted && microphoneGranted) {
           if (pollingRef.current) {
             clearInterval(pollingRef.current);
             pollingRef.current = null;
           }
-          // Now that we have mic permission, refresh audio devices
-          await Promise.all([refreshAudioDevices(), refreshOutputDevices()]);
           timeoutRef.current = setTimeout(() => onComplete(), 500);
         }
 
@@ -224,7 +192,7 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
         }
       }
     }, 1000);
-  }, [onComplete, refreshAudioDevices, refreshOutputDevices, t]);
+  }, [onComplete, t]);
 
   // Cleanup polling and timeouts on unmount
   useEffect(() => {
