@@ -11,7 +11,7 @@ import { PasteMethodSetting } from "../PasteMethod";
 import { TypingToolSetting } from "../TypingTool";
 import { ClipboardHandlingSetting } from "../ClipboardHandling";
 import { AutoSubmit } from "../AutoSubmit";
-import { RecordingRetentionPeriodSelector } from "../RecordingRetentionPeriod";
+
 import { KeyboardImplementationSelector } from "../debug/KeyboardImplementationSelector";
 import { ExportImportSettings } from "./ExportImportSettings";
 import { ConfigFileSettings } from "./ConfigFileSettings";
@@ -39,13 +39,6 @@ export const AdvancedSettings: React.FC = () => {
         <TypingToolSetting descriptionMode="tooltip" grouped={true} />
         <ClipboardHandlingSetting descriptionMode="tooltip" grouped={true} />
         <AutoSubmit descriptionMode="tooltip" grouped={true} />
-      </SettingsGroup>
-
-      <SettingsGroup title={t("settings.advanced.groups.history")}>
-        <RecordingRetentionPeriodSelector
-          descriptionMode="tooltip"
-          grouped={true}
-        />
       </SettingsGroup>
 
       <SettingsGroup title={t("settings.advanced.groups.data")}>
