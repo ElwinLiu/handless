@@ -103,7 +103,7 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
         SttProviderInfo {
             id: "soniox".to_string(),
             name: "Soniox".to_string(),
-            description: "Soniox cloud speech-to-text. High accuracy with async transcription.".to_string(),
+            description: "Soniox cloud speech-to-text. High accuracy with realtime transcription.".to_string(),
             supported_languages: vec![
                 "af", "sq", "ar", "az", "eu", "be", "bn", "bs", "bg", "ca",
                 "zh-Hans", "zh-Hant", "hr", "cs", "da", "nl", "en", "et", "fi", "fr",
@@ -117,7 +117,7 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
             is_recommended: false,
             backend: ProviderBackend::Cloud {
                 base_url: "https://api.soniox.com/v1".to_string(),
-                default_model: "stt-async-v4".to_string(),
+                default_model: "stt-rt-preview".to_string(),
                 console_url: Some("https://console.soniox.com".to_string()),
             },
             available_options: vec![

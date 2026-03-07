@@ -565,7 +565,7 @@ fn default_stt_providers() -> Vec<SttProvider> {
             label: "Soniox".to_string(),
             provider_type: SttProviderType::Cloud,
             base_url: "https://api.soniox.com/v1".to_string(),
-            default_model: "stt-async-v4".to_string(),
+            default_model: "stt-rt-preview".to_string(),
         },
     ]
 }
@@ -644,6 +644,15 @@ fn ensure_stt_defaults(settings: &mut AppSettings) -> bool {
             }
         }
     }
+
+    // Default realtime to true for providers that support it
+    for info in crate::stt_provider::cloud_provider_registry() {
+        if info.supports_realtime && !settings.stt_realtime_enabled.contains_key(&info.id) {
+            settings.stt_realtime_enabled.insert(info.id, true);
+            changed = true;
+        }
+    }
+
     changed
 }
 
