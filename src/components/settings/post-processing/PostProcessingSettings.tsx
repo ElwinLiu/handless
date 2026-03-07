@@ -218,10 +218,11 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
     selectedPrompt?.prompt,
   ]);
 
-  const handlePromptSelect = (promptId: string | null) => {
+  const handlePromptSelect = async (promptId: string | null) => {
     if (!promptId) return;
     const value = promptId === NONE_VALUE ? null : promptId;
-    updateSetting("post_process_selected_prompt_id", value);
+    await updateSetting("post_process_selected_prompt_id", value);
+    await refreshSettings();
     setIsCreating(false);
   };
 
