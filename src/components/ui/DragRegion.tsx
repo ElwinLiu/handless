@@ -6,6 +6,8 @@ export const DragRegion = () => {
 
   return (
     <div
+      role="presentation"
+      aria-hidden="true"
       onMouseDown={(e) => {
         if (e.buttons === 1) appWindow.startDragging();
       }}
