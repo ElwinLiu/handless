@@ -172,7 +172,7 @@ function App() {
               position="top-center"
               closeButton
               theme={resolvedTheme}
-              style={{ left: "calc(50% + 80px)" }}
+              style={{ left: "calc(50% + var(--sidebar-width) / 2)" }}
               toastOptions={{
                 unstyled: true,
                 classNames: {
