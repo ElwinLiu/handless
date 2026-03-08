@@ -60,7 +60,7 @@ function StatCard({
   subLabel: string;
 }) {
   return (
-    <div className="bg-background-translucent backdrop-blur-sm border border-muted/20 rounded px-3 py-2.5">
+    <div className="bg-background-translucent backdrop-blur-sm border border-glass-border rounded px-3 py-2.5">
       <div className="flex items-center gap-1.5 mb-1">
         <IconComponent size={12} className="text-muted" />
         <span className="text-[10px] text-muted uppercase tracking-wide">
@@ -198,7 +198,7 @@ export const StatsSettings: React.FC = () => {
   let content;
   if (loading) {
     content = (
-      <div className="bg-background-translucent backdrop-blur-sm border border-muted/20 rounded">
+      <div className="bg-background-translucent backdrop-blur-sm border border-glass-border rounded">
         <div className="px-3 py-8 flex flex-col items-center gap-3">
           <div className="w-5 h-5 border-2 border-muted/40 border-t-accent rounded-full animate-spin" />
         </div>
@@ -206,7 +206,7 @@ export const StatsSettings: React.FC = () => {
     );
   } else if (stats.length === 0) {
     content = (
-      <div className="bg-background-translucent backdrop-blur-sm border border-muted/20 rounded">
+      <div className="bg-background-translucent backdrop-blur-sm border border-glass-border rounded">
         <div className="px-3 py-10 flex flex-col items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-muted/10 flex items-center justify-center">
             <Speedometer className="w-5 h-5 text-muted" />
@@ -255,7 +255,7 @@ export const StatsSettings: React.FC = () => {
               {t("settings.stats.wpmOverTime")}
             </h3>
           </div>
-          <div className="bg-background-translucent backdrop-blur-sm border border-muted/20 rounded px-3 py-4">
+          <div className="bg-background-translucent backdrop-blur-sm border border-glass-border rounded px-3 py-4">
             <ResponsiveContainer width="100%" height={200}>
               <LineChart data={chartData}>
                 <XAxis
@@ -329,7 +329,7 @@ export const StatsSettings: React.FC = () => {
               className={`px-2.5 py-1 rounded-full text-[11px] font-medium transition-colors ${
                 range === key
                   ? "bg-accent text-white"
-                  : "bg-background-translucent border border-muted/20 text-muted hover:text-text hover:border-muted/40"
+                  : "bg-background-translucent border border-glass-border text-muted hover:text-text hover:border-muted/40"
               }`}
             >
               {key === "custom" && (
@@ -354,7 +354,7 @@ export const StatsSettings: React.FC = () => {
                 value={customFrom}
                 max={customTo || todayDateStr}
                 onChange={(e) => setCustomFrom(e.target.value)}
-                className="bg-background-translucent border border-muted/20 rounded px-2 py-1 text-[11px] text-text focus:outline-none focus:border-accent/50"
+                className="bg-background-translucent border border-glass-border rounded px-2 py-1 text-[11px] text-text focus:outline-none focus:border-accent/50"
               />
             </label>
             <label className="flex items-center gap-1.5 text-[11px] text-muted">
@@ -365,7 +365,7 @@ export const StatsSettings: React.FC = () => {
                 min={customFrom}
                 max={todayDateStr}
                 onChange={(e) => setCustomTo(e.target.value)}
-                className="bg-background-translucent border border-muted/20 rounded px-2 py-1 text-[11px] text-text focus:outline-none focus:border-accent/50"
+                className="bg-background-translucent border border-glass-border rounded px-2 py-1 text-[11px] text-text focus:outline-none focus:border-accent/50"
               />
             </label>
           </div>
