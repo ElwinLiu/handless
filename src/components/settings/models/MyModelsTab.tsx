@@ -6,6 +6,7 @@ import { useModelStore } from "@/stores/modelStore";
 import { useSettings } from "@/hooks/useSettings";
 import { useModelActions } from "@/hooks/useModelActions";
 import { getProviderStatus } from "@/lib/utils/providerStatus";
+import { getModelSettingsProps } from "@/lib/utils/modelSettings";
 import { filterMyProviders } from "@/lib/utils/providerFilters";
 
 const EMPTY_ARRAY: string[] = [];
@@ -146,6 +147,7 @@ export const MyModelsTab: React.FC = () => {
             downloadProgress={downloadProgress[provider.id]?.percentage}
             downloadSpeed={downloadStats[provider.id]?.speed}
             showRecommended={false}
+            {...getModelSettingsProps(provider)}
           />
         ),
       )}

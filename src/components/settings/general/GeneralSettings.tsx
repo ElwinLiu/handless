@@ -7,7 +7,6 @@ import { useSettings } from "../../../hooks/useSettings";
 import { VolumeSlider } from "../VolumeSlider";
 import { OutputDeviceSelector } from "../OutputDeviceSelector";
 import { MuteWhileRecording } from "../MuteWhileRecording";
-import { ModelSettingsCard } from "./ModelSettingsCard";
 
 export const GeneralSettings: React.FC = () => {
   const { t } = useTranslation();
@@ -16,7 +15,6 @@ export const GeneralSettings: React.FC = () => {
   return (
     <div className="max-w-3xl w-full mx-auto space-y-8">
       <h1 className="sr-only">{t("sidebar.general")}</h1>
-      <ModelSettingsCard />
       <SettingsGroup title={t("settings.sound.title")}>
         <MicrophoneSelector descriptionMode="tooltip" grouped={true} />
         <MuteWhileRecording descriptionMode="tooltip" grouped={true} />
