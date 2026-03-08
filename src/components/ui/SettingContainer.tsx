@@ -77,7 +77,7 @@ export const SettingContainer: React.FC<SettingContainerProps> = ({
           <h3 className={`text-sm font-medium ${disabled ? "opacity-50" : ""}`}>
             {title}
           </h3>
-          <p className={`text-sm ${disabled ? "opacity-50" : ""}`}>
+          <p className={`text-sm text-muted-foreground ${disabled ? "opacity-50" : ""}`}>
             {description}
           </p>
         </div>
@@ -126,7 +126,7 @@ export const SettingContainer: React.FC<SettingContainerProps> = ({
         <h3 className={`text-sm font-medium ${disabled ? "opacity-50" : ""}`}>
           {title}
         </h3>
-        <p className={`text-sm ${disabled ? "opacity-50" : ""}`}>
+        <p className={`text-sm text-muted-foreground ${disabled ? "opacity-50" : ""}`}>
           {description}
         </p>
       </div>
