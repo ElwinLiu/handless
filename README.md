@@ -9,61 +9,25 @@
 <h1 align="center">Handless</h1>
 
 <p align="center">
-  <strong>A free, open source, and extensible speech-to-text application with local and cloud options.</strong>
-</p>
-
-<p align="center">
   <a href="https://github.com/ElwinLiu/handless/actions/workflows/build-test.yml"><img src="https://github.com/ElwinLiu/handless/actions/workflows/build-test.yml/badge.svg" alt="Build" /></a>
   <a href="https://github.com/ElwinLiu/handless/actions/workflows/lint.yml"><img src="https://github.com/ElwinLiu/handless/actions/workflows/lint.yml/badge.svg" alt="Lint" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT" /></a>
 </p>
 
-Handless is a cross-platform desktop application for speech transcription. Press a shortcut, speak, and have your words appear in any text field. Run everything locally for full privacy, or use cloud APIs for convenience -- your choice.
+Free, open-source, cross-platform speech-to-text. Press a shortcut, speak, get text in any app. Run locally for privacy or use cloud APIs.
 
 Forked from [Handy](https://github.com/cjpais/Handy) v0.7.8.
 
-## Table of Contents
-
-- [Why Handless?](#why-handless)
-- [How It Works](#how-it-works)
-- [Features](#features)
-- [Getting Started](#getting-started)
-- [CLI Parameters](#cli-parameters)
-- [Known Issues](#known-issues)
-- [Linux Notes](#linux-notes)
-- [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-- [License](#license)
-- [Acknowledgments](#acknowledgments)
-
-## Why Handless?
-
-- **Free**: Accessibility tooling belongs in everyone's hands, not behind a paywall
-- **Open Source**: Together we can build further. Extend Handless for yourself and contribute to something bigger
-- **Private by default**: Transcribe entirely on-device with local models, or opt in to cloud APIs when you prefer
-- **Simple**: One tool, one job. Transcribe what you say and put it into a text box
-
-Handless isn't trying to be the best speech-to-text app -- it's trying to be the most forkable one.
-
-## How It Works
-
-1. **Press** a configurable keyboard shortcut to start/stop recording (or use push-to-talk mode)
-2. **Speak** your words while the shortcut is active
-3. **Release** and Handless processes your speech using your chosen model
-4. **Get** your transcribed text pasted directly into whatever app you're using
-
 ## Features
 
-- **Local transcription** with a variety of built-in models -- browse and download them in Settings
-- **Voice Activity Detection** to filter silence (local models only)
-- **Cloud STT** support via OpenAI or Soniox
-- **LLM post-processing** to clean up, reformat, or restructure transcriptions
-- **Cross-platform**: macOS (Intel & Apple Silicon), Windows (x64), Linux (x64)
-- **Available in 17 languages**
+- **Local transcription** -- download models in Settings, runs fully on-device
+- **Cloud STT** via OpenAI or Soniox
+- **Voice Activity Detection** (local models only)
+- **LLM post-processing** to clean up or reformat transcriptions
+- **macOS** (Intel & Apple Silicon), **Windows** (x64), **Linux** (x64)
+- **17 languages**
 
-## Getting Started
-
-### Install
+## Install
 
 **macOS (Homebrew):**
 
@@ -72,152 +36,105 @@ brew tap ElwinLiu/tap
 brew install --cask handless
 ```
 
-**Other platforms:** Download the latest release from the [releases page](https://github.com/ElwinLiu/handless/releases).
+**Other platforms:** grab a build from the [releases page](https://github.com/ElwinLiu/handless/releases).
 
-To build from source, see [BUILD.md](BUILD.md).
+Build from source: see [BUILD.md](BUILD.md).
 
-## CLI Parameters
+## CLI
 
-Handless supports command-line flags for controlling a running instance and customizing startup behavior.
-
-**Remote control flags** (sent to an already-running instance):
+**Remote control** (talks to a running instance):
 
 ```bash
-handless --toggle-transcription    # Toggle recording on/off
-handless --toggle-post-process     # Toggle recording with post-processing on/off
-handless --cancel                  # Cancel the current operation
+handless --toggle-transcription    # Toggle recording
+handless --toggle-post-process     # Toggle recording + post-processing
+handless --cancel                  # Cancel current operation
 ```
 
 **Startup flags:**
 
 ```bash
-handless --start-hidden            # Start without showing the main window
-handless --no-tray                 # Start without the system tray icon
-handless --debug                   # Enable debug mode with verbose logging
-handless --help                    # Show all available flags
+handless --start-hidden            # No main window
+handless --no-tray                 # No tray icon
+handless --debug                   # Verbose logging
+handless --help                    # All flags
 ```
 
-Flags can be combined: `handless --start-hidden --no-tray`
+Combine freely: `handless --start-hidden --no-tray`
 
-> **macOS tip:** When installed as an app bundle, invoke the binary directly:
->
-> ```bash
-> /Applications/Handless.app/Contents/MacOS/Handless --toggle-transcription
-> ```
+> **macOS:** invoke the binary directly: `/Applications/Handless.app/Contents/MacOS/Handless --toggle-transcription`
 
-## Known Issues
+## Linux
 
-This project is actively being developed. See all [known issues](https://github.com/elwin/handless/issues).
+### Text Input
 
-**Wayland Support (Linux):**
+| Display Server | Tool | Install |
+| --- | --- | --- |
+| X11 | `xdotool` | `sudo apt install xdotool` |
+| Wayland | `wtype` | `sudo apt install wtype` |
+| Both | `dotool` | `sudo apt install dotool` (needs `input` group) |
 
-- Limited support for Wayland display server
-- Requires [`wtype`](https://github.com/atx/wtype) or [`dotool`](https://sr.ht/~geb/dotool/) for text input (see [Linux Notes](#linux-notes))
+For `dotool`: `sudo usermod -aG input $USER`, then re-login.
 
-## Linux Notes
+Without these, Handless falls back to enigo (limited Wayland support).
 
-### Text Input Tools
+### Dependencies
 
-For reliable text input on Linux, install the appropriate tool for your display server:
+If startup fails with `libgtk-layer-shell.so.0` not found:
 
-| Display Server | Recommended Tool | Install Command                                    |
-| -------------- | ---------------- | -------------------------------------------------- |
-| X11            | `xdotool`        | `sudo apt install xdotool`                         |
-| Wayland        | `wtype`          | `sudo apt install wtype`                           |
-| Both           | `dotool`         | `sudo apt install dotool` (requires `input` group) |
+| Distro | Command |
+| --- | --- |
+| Ubuntu/Debian | `sudo apt install libgtk-layer-shell0` |
+| Fedora/RHEL | `sudo dnf install gtk-layer-shell` |
+| Arch | `sudo pacman -S gtk-layer-shell` |
 
-- **dotool setup**: Add your user to the `input` group: `sudo usermod -aG input $USER` (then log out and back in)
+For building from source on Debian-based: also install `libgtk-layer-shell-dev`.
 
-Without these tools, Handless falls back to enigo which may have limited compatibility, especially on Wayland.
+### Wayland Shortcuts
 
-### Runtime Dependencies
+System-level shortcuts must go through your DE/WM. Use [CLI flags](#cli) as the command.
 
-Handless links `gtk-layer-shell` on Linux. If startup fails with `error while loading shared libraries: libgtk-layer-shell.so.0`:
+<details>
+<summary>Examples</summary>
 
-| Distro        | Package               | Command                                |
-| ------------- | --------------------- | -------------------------------------- |
-| Ubuntu/Debian | `libgtk-layer-shell0` | `sudo apt install libgtk-layer-shell0` |
-| Fedora/RHEL   | `gtk-layer-shell`     | `sudo dnf install gtk-layer-shell`     |
-| Arch Linux    | `gtk-layer-shell`     | `sudo pacman -S gtk-layer-shell`       |
+**GNOME:** Settings > Keyboard > Custom Shortcuts > add `handless --toggle-transcription`
 
-For building from source on Ubuntu/Debian, you may also need `libgtk-layer-shell-dev`.
+**KDE:** System Settings > Shortcuts > Custom Shortcuts > add command
 
-### Other Notes
-
-- The recording overlay is disabled by default (`Overlay Position: None`) because certain compositors treat it as the active window, which can steal focus and prevent pasting.
-- Running with `WEBKIT_DISABLE_DMABUF_RENDERER=1` may help if you experience issues.
-
-### Global Keyboard Shortcuts (Wayland)
-
-On Wayland, system-level shortcuts must be configured through your desktop environment or window manager. Use the [CLI flags](#cli-parameters) as the command.
-
-**GNOME:**
-
-1. Open **Settings > Keyboard > Keyboard Shortcuts > Custom Shortcuts**
-2. Click **+**, set **Name** to `Toggle Handless Transcription`
-3. Set **Command** to `handless --toggle-transcription`
-4. Click **Set Shortcut** and press your desired key combination
-
-**KDE Plasma:**
-
-1. Open **System Settings > Shortcuts > Custom Shortcuts**
-2. Click **Edit > New > Global Shortcut > Command/URL**
-3. Set your desired key combination and command `handless --toggle-transcription`
-
-**Sway / i3:**
-
+**Sway/i3:**
 ```ini
 bindsym $mod+o exec handless --toggle-transcription
 ```
 
 **Hyprland:**
-
 ```ini
 bind = $mainMod, O, exec, handless --toggle-transcription
 ```
+</details>
 
 ### Unix Signals
 
-You can also control Handless via Unix signals:
+| Signal | Action | Example |
+| --- | --- | --- |
+| `SIGUSR2` | Toggle transcription | `pkill -USR2 -n handless` |
+| `SIGUSR1` | Toggle + post-processing | `pkill -USR1 -n handless` |
 
-| Signal    | Action                                    | Example                   |
-| --------- | ----------------------------------------- | ------------------------- |
-| `SIGUSR2` | Toggle transcription                      | `pkill -USR2 -n handless` |
-| `SIGUSR1` | Toggle transcription with post-processing | `pkill -USR1 -n handless` |
+### Notes
 
-Example Sway config:
-
-```ini
-bindsym $mod+o exec pkill -USR2 -n handless
-bindsym $mod+p exec pkill -USR1 -n handless
-```
+- Recording overlay is off by default (`Overlay Position: None`) -- some compositors treat it as the active window, stealing focus.
+- Try `WEBKIT_DISABLE_DMABUF_RENDERER=1` if you hit rendering issues.
 
 ## Troubleshooting
 
-### Debug Mode
-
-Press `Cmd+Shift+D` (macOS) or `Ctrl+Shift+D` (Windows/Linux) to open the debug panel.
+`Cmd+Shift+D` (macOS) or `Ctrl+Shift+D` (Windows/Linux) opens the debug panel.
 
 ## Contributing
 
-Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, workflow, and guidelines. For translations, see [CONTRIBUTING_TRANSLATIONS.md](CONTRIBUTING_TRANSLATIONS.md).
+See [CONTRIBUTING.md](CONTRIBUTING.md). For translations: [CONTRIBUTING_TRANSLATIONS.md](CONTRIBUTING_TRANSLATIONS.md).
 
 ## License
 
-MIT License -- see [LICENSE](LICENSE) for details.
+[MIT](LICENSE)
 
 ## Acknowledgments
 
-- **Whisper** by OpenAI for the speech recognition model
-- **whisper.cpp and ggml** for cross-platform whisper inference/acceleration
-- **NVIDIA NeMo** for the Parakeet speech recognition models
-- **Moonshine** by Useful Sensors for lightweight speech recognition
-- **SenseVoice** by FunAudioLLM for multilingual speech recognition
-- **Silero** for lightweight VAD
-- **Tauri** for the Rust-based app framework
-- **[Handy](https://github.com/cjpais/Handy)** -- the upstream project this was forked from
-- **Community contributors** helping make Handless better
-
----
-
-_"Your search for the right speech-to-text tool can end here -- not because Handless is perfect, but because you can make it perfect for you."_
+[Whisper](https://github.com/openai/whisper) | [whisper.cpp](https://github.com/ggerganov/whisper.cpp) | [NeMo Parakeet](https://github.com/NVIDIA/NeMo) | [Moonshine](https://github.com/usefulsensors/moonshine) | [SenseVoice](https://github.com/FunAudioLLM/SenseVoice) | [Silero VAD](https://github.com/snakers4/silero-vad) | [Tauri](https://tauri.app) | [Handy](https://github.com/cjpais/Handy)
