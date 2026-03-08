@@ -21,6 +21,7 @@ export const AdvancedSettings: React.FC = () => {
 
   return (
     <div className="max-w-3xl w-full mx-auto space-y-4">
+      <h1 className="sr-only">{t("sidebar.advanced")}</h1>
       <SettingsGroup title={t("settings.advanced.groups.app")}>
         <ThemeSelector descriptionMode="tooltip" grouped={true} />
         <StartHidden descriptionMode="tooltip" grouped={true} />

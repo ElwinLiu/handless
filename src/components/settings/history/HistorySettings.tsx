@@ -146,6 +146,7 @@ export const HistorySettings: React.FC = () => {
   if (loading) {
     return (
       <div className="max-w-3xl w-full mx-auto space-y-4">
+        <h1 className="sr-only">{t("sidebar.history")}</h1>
         {retentionSection}
         <div className="space-y-1.5">
           <div className="px-3 flex items-center justify-between">
@@ -175,6 +176,7 @@ export const HistorySettings: React.FC = () => {
   if (historyEntries.length === 0) {
     return (
       <div className="max-w-3xl w-full mx-auto space-y-4">
+        <h1 className="sr-only">{t("sidebar.history")}</h1>
         {retentionSection}
         <div className="space-y-1.5">
           <div className="px-3 flex items-center justify-between">
@@ -205,6 +207,7 @@ export const HistorySettings: React.FC = () => {
 
   return (
     <div className="max-w-3xl w-full mx-auto space-y-4">
+      <h1 className="sr-only">{t("sidebar.history")}</h1>
       {retentionSection}
       <div className="space-y-1.5">
         <div className="px-3 flex items-center justify-between">
