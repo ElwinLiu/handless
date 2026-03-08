@@ -117,7 +117,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     .map(([id, config]) => ({ id: id as SidebarSection, ...config }));
 
   return (
-    <div className="flex flex-col w-40 h-full border-e border-glass-border glass-panel-heavy items-center px-2">
+    <div className="flex flex-col h-full border-e border-glass-border glass-panel-heavy items-center px-2" style={{ width: "var(--sidebar-width)" }}>
       <DragRegion />
       <LayoutGroup>
         <div role="tablist" className="flex flex-col w-full items-center gap-1">

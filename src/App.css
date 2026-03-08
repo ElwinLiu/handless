@@ -74,6 +74,9 @@
   --glass-blur: 12px;
   --glass-blur-heavy: 24px;
   --glass-blur-light: 6px;
+
+  /* Layout */
+  --sidebar-width: 10rem;
 }
 
 html,
