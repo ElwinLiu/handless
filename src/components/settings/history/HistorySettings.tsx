@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 import { AudioPlayer } from "../../ui/AudioPlayer";
 import { Button } from "../../ui/Button";
 import {
@@ -276,7 +277,7 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
       await deleteAudio(entry.id);
     } catch (error) {
       console.error("Failed to delete entry:", error);
-      alert("Failed to delete entry. Please try again.");
+      toast.error(t("settings.history.deleteError"));
     }
   };
 
@@ -297,9 +298,9 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
           <SimpleTooltip content={t("settings.history.copyToClipboard")}>
             <button
               onClick={handleCopyText}
-              className="p-1 rounded text-text/50 hover:text-accent transition-colors cursor-pointer"
+              className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded text-text/50 hover:text-accent transition-colors cursor-pointer"
             >
-              {showCopied ? <Check size={12} /> : <Copy size={12} />}
+              {showCopied ? <Check size={14} /> : <Copy size={14} />}
             </button>
           </SimpleTooltip>
           <SimpleTooltip
@@ -311,21 +312,21 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
           >
             <button
               onClick={onToggleSaved}
-              className={`p-1 rounded transition-colors cursor-pointer ${
+              className={`p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded transition-colors cursor-pointer ${
                 entry.saved
                   ? "text-accent hover:text-accent/80"
                   : "text-text/50 hover:text-accent"
               }`}
             >
-              <Star size={12} weight={entry.saved ? "fill" : "light"} />
+              <Star size={14} weight={entry.saved ? "fill" : "light"} />
             </button>
           </SimpleTooltip>
           <SimpleTooltip content={t("settings.history.delete")}>
             <button
               onClick={handleDeleteEntry}
-              className="p-1 rounded text-text/50 hover:text-red-400 transition-colors cursor-pointer"
+              className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded text-text/50 hover:text-red-400 transition-colors cursor-pointer"
             >
-              <Trash size={12} />
+              <Trash size={14} />
             </button>
           </SimpleTooltip>
         </div>
