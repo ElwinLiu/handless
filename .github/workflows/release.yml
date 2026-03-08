@@ -22,6 +22,30 @@ jobs:
           echo "Application version from tauri.conf.json: $VERSION"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
+      - name: Check for existing release and clean up stale drafts
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const tag = `v${{ steps.get-version.outputs.version }}`;
+            const releases = await github.rest.repos.listReleases({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 100
+            });
+            for (const release of releases.data) {
+              if (release.tag_name !== tag) continue;
+              if (!release.draft) {
+                core.setFailed(`Published release ${tag} already exists. Bump the version in tauri.conf.json first.`);
+                return;
+              }
+              console.log(`Deleting stale draft release ${release.id}`);
+              await github.rest.repos.deleteRelease({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: release.id
+              });
+            }
+
       - name: Create Draft Release
         id: create-release
         uses: actions/github-script@v8
