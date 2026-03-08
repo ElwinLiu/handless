@@ -120,15 +120,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <div className="flex flex-col w-40 h-full border-e border-glass-border glass-panel-heavy items-center px-2">
       <DragRegion />
       <LayoutGroup>
-        <div className="flex flex-col w-full items-center gap-1">
+        <div role="tablist" className="flex flex-col w-full items-center gap-1">
           {availableSections.map((section) => {
             const Icon = section.icon;
             const isActive = activeSection === section.id;
 
             return (
-              <motion.div
+              <motion.button
                 key={section.id}
-                className="relative flex gap-2 items-center py-1 px-2 w-full rounded-lg cursor-pointer"
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                className="relative flex gap-2 items-center py-1 px-2 w-full rounded-lg cursor-pointer bg-transparent border-none text-inherit text-left"
                 onClick={() => onSectionChange(section.id)}
                 whileHover={{
                   backgroundColor: isActive
@@ -155,7 +158,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 >
                   {t(section.labelKey)}
                 </p>
-              </motion.div>
+              </motion.button>
             );
           })}
         </div>
