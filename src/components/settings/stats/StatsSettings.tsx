@@ -221,7 +221,7 @@ export const StatsSettings: React.FC = () => {
     content = (
       <>
         {/* Summary cards */}
-        <div className="px-3 grid grid-cols-4 gap-2">
+        <div className="px-3 grid grid-cols-2 sm:grid-cols-4 gap-2">
           <StatCard
             icon={ChatText}
             label={t("settings.stats.wordsSpoken")}
