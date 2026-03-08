@@ -106,8 +106,6 @@ const settingUpdaters: {
 } = {
   always_on_microphone: (value) =>
     commands.updateMicrophoneMode(value as boolean),
-  audio_feedback: (value) =>
-    commands.changeAudioFeedbackSetting(value as boolean),
   audio_feedback_volume: (value) =>
     commands.changeAudioFeedbackVolumeSetting(value as number),
   sound_theme: (value) => commands.changeSoundThemeSetting(value as string),

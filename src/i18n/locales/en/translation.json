@@ -281,10 +281,6 @@
         "placeholder": "Select microphone...",
         "loading": "Loading..."
       },
-      "audioFeedback": {
-        "label": "Audio Feedback",
-        "description": "Play sound when recording starts and stops"
-      },
       "outputDevice": {
         "title": "Output Device",
         "description": "Select your preferred audio output device for feedback sounds",

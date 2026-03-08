@@ -281,10 +281,6 @@
         "placeholder": "Vyberte mikrofon...",
         "loading": "Načítání..."
       },
-      "audioFeedback": {
-        "label": "Zvuková odezva",
-        "description": "Přehrát zvuk při zahájení a ukončení nahrávání"
-      },
       "outputDevice": {
         "title": "Výstupní zařízení",
         "description": "Vyberte preferované výstupní zařízení pro zvuky odezvy",

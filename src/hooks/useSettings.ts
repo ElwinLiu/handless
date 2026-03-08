@@ -11,6 +11,5 @@ export const useSettings = () => {
   return {
     ...store,
     isUpdating: store.isUpdatingKey,
-    audioFeedbackEnabled: store.settings?.audio_feedback || false,
   };
 };

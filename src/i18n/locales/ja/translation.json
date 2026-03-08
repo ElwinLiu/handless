@@ -281,10 +281,6 @@
         "placeholder": "マイクを選択...",
         "loading": "読み込み中..."
       },
-      "audioFeedback": {
-        "label": "音声フィードバック",
-        "description": "録音の開始と停止時にサウンドを再生"
-      },
       "outputDevice": {
         "title": "出力デバイス",
         "description": "フィードバックサウンド用の音声出力デバイスを選択",

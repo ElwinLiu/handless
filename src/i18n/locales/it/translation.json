@@ -281,10 +281,6 @@
         "placeholder": "Scegli microfono...",
         "loading": "Caricamento..."
       },
-      "audioFeedback": {
-        "label": "Feedback Audio",
-        "description": "Riproduci un suono quando la registrazione inizia e finisce"
-      },
       "outputDevice": {
         "title": "Dispositivo di Output",
         "description": "Scegli il dispositivo di output per il feedback audio",

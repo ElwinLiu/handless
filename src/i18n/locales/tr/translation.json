@@ -281,10 +281,6 @@
         "placeholder": "Mikrofon seçin...",
         "loading": "Yükleniyor..."
       },
-      "audioFeedback": {
-        "label": "Sesli Geri Bildirim",
-        "description": "Kayıt başladığında ve bittiğinde ses çalar"
-      },
       "outputDevice": {
         "title": "Çıkış Cihazı",
         "description": "Geri bildirim sesleri için ses çıkış cihazını seçin",

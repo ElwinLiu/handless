@@ -281,10 +281,6 @@
         "placeholder": "Sélectionner un microphone...",
         "loading": "Chargement..."
       },
-      "audioFeedback": {
-        "label": "Signal sonore",
-        "description": "Jouer un son au début et à la fin de l'enregistrement"
-      },
       "outputDevice": {
         "title": "Périphérique de sortie",
         "description": "Sélectionnez votre périphérique de sortie audio pour le signal sonore",

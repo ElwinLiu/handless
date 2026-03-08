@@ -281,10 +281,6 @@
         "placeholder": "选择麦克风...",
         "loading": "加载中..."
       },
-      "audioFeedback": {
-        "label": "音频反馈",
-        "description": "录制开始和停止时播放声音"
-      },
       "outputDevice": {
         "title": "输出设备",
         "description": "选择用于反馈声音的音频输出设备",

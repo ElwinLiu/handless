@@ -281,10 +281,6 @@
         "placeholder": "Wybierz mikrofon...",
         "loading": "Wczytywanie..."
       },
-      "audioFeedback": {
-        "label": "Informacja dźwiękowa",
-        "description": "Odtwarzaj dźwięk przy rozpoczęciu i zakończeniu nagrywania"
-      },
       "outputDevice": {
         "title": "Urządzenie wyjściowe",
         "description": "Wybierz preferowane urządzenie audio do odtwarzania dźwięków",

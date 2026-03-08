@@ -281,10 +281,6 @@
         "placeholder": "Seleccionar micrófono...",
         "loading": "Cargando..."
       },
-      "audioFeedback": {
-        "label": "Retroalimentación de Audio",
-        "description": "Reproducir sonido cuando la grabación inicia y se detiene"
-      },
       "outputDevice": {
         "title": "Dispositivo de Salida",
         "description": "Selecciona tu dispositivo de salida de audio preferido para los sonidos de retroalimentación",

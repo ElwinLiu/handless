@@ -295,7 +295,6 @@ impl Default for TypingTool {
 pub struct AppSettings {
     pub bindings: HashMap<String, ShortcutBinding>,
     pub push_to_talk: bool,
-    pub audio_feedback: bool,
     #[serde(default = "default_audio_feedback_volume")]
     pub audio_feedback_volume: f32,
     #[serde(default = "default_sound_theme")]
@@ -722,7 +721,6 @@ pub fn get_default_settings() -> AppSettings {
     AppSettings {
         bindings,
         push_to_talk: true,
-        audio_feedback: true,
         audio_feedback_volume: default_audio_feedback_volume(),
         sound_theme: default_sound_theme(),
         start_hidden: default_start_hidden(),

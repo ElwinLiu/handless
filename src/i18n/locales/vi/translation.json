@@ -281,10 +281,6 @@
         "placeholder": "Chọn micrô...",
         "loading": "Đang tải..."
       },
-      "audioFeedback": {
-        "label": "Phản hồi âm thanh",
-        "description": "Phát âm thanh khi bắt đầu và kết thúc ghi âm"
-      },
       "outputDevice": {
         "title": "Thiết bị đầu ra",
         "description": "Chọn thiết bị đầu ra âm thanh ưa thích của bạn cho âm thanh phản hồi",

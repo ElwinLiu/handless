@@ -281,10 +281,6 @@
         "placeholder": "Mikrofon auswählen...",
         "loading": "Wird geladen..."
       },
-      "audioFeedback": {
-        "label": "Audio-Feedback",
-        "description": "Ton bei Start und Ende der Aufnahme abspielen"
-      },
       "outputDevice": {
         "title": "Ausgabegerät",
         "description": "Bevorzugtes Audioausgabegerät für Feedback-Töne auswählen",

@@ -281,10 +281,6 @@
         "placeholder": "選擇麥克風...",
         "loading": "載入中..."
       },
-      "audioFeedback": {
-        "label": "聲音回饋",
-        "description": "錄製開始和停止時播放聲音"
-      },
       "outputDevice": {
         "title": "輸出裝置",
         "description": "選擇用於聲音回饋的音訊輸出裝置",
