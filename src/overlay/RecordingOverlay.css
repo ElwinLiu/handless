@@ -23,6 +23,7 @@
 }
 
 .recording-overlay {
+  /* Intentionally always-dark: floating overlay renders on top of other apps */
   /* width and height controlled by inline style */
   position: relative;
   display: flex;
@@ -86,7 +87,7 @@
   width: 2px;
   height: 2px;
   border-radius: 50%;
-  background: #ff8c00;
+  background: #ef6f2f;
   will-change: height, opacity;
 }
 
@@ -126,7 +127,7 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: rgba(255, 180, 100, 0.18);
+  background: rgba(239, 111, 47, 0.18);
   pointer-events: none;
   transition: width 150ms ease-out;
 }
@@ -146,7 +147,7 @@
   width: 3px;
   height: 3px;
   border-radius: 50%;
-  background: #ff8c00;
+  background: #ef6f2f;
   opacity: 0.5;
   animation: thinking-bounce 600ms ease-in-out infinite;
   will-change: transform, opacity;
