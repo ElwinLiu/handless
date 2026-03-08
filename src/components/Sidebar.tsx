@@ -131,7 +131,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 type="button"
                 role="tab"
                 aria-selected={isActive}
-                className="relative flex gap-2 items-center py-1 px-2 w-full rounded-lg cursor-pointer bg-transparent border-none text-inherit text-left"
+                className="relative flex gap-2.5 items-center py-1.5 px-2.5 w-full rounded-lg cursor-pointer bg-transparent border-none text-inherit text-left"
                 onClick={() => onSectionChange(section.id)}
                 whileHover={{
                   backgroundColor: isActive
@@ -142,19 +142,26 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 transition={spring.snappy}
               >
                 {isActive && (
-                  <motion.div
-                    layoutId="sidebar-active-indicator"
-                    className="absolute inset-y-1 left-0 w-[3px] rounded-full bg-accent"
-                    transition={spring.snappy}
-                  />
+                  <>
+                    <motion.div
+                      layoutId="sidebar-active-bg"
+                      className="absolute inset-0 rounded-lg bg-accent/[0.08]"
+                      transition={spring.snappy}
+                    />
+                    <motion.div
+                      layoutId="sidebar-active-indicator"
+                      className="absolute inset-y-1.5 left-0 w-[3px] rounded-full bg-accent shadow-accent-glow"
+                      transition={spring.snappy}
+                    />
+                  </>
                 )}
                 <Icon
-                  size={18}
-                  weight={isActive ? "regular" : "light"}
+                  size={20}
+                  weight={isActive ? "bold" : "regular"}
                   className={`shrink-0 relative z-10 ${isActive ? "text-accent" : "text-muted"}`}
                 />
                 <p
-                  className={`text-sm truncate relative z-10 ${isActive ? "font-semibold" : "font-medium text-muted"}`}
+                  className={`text-sm truncate relative z-10 ${isActive ? "font-bold" : "font-medium text-muted"}`}
                 >
                   {t(section.labelKey)}
                 </p>

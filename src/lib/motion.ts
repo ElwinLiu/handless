@@ -8,28 +8,28 @@ export const spring = {
 };
 
 // ── Micro-interaction presets ───────────────────────────────────────
-export const tapScale = { scale: 0.97 };
-export const hoverLift = { y: -2, transition: spring.gentle };
+export const tapScale = { scale: 0.96 };
+export const hoverLift = { y: -3, transition: spring.gentle };
 
 // ── Page / section transition variants ─────────────────────────────
 export const pageVariants: Variants = {
-  initial: { opacity: 0, y: 6, filter: "blur(2px)" },
+  initial: { opacity: 0, y: 10, filter: "blur(3px)" },
   animate: { opacity: 1, y: 0, filter: "blur(0px)" },
-  exit: { opacity: 0, y: -3, filter: "blur(2px)" },
+  exit: { opacity: 0, y: -5, filter: "blur(3px)" },
 };
 
 export const pageTransition: Transition = {
-  duration: 0.25,
-  ease: [0.25, 0.1, 0.25, 1],
+  duration: 0.3,
+  ease: [0.16, 1, 0.3, 1], // ease-out-expo
 };
 
 // ── Stagger container / item variants ──────────────────────────────
 export const staggerContainer: Variants = {
   initial: {},
-  animate: { transition: { staggerChildren: 0.04 } },
+  animate: { transition: { staggerChildren: 0.06 } },
 };
 
 export const staggerItem: Variants = {
-  initial: { opacity: 0, y: 4 },
+  initial: { opacity: 0, y: 6 },
   animate: { opacity: 1, y: 0, transition: spring.gentle },
 };

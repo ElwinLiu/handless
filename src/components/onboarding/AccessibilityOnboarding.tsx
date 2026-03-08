@@ -37,10 +37,10 @@ const PermissionRow: React.FC<{
 }> = ({ icon, label, status, onGrant }) => {
   const { t } = useTranslation();
   return (
-    <div className="flex items-center justify-between gap-4 py-3">
+    <div className="flex items-center justify-between gap-4 py-3.5">
       <div className="flex items-center gap-3">
-        <span className="text-text/40">{icon}</span>
-        <span className="text-sm text-text/70">{label}</span>
+        <span className="text-text/50">{icon}</span>
+        <span className="text-sm font-medium text-text/80">{label}</span>
       </div>
       <AnimatePresence mode="wait">
         {status === "granted" ? (
@@ -275,10 +275,10 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
         >
-          <h1 className="text-2xl font-semibold tracking-tight text-text mb-1">
+          <h1 className="text-3xl font-bold tracking-tight text-text mb-1">
             {t("appName")}
           </h1>
-          <p className="text-xs text-text/30 mb-10">
+          <p className="text-xs text-text/40 mb-10">
             {t("onboarding.permissions.description")}
           </p>
 

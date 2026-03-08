@@ -14,10 +14,10 @@ export const SettingsGroup: React.FC<SettingsGroupProps> = ({
   children,
 }) => {
   return (
-    <div className="space-y-1.5">
+    <div className="space-y-2">
       {title && (
         <div className="px-3">
-          <h2 className="text-sm font-semibold text-muted-foreground">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
             {title}
           </h2>
           {description && (
@@ -26,7 +26,7 @@ export const SettingsGroup: React.FC<SettingsGroupProps> = ({
         </div>
       )}
       <motion.div
-        className="rounded-xl overflow-visible border border-glass-border"
+        className="rounded-xl overflow-visible border border-glass-border shadow-glass"
         variants={staggerContainer}
         initial="initial"
         animate="animate"

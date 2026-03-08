@@ -23,7 +23,7 @@ const Footer: React.FC = () => {
 
   return (
     <div className="w-full border-t border-glass-border bg-glass-bg pt-2">
-      <div className="flex justify-between items-center text-xs px-4 pb-2 text-text/60">
+      <div className="flex justify-between items-center text-xs px-4 pb-2 text-text/70">
         <div className="flex items-center gap-4">
           <ModelSelector />
         </div>
