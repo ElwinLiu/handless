@@ -32,9 +32,11 @@ export const ModelsSettings: React.FC = () => {
         </p>
       </div>
 
-      <div className="flex gap-1 border-b border-muted/20 mb-4">
+      <div role="tablist" className="flex gap-1 border-b border-muted/20 mb-4">
         <button
           type="button"
+          role="tab"
+          aria-selected={activeTab === "myModels"}
           onClick={() => setActiveTab("myModels")}
           className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px ${
             activeTab === "myModels"
@@ -46,6 +48,8 @@ export const ModelsSettings: React.FC = () => {
         </button>
         <button
           type="button"
+          role="tab"
+          aria-selected={activeTab === "library"}
           onClick={() => setActiveTab("library")}
           className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px ${
             activeTab === "library"
@@ -57,7 +61,9 @@ export const ModelsSettings: React.FC = () => {
         </button>
       </div>
 
-      {activeTab === "myModels" ? <MyModelsTab /> : <LibraryTab />}
+      <div role="tabpanel">
+        {activeTab === "myModels" ? <MyModelsTab /> : <LibraryTab />}
+      </div>
     </div>
   );
 };
