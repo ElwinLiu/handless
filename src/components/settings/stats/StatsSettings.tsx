@@ -60,7 +60,7 @@ function StatCard({
   subLabel: string;
 }) {
   return (
-    <div className="bg-background-translucent backdrop-blur-sm border border-glass-border rounded px-3 py-2.5">
+    <div className="bg-background-translucent border border-glass-border rounded px-3 py-2.5">
       <div className="flex items-center gap-1.5 mb-1">
         <IconComponent size={12} className="text-muted" />
         <span className="text-[10px] text-muted uppercase tracking-wide">
@@ -198,7 +198,7 @@ export const StatsSettings: React.FC = () => {
   let content;
   if (loading) {
     content = (
-      <div className="bg-background-translucent backdrop-blur-sm border border-glass-border rounded">
+      <div className="bg-background-translucent border border-glass-border rounded">
         <div className="px-3 py-8 flex flex-col items-center gap-3">
           <div className="w-5 h-5 border-2 border-muted/40 border-t-accent rounded-full animate-spin" />
         </div>
@@ -206,7 +206,7 @@ export const StatsSettings: React.FC = () => {
     );
   } else if (stats.length === 0) {
     content = (
-      <div className="bg-background-translucent backdrop-blur-sm border border-glass-border rounded">
+      <div className="bg-background-translucent border border-glass-border rounded">
         <div className="px-3 py-10 flex flex-col items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-muted/10 flex items-center justify-center">
             <Speedometer className="w-5 h-5 text-muted" />
@@ -255,7 +255,7 @@ export const StatsSettings: React.FC = () => {
               {t("settings.stats.wpmOverTime")}
             </h3>
           </div>
-          <div className="bg-background-translucent backdrop-blur-sm border border-glass-border rounded px-3 py-4">
+          <div className="bg-background-translucent border border-glass-border rounded px-3 py-4">
             <ResponsiveContainer width="100%" height={200}>
               <LineChart data={chartData}>
                 <XAxis
@@ -312,7 +312,7 @@ export const StatsSettings: React.FC = () => {
   }
 
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-4">
+    <div className="max-w-3xl w-full mx-auto space-y-6">
       <h1 className="sr-only">{t("sidebar.stats")}</h1>
       <div className="space-y-3">
         <div className="px-3">

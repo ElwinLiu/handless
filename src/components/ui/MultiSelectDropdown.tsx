@@ -88,7 +88,7 @@ export const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
         className={cn(
-          "px-2 py-1 text-sm font-semibold bg-glass-bg border border-glass-border rounded backdrop-blur-sm",
+          "px-2 py-1 text-sm font-semibold bg-glass-bg border border-glass-border rounded",
           "min-w-[160px] text-start flex items-center justify-between gap-1",
           "transition-all duration-150",
           disabled

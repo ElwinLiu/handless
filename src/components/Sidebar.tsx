@@ -144,17 +144,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 {isActive && (
                   <motion.div
                     layoutId="sidebar-active-indicator"
-                    className="absolute inset-0 rounded-lg bg-accent/80"
+                    className="absolute inset-y-1 left-0 w-[3px] rounded-full bg-accent"
                     transition={spring.snappy}
                   />
                 )}
                 <Icon
                   size={18}
-                  weight="light"
-                  className={`shrink-0 relative z-10 ${!isActive ? "opacity-85" : ""}`}
+                  weight={isActive ? "regular" : "light"}
+                  className={`shrink-0 relative z-10 ${isActive ? "text-accent" : "text-muted"}`}
                 />
                 <p
-                  className={`text-sm font-medium truncate relative z-10 ${!isActive ? "opacity-85" : ""}`}
+                  className={`text-sm truncate relative z-10 ${isActive ? "font-semibold" : "font-medium text-muted"}`}
                 >
                   {t(section.labelKey)}
                 </p>

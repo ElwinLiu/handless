@@ -17,7 +17,7 @@ export const ResetButton: React.FC<ResetButtonProps> = React.memo(
       className={`p-1 rounded-lg border border-transparent transition-all duration-150 ${
         disabled
           ? "opacity-50 cursor-not-allowed text-text/40"
-          : "hover:bg-accent/30 hover:shadow-accent-glow active:bg-accent/50 active:translate-y-[1px] hover:cursor-pointer hover:border-accent text-text/80"
+          : "hover:bg-accent/30 active:bg-accent/50 active:translate-y-[1px] hover:cursor-pointer hover:border-accent text-text/80"
       } ${className}`}
       onClick={onClick}
       disabled={disabled}

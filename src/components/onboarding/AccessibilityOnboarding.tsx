@@ -49,7 +49,7 @@ const PermissionRow: React.FC<{
             className="text-xs text-success/80 flex items-center gap-1.5"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={spring.bouncy}
+            transition={spring.stiff}
           >
             <Check weight="bold" className="w-3.5 h-3.5" />
             {t("onboarding.permissions.granted")}
@@ -250,7 +250,7 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
           <motion.div
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={spring.bouncy}
+            transition={spring.stiff}
           >
             <Check weight="bold" className="w-8 h-8 text-success/70" />
           </motion.div>

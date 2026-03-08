@@ -17,16 +17,16 @@ export const SettingsGroup: React.FC<SettingsGroupProps> = ({
     <div className="space-y-1.5">
       {title && (
         <div className="px-3">
-          <h2 className="text-xs font-medium text-muted uppercase tracking-wide">
+          <h2 className="text-sm font-semibold text-muted-foreground">
             {title}
           </h2>
           {description && (
-            <p className="text-xs text-muted mt-1">{description}</p>
+            <p className="text-xs text-muted mt-0.5">{description}</p>
           )}
         </div>
       )}
       <motion.div
-        className="glass-panel rounded-xl overflow-visible"
+        className="rounded-xl overflow-visible border border-glass-border"
         variants={staggerContainer}
         initial="initial"
         animate="animate"

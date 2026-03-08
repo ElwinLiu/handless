@@ -20,7 +20,7 @@ export const AdvancedSettings: React.FC = () => {
   const { t } = useTranslation();
 
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-4">
+    <div className="max-w-3xl w-full mx-auto space-y-6">
       <h1 className="sr-only">{t("sidebar.advanced")}</h1>
       <SettingsGroup title={t("settings.advanced.groups.app")}>
         <ThemeSelector descriptionMode="tooltip" grouped={true} />

@@ -38,7 +38,7 @@ const NumberInput = React.forwardRef<HTMLDivElement, NumberInputProps>(
       <div
         ref={ref}
         className={cn(
-          "inline-flex items-center rounded-md border border-glass-border bg-glass-bg backdrop-blur-sm shadow-sm",
+          "inline-flex items-center rounded-md border border-glass-border bg-glass-bg shadow-sm",
           disabled && "opacity-50 pointer-events-none",
           className,
         )}

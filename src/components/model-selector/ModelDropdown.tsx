@@ -24,7 +24,7 @@ const DropdownItem: React.FC<DropdownItemProps> = ({
       className={`w-full text-start px-3 py-2 rounded-md transition-colors cursor-pointer focus:outline-none ${
         active
           ? "bg-accent/10 text-text"
-          : "text-text/70 hover:bg-white/5 hover:text-text"
+          : "text-text/70 hover:bg-glass-highlight hover:text-text"
       }`}
     >
       <div className="flex items-center justify-between gap-2">

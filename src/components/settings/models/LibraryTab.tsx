@@ -105,7 +105,7 @@ export const LibraryTab: React.FC = () => {
     <div className="space-y-4">
       {cloudProviders.length > 0 && (
         <div className="space-y-2">
-          <h2 className="text-sm font-medium text-text/60">
+          <h2 className="text-sm font-semibold text-muted-foreground">
             {t("settings.models.cloudProviders.title")}
           </h2>
           {cloudProviders.map((provider) => (
@@ -143,7 +143,7 @@ export const LibraryTab: React.FC = () => {
 
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-medium text-text/60">
+          <h2 className="text-sm font-semibold text-muted-foreground">
             {t("settings.models.localModels.title")}
           </h2>
           <LanguageFilter value={languageFilter} onChange={setLanguageFilter} />

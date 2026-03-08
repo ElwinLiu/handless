@@ -24,11 +24,11 @@ export const SelectableCard: React.FC<SelectableCardProps> = ({
   children,
 }) => {
   const baseClasses = compact
-    ? "flex flex-col rounded-xl px-3 py-2 gap-1 text-left transition-all duration-200 backdrop-blur-sm"
-    : "flex flex-col rounded-xl px-4 py-3 gap-2 text-left transition-all duration-200 backdrop-blur-sm";
+    ? "flex flex-col rounded-xl px-3 py-2 gap-1 text-left transition-all duration-200"
+    : "flex flex-col rounded-xl px-4 py-3 gap-2 text-left transition-all duration-200";
 
   const variantClasses = active
-    ? "border-2 border-accent/50 bg-accent/10 shadow-accent-glow"
+    ? "border-2 border-accent/50 bg-accent/10"
     : featured
       ? "border-2 border-accent/25 bg-glass-bg"
       : "border-2 border-glass-border bg-glass-bg";
@@ -37,7 +37,7 @@ export const SelectableCard: React.FC<SelectableCardProps> = ({
     ? ""
     : disabled
       ? "opacity-50 cursor-not-allowed"
-      : "cursor-pointer hover:border-accent/50 hover:bg-accent/5 hover:shadow-glass-hover group [&_p]:cursor-text [&_h3]:cursor-text";
+      : "cursor-pointer hover:border-accent/50 hover:bg-accent/5 group [&_p]:cursor-text [&_h3]:cursor-text";
 
   const handleClick = () => {
     if (clickable && !disabled && onClick) {
