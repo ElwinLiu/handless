@@ -197,6 +197,7 @@ const SearchableDropdown: React.FC<DropdownProps> = ({
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={onSearchKeyDown}
+                aria-label={searchPlaceholder || t("common.search")}
                 placeholder={searchPlaceholder || t("common.search")}
                 className="w-full px-2 py-1 text-sm bg-glass-bg border border-glass-border rounded focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent"
               />
