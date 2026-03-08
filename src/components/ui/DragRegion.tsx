@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 
-export const DragRegion: React.FC = () => {
+export const DragRegion = () => {
   const appWindow = useMemo(() => getCurrentWindow(), []);
 
   return (
