@@ -529,7 +529,9 @@
       "save": "Зберегти транскрипцію",
       "unsave": "Видалити зі збережених",
       "delete": "Видалити запис",
-      "deleteError": "Не вдалося видалити запис. Спробуйте ще раз."
+      "deleteError": "Не вдалося видалити запис. Спробуйте ще раз.",
+      "hideOriginal": "Hide original",
+      "showOriginal": "Show original"
     },
     "debug": {
       "title": "Дебаг",
