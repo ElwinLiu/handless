@@ -56,7 +56,7 @@
 
 ## GitHub Repo Config & Templates
 
-- [x] `.github/FUNDING.yml` — updated (removed handy.computer references)
+- [x] `.github/FUNDING.yml` — removed
 - [x] `.github/ISSUE_TEMPLATE/config.yml` — updated to elwin/handless URLs
 - [x] `.github/ISSUE_TEMPLATE/bug_report.md` — updated
 - [x] `.github/PULL_REQUEST_TEMPLATE.md` — updated

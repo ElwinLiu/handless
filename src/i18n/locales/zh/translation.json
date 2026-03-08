@@ -615,11 +615,6 @@
         "description": "查看源代码并贡献",
         "button": "在 GitHub 上查看"
       },
-      "supportDevelopment": {
-        "title": "支持开发",
-        "description": "帮助我们继续开发 Handless",
-        "button": "捐赠"
-      },
       "acknowledgments": {
         "title": "致谢",
         "whisper": {

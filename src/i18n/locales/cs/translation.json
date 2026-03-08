@@ -615,11 +615,6 @@
         "description": "Zobrazit zdrojový kód a přispět",
         "button": "Zobrazit na GitHubu"
       },
-      "supportDevelopment": {
-        "title": "Podpořte vývoj",
-        "description": "Pomozte nám pokračovat ve vývoji Handless",
-        "button": "Přispět"
-      },
       "acknowledgments": {
         "title": "Poděkování",
         "whisper": {

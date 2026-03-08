@@ -615,11 +615,6 @@
         "description": "View source code and contribute",
         "button": "View on GitHub"
       },
-      "supportDevelopment": {
-        "title": "Support Development",
-        "description": "Help us continue building Handless",
-        "button": "Donate"
-      },
       "acknowledgments": {
         "title": "Acknowledgments",
         "whisper": {

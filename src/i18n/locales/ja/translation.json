@@ -615,11 +615,6 @@
         "description": "ソースコードを見て貢献する",
         "button": "GitHubで見る"
       },
-      "supportDevelopment": {
-        "title": "開発を支援",
-        "description": "Handlessの開発を支援してください",
-        "button": "寄付する"
-      },
       "acknowledgments": {
         "title": "謝辞",
         "whisper": {

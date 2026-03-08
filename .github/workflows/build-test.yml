@@ -37,7 +37,7 @@ jobs:
       platform: ${{ matrix.platform }}
       target: ${{ matrix.target }}
       build-args: ${{ matrix.args }}
-      sign-binaries: true
+      sign-binaries: false
       asset-prefix: "handless-test"
       upload-artifacts: true
       is-debug-build: ${{ contains(matrix.args, '--debug') }}
