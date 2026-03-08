@@ -27,8 +27,8 @@ export const RecordingRetentionPeriodSelector: React.FC<RecordingRetentionPeriod
       );
     };
 
-    const handleLimitChange = (value: number) => {
-      updateSetting("history_limit", value);
+    const handleLimitChange = (value: number | undefined) => {
+      if (value !== undefined) updateSetting("history_limit", value);
     };
 
     const retentionOptions = [

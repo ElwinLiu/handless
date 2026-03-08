@@ -1,73 +1,46 @@
 import React from "react";
-import { Minus, Plus } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
+import { inputVariants } from "./Input";
 
 interface NumberInputProps {
-  value: number;
-  onChange: (value: number) => void;
+  value?: number;
+  onChange: (value: number | undefined) => void;
   min?: number;
   max?: number;
   step?: number;
   disabled?: boolean;
+  placeholder?: string;
   className?: string;
 }
 
-const stepBtnCn = (side: "l" | "r") =>
-  cn(
-    "flex items-center justify-center h-7 w-7 text-muted-foreground",
-    "hover:text-text hover:bg-glass-highlight transition-colors",
-    "disabled:opacity-40 disabled:pointer-events-none cursor-pointer",
-    side === "l" ? "rounded-l-md" : "rounded-r-md",
-  );
+const compactClasses = inputVariants({ variant: "compact" });
 
-const NumberInput = React.forwardRef<HTMLDivElement, NumberInputProps>(
-  (
-    { value, onChange, min = 0, max = Infinity, step = 1, disabled, className },
-    ref,
-  ) => {
-    const clamp = (v: number) => Math.min(max, Math.max(min, v));
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const parsed = parseInt(e.target.value, 10);
-      if (!isNaN(parsed)) {
-        onChange(clamp(parsed));
-      }
-    };
-
+const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
+  ({ value, onChange, min, max, className, ...props }, ref) => {
     return (
-      <div
+      <input
         ref={ref}
-        className={cn(
-          "inline-flex items-center rounded-md border border-glass-border bg-glass-bg shadow-sm",
-          disabled && "opacity-50 pointer-events-none",
-          className,
-        )}
-      >
-        <button
-          type="button"
-          onClick={() => onChange(clamp(value - step))}
-          disabled={disabled || value <= min}
-          className={stepBtnCn("l")}
-        >
-          <Minus size={12} weight="bold" />
-        </button>
-        <input
-          type="text"
-          inputMode="numeric"
-          value={value}
-          onChange={handleInputChange}
-          disabled={disabled}
-          className="h-7 w-10 text-center text-sm bg-transparent border-x border-glass-border text-text focus:outline-none"
-        />
-        <button
-          type="button"
-          onClick={() => onChange(clamp(value + step))}
-          disabled={disabled || value >= max}
-          className={stepBtnCn("r")}
-        >
-          <Plus size={12} weight="bold" />
-        </button>
-      </div>
+        type="number"
+        value={value ?? ""}
+        onChange={(e) => {
+          if (!e.target.value) {
+            onChange(undefined);
+            return;
+          }
+          const parsed = parseFloat(e.target.value);
+          if (!isNaN(parsed)) {
+            const clamped =
+              min !== undefined || max !== undefined
+                ? Math.min(max ?? Infinity, Math.max(min ?? -Infinity, parsed))
+                : parsed;
+            onChange(clamped);
+          }
+        }}
+        min={min}
+        max={max}
+        className={cn(compactClasses, "max-w-[70px]", className)}
+        {...props}
+      />
     );
   },
 );
