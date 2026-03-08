@@ -136,7 +136,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 whileHover={{
                   backgroundColor: isActive
                     ? undefined
-                    : "rgba(255,255,255,0.05)",
+                    : "var(--color-glass-highlight)",
                 }}
                 whileTap={tapScale}
                 transition={spring.snappy}
