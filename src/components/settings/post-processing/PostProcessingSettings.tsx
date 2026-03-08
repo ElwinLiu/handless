@@ -320,12 +320,9 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
           className="min-h-[200px] rounded-t-none"
         />
       </div>
-      <p
-        className="text-xs text-muted/70"
-        dangerouslySetInnerHTML={{
-          __html: t("settings.postProcessing.prompts.promptTip"),
-        }}
-      />
+      <p className="text-xs text-muted/70">
+        {t("settings.postProcessing.prompts.promptTip")}
+      </p>
     </>
   );
 
