@@ -312,7 +312,7 @@ export const StatsSettings: React.FC = () => {
   }
 
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-6">
+    <div className="max-w-3xl w-full mx-auto space-y-8">
       <h1 className="sr-only">{t("sidebar.stats")}</h1>
       <div className="space-y-3">
         <div className="px-3">
