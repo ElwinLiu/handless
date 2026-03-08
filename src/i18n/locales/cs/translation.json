@@ -529,7 +529,9 @@
       "save": "Uložit přepis",
       "unsave": "Odebrat z uložených",
       "delete": "Smazat záznam",
-      "deleteError": "Nepodařilo se smazat záznam. Zkuste to prosím znovu."
+      "deleteError": "Nepodařilo se smazat záznam. Zkuste to prosím znovu.",
+      "hideOriginal": "Hide original",
+      "showOriginal": "Show original"
     },
     "debug": {
       "title": "Ladění",

@@ -341,7 +341,7 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
           className="flex items-center gap-1 text-[11px] text-muted/60 hover:text-muted transition-colors cursor-pointer"
         >
           <Sparkle size={10} />
-          <span>{expanded ? "Hide original" : "Show original"}</span>
+          <span>{expanded ? t("settings.history.hideOriginal") : t("settings.history.showOriginal")}</span>
         </button>
       )}
       {hasPostProcessed && expanded && (

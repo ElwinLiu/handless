@@ -529,7 +529,9 @@
       "save": "Transkripsiyonu kaydet",
       "unsave": "Kaydedilenlerden kaldır",
       "delete": "Kaydı sil",
-      "deleteError": "Kayıt silinemedi. Lütfen tekrar deneyin."
+      "deleteError": "Kayıt silinemedi. Lütfen tekrar deneyin.",
+      "hideOriginal": "Hide original",
+      "showOriginal": "Show original"
     },
     "debug": {
       "title": "Hata Ayıklama",

@@ -529,7 +529,9 @@
       "save": "保存转录",
       "unsave": "从已保存中移除",
       "delete": "删除条目",
-      "deleteError": "删除条目失败，请重试。"
+      "deleteError": "删除条目失败，请重试。",
+      "hideOriginal": "Hide original",
+      "showOriginal": "Show original"
     },
     "debug": {
       "title": "调试",

@@ -529,7 +529,9 @@
       "save": "儲存轉錄",
       "unsave": "從已儲存中移除",
       "delete": "刪除條目",
-      "deleteError": "刪除條目失敗，請重試"
+      "deleteError": "刪除條目失敗，請重試",
+      "hideOriginal": "Hide original",
+      "showOriginal": "Show original"
     },
     "debug": {
       "title": "偵錯",

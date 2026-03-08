@@ -451,7 +451,9 @@
       "save": "حفظ التفريغ",
       "unsave": "إزالة من المحفوظات",
       "delete": "حذف الإدخال",
-      "deleteError": ".فشل حذف الإدخال. يرجى المحاولة مرة أخرى"
+      "deleteError": ".فشل حذف الإدخال. يرجى المحاولة مرة أخرى",
+      "hideOriginal": "Hide original",
+      "showOriginal": "Show original"
     },
     "debug": {
       "title": "تصحيح الأخطاء",
