@@ -12,6 +12,7 @@ import {
 import { motion } from "motion/react";
 import { ApiKeyField } from "@/components/settings/PostProcessingSettingsApi/ApiKeyField";
 import { Input } from "@/components/ui/Input";
+import { NumberInput } from "@/components/ui/NumberInput";
 import Badge from "@/components/ui/Badge";
 import { Dropdown } from "@/components/ui/Dropdown";
 import { MultiSelectDropdown } from "@/components/ui/MultiSelectDropdown";
@@ -113,18 +114,13 @@ const CloudOptionControl: React.FC<{
               {t(option.description)}
             </span>
           )}
-          <Input
-            type="number"
-            value={value !== undefined && value !== null ? String(value) : ""}
+          <NumberInput
+            value={typeof value === "number" ? value : undefined}
             placeholder={String(min)}
-            onChange={(e) =>
-              onChange(e.target.value ? Number(e.target.value) : undefined)
-            }
+            onChange={onChange}
             min={min}
             max={max}
             step={step}
-            variant="compact"
-            className="max-w-[70px]"
           />
         </div>
       );
