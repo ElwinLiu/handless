@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
+  CaretDown,
   Cloud,
   DownloadSimple,
   Globe,
@@ -8,7 +9,10 @@ import {
   CircleNotch,
   Trash,
 } from "@phosphor-icons/react";
+import { motion } from "motion/react";
 import type { SttProviderInfo } from "@/bindings";
+import { cn } from "../../lib/utils";
+import { spring } from "../../lib/motion";
 import { formatModelSize } from "../../lib/utils/format";
 import {
   getLanguageDisplayText,
@@ -17,8 +21,12 @@ import {
 } from "../../lib/utils/modelTranslation";
 import Badge from "../ui/Badge";
 import { Button } from "../ui/Button";
+import { Checkbox } from "../ui/Checkbox";
+import { Dropdown } from "../ui/Dropdown";
 import { SelectableCard } from "../ui/SelectableCard";
 import { SimpleTooltip } from "../ui/Tooltip";
+import { useSettings } from "../../hooks/useSettings";
+import { LANGUAGES } from "../../lib/constants/languages";
 
 export type ModelCardStatus =
   | "downloadable"
@@ -43,6 +51,9 @@ interface ModelCardProps {
   downloadSpeed?: number; // MB/s
   showRecommended?: boolean;
   configuredModel?: string;
+  showSettings?: boolean;
+  supportedLanguages?: string[];
+  supportsTranslation?: boolean;
 }
 
 const ModelCard: React.FC<ModelCardProps> = ({
@@ -60,8 +71,25 @@ const ModelCard: React.FC<ModelCardProps> = ({
   downloadSpeed,
   showRecommended = true,
   configuredModel,
+  showSettings = false,
+  supportedLanguages,
+  supportsTranslation = false,
 }) => {
   const { t } = useTranslation();
+  const [expanded, setExpanded] = useState(false);
+  const { getSetting, updateSetting, isUpdating } = useSettings();
+
+  const languageOptions = useMemo(
+    () =>
+      LANGUAGES.filter(
+        (lang) =>
+          !supportedLanguages ||
+          supportedLanguages.length === 0 ||
+          lang.value === "auto" ||
+          supportedLanguages.includes(lang.value),
+      ).map((lang) => ({ value: lang.value, label: lang.label })),
+    [supportedLanguages],
+  );
   const isFeatured = variant === "featured";
   const isCloud = provider.backend.type === "Cloud";
   const isLocal = provider.backend.type === "Local";
@@ -91,10 +119,10 @@ const ModelCard: React.FC<ModelCardProps> = ({
     <SelectableCard
       active={status === "active"}
       featured={isFeatured}
-      clickable={isClickable}
+      clickable={isClickable && !expanded}
       disabled={disabled}
       compact={compact}
-      className={className}
+      className={cn(className, expanded && status === "active" && "bg-accent/5")}
       onClick={handleClick}
     >
       {/* Top section: name/description + score bars */}
@@ -167,7 +195,67 @@ const ModelCard: React.FC<ModelCardProps> = ({
               </div>
             </div>
           )}
+        {showSettings && (
+          <button
+            type="button"
+            aria-expanded={expanded}
+            aria-label={expanded ? "Collapse" : "Expand"}
+            className="ml-auto p-1.5 rounded text-text/40 hover:text-text/70 hover:bg-muted/20 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring transition-colors"
+            onClick={(e) => {
+              e.stopPropagation();
+              setExpanded((v) => !v);
+            }}
+          >
+            <CaretDown
+              className={`w-4 h-4 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`}
+            />
+          </button>
+        )}
       </div>
+
+      {/* Expandable model settings */}
+      {showSettings && expanded && (
+        <motion.div
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={spring.snappy}
+          className="flex flex-col gap-3 pt-1"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {supportedLanguages && supportedLanguages.length > 1 && (
+            <div className="flex flex-col gap-1">
+              <label className="text-xs text-text/60 font-medium">
+                {t("settings.general.language.title")}
+              </label>
+              <Dropdown
+                selectedValue={getSetting("selected_language") || "auto"}
+                options={languageOptions}
+                onSelect={(val) => updateSetting("selected_language", val)}
+                placeholder={t("settings.general.language.auto")}
+                disabled={isUpdating("selected_language")}
+                searchable
+                searchPlaceholder={t(
+                  "settings.general.language.searchPlaceholder",
+                )}
+                className="w-[200px]"
+              />
+            </div>
+          )}
+          {supportsTranslation && (
+            <label className="flex items-center gap-2 cursor-pointer">
+              <Checkbox
+                checked={getSetting("translate_to_english") || false}
+                onChange={(enabled) =>
+                  updateSetting("translate_to_english", enabled)
+                }
+              />
+              <span className="text-xs text-text/60 font-medium">
+                {t("settings.advanced.translateToEnglish.label")}
+              </span>
+            </label>
+          )}
+        </motion.div>
+      )}
 
       {!compact && <hr className="w-full border-muted/20" />}
 

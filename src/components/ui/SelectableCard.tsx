@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "motion/react";
 import { tapScale, hoverLift, spring } from "@/lib/motion";
+import { cn } from "@/lib/utils";
 
 interface SelectableCardProps {
   active?: boolean;
@@ -58,15 +59,13 @@ export const SelectableCard: React.FC<SelectableCardProps> = ({
       whileHover={clickable && !disabled ? hoverLift : undefined}
       whileTap={clickable && !disabled ? tapScale : undefined}
       transition={spring.gentle}
-      className={[
+      className={cn(
         baseClasses,
         variantClasses,
         interactiveClasses,
         "select-text",
         className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
+      )}
     >
       {children}
     </motion.div>
