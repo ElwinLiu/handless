@@ -12,6 +12,19 @@ import ModelStatusButton from "./ModelStatusButton";
 import ModelDropdown from "./ModelDropdown";
 import DownloadProgressDisplay from "./DownloadProgressDisplay";
 
+/** Shallow-compare two optional string records by their entries. */
+function shallowEqualRecords(
+  a: Partial<Record<string, string>> | undefined,
+  b: Partial<Record<string, string>> | undefined,
+): boolean {
+  if (a === b) return true;
+  if (!a || !b) return false;
+  const keysA = Object.keys(a);
+  const keysB = Object.keys(b);
+  if (keysA.length !== keysB.length) return false;
+  return keysA.every((k) => a[k] === b[k]);
+}
+
 interface ModelStateEvent {
   event_type: string;
   model_id?: string;
@@ -178,10 +191,14 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({ onError }) => {
 
   // Only show "My Models" in the dropdown: downloaded local models + cloud providers with an API key
   const sttApiKeys = settings?.stt_api_keys;
-  const sttApiKeysKey = JSON.stringify(sttApiKeys);
+  const sttApiKeysRef = useRef(sttApiKeys);
+  if (!shallowEqualRecords(sttApiKeysRef.current, sttApiKeys)) {
+    sttApiKeysRef.current = sttApiKeys;
+  }
+  const stableSttApiKeys = sttApiKeysRef.current;
   const myProviders = useMemo(
-    () => filterMyProviders(providers, sttApiKeys),
-    [providers, sttApiKeysKey],
+    () => filterMyProviders(providers, stableSttApiKeys),
+    [providers, stableSttApiKeys],
   );
 
   const getModelDisplayText = (): string => {
