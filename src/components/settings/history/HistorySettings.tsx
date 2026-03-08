@@ -145,7 +145,7 @@ export const HistorySettings: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="max-w-3xl w-full mx-auto space-y-4">
+      <div className="max-w-3xl w-full mx-auto space-y-6">
         <h1 className="sr-only">{t("sidebar.history")}</h1>
         {retentionSection}
         <div className="space-y-1.5">
@@ -160,7 +160,7 @@ export const HistorySettings: React.FC = () => {
               label={t("settings.history.openFolder")}
             />
           </div>
-          <div className="bg-background-translucent backdrop-blur-sm border border-muted/20 rounded overflow-visible">
+          <div className="bg-background-translucent border border-muted/20 rounded overflow-visible">
             <div className="px-3 py-8 flex flex-col items-center gap-3">
               <div className="w-5 h-5 border-2 border-muted/40 border-t-accent rounded-full animate-spin" />
               <p className="text-sm text-muted">
@@ -175,7 +175,7 @@ export const HistorySettings: React.FC = () => {
 
   if (historyEntries.length === 0) {
     return (
-      <div className="max-w-3xl w-full mx-auto space-y-4">
+      <div className="max-w-3xl w-full mx-auto space-y-6">
         <h1 className="sr-only">{t("sidebar.history")}</h1>
         {retentionSection}
         <div className="space-y-1.5">
@@ -190,7 +190,7 @@ export const HistorySettings: React.FC = () => {
               label={t("settings.history.openFolder")}
             />
           </div>
-          <div className="bg-background-translucent backdrop-blur-sm border border-muted/20 rounded overflow-visible">
+          <div className="bg-background-translucent border border-muted/20 rounded overflow-visible">
             <div className="px-3 py-10 flex flex-col items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-muted/10 flex items-center justify-center">
                 <Microphone className="w-5 h-5 text-muted/60" />
@@ -206,7 +206,7 @@ export const HistorySettings: React.FC = () => {
   }
 
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-4">
+    <div className="max-w-3xl w-full mx-auto space-y-6">
       <h1 className="sr-only">{t("sidebar.history")}</h1>
       {retentionSection}
       <div className="space-y-1.5">

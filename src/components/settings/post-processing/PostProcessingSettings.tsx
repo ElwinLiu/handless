@@ -444,7 +444,7 @@ export const PostProcessingSettings: React.FC = () => {
     : null;
 
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-4">
+    <div className="max-w-3xl w-full mx-auto space-y-6">
       <h1 className="sr-only">{t("sidebar.postProcessing")}</h1>
       <SettingsGroup title={t("settings.postProcessing.api.title")}>
         <PostProcessingSettingsApi />

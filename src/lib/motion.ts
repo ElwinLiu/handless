@@ -4,7 +4,7 @@ import type { Transition, Variants } from "motion/react";
 export const spring = {
   gentle: { type: "spring", stiffness: 120, damping: 20 } as Transition,
   snappy: { type: "spring", stiffness: 300, damping: 25 } as Transition,
-  bouncy: { type: "spring", stiffness: 400, damping: 15 } as Transition,
+  stiff: { type: "spring", stiffness: 400, damping: 30 } as Transition,
 };
 
 // ── Micro-interaction presets ───────────────────────────────────────
@@ -13,9 +13,9 @@ export const hoverLift = { y: -2, transition: spring.gentle };
 
 // ── Page / section transition variants ─────────────────────────────
 export const pageVariants: Variants = {
-  initial: { opacity: 0, y: 8, filter: "blur(4px)" },
+  initial: { opacity: 0, y: 6, filter: "blur(2px)" },
   animate: { opacity: 1, y: 0, filter: "blur(0px)" },
-  exit: { opacity: 0, y: -4, filter: "blur(4px)" },
+  exit: { opacity: 0, y: -3, filter: "blur(2px)" },
 };
 
 export const pageTransition: Transition = {
@@ -26,10 +26,10 @@ export const pageTransition: Transition = {
 // ── Stagger container / item variants ──────────────────────────────
 export const staggerContainer: Variants = {
   initial: {},
-  animate: { transition: { staggerChildren: 0.05 } },
+  animate: { transition: { staggerChildren: 0.04 } },
 };
 
 export const staggerItem: Variants = {
-  initial: { opacity: 0, y: 8 },
+  initial: { opacity: 0, y: 4 },
   animate: { opacity: 1, y: 0, transition: spring.gentle },
 };
