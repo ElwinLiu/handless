@@ -66,7 +66,6 @@ export const HistorySettings: React.FC = () => {
 
     const setupListener = async () => {
       const unlisten = await listen("history-updated", () => {
-        console.log("History updated, reloading entries...");
         loadHistoryEntries();
       });
       return unlisten;
