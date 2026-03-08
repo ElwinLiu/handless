@@ -22,7 +22,7 @@ export const ModelsSettings: React.FC = () => {
   }
 
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-6">
+    <div className="max-w-3xl w-full mx-auto space-y-8">
       <div className="mb-4">
         <h1 className="text-xl font-semibold mb-2">
           {t("settings.models.title")}

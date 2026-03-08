@@ -29,4 +29,5 @@ export {
   CardContent,
 } from "./Card";
 export { Switch } from "./Switch";
+export { Checkbox } from "./Checkbox";
 export { Label } from "./Label";

@@ -14,7 +14,7 @@ export const GeneralSettings: React.FC = () => {
   const { audioFeedbackEnabled } = useSettings();
 
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-6">
+    <div className="max-w-3xl w-full mx-auto space-y-8">
       <h1 className="sr-only">{t("sidebar.general")}</h1>
       <ModelSettingsCard />
       <SettingsGroup title={t("settings.sound.title")}>

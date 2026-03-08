@@ -19,7 +19,7 @@ export const DebugSettings: React.FC = () => {
   const isLinux = type() === "linux";
 
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-6">
+    <div className="max-w-3xl w-full mx-auto space-y-8">
       <h1 className="sr-only">{t("sidebar.debug")}</h1>
       <SettingsGroup title={t("settings.debug.title")}>
         <LogLevelSelector grouped={true} />

@@ -9,6 +9,7 @@ import {
   Translate,
   CircleNotch,
 } from "@phosphor-icons/react";
+import { motion } from "motion/react";
 import { ApiKeyField } from "@/components/settings/PostProcessingSettingsApi/ApiKeyField";
 import { Input } from "@/components/ui/Input";
 import Badge from "@/components/ui/Badge";
@@ -21,6 +22,7 @@ import { LANGUAGES } from "@/lib/constants/languages";
 import { getLanguageDisplayText } from "@/lib/utils/modelTranslation";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { SimpleTooltip } from "@/components/ui/Tooltip";
+import { Checkbox } from "@/components/ui/Checkbox";
 
 const CloudOptionControl: React.FC<{
   option: CloudProviderOption;
@@ -58,7 +60,7 @@ const CloudOptionControl: React.FC<{
               clearable
               className="w-[200px]"
             />
-            <span className="text-xs text-text/40">
+            <span className="text-xs text-text/50">
               {t("settings.models.cloudProviders.options.selectLanguageHint")}
             </span>
           </div>
@@ -87,7 +89,7 @@ const CloudOptionControl: React.FC<{
         <div className="flex flex-col gap-1">
           <label className="text-xs text-text/60 font-medium">{label}</label>
           {option.description && (
-            <span className="text-xs text-text/40">
+            <span className="text-xs text-text/50">
               {t(option.description)}
             </span>
           )}
@@ -107,7 +109,7 @@ const CloudOptionControl: React.FC<{
         <div className="flex flex-col gap-1">
           <label className="text-xs text-text/60 font-medium">{label}</label>
           {option.description && (
-            <span className="text-xs text-text/40">
+            <span className="text-xs text-text/50">
               {t(option.description)}
             </span>
           )}
@@ -130,15 +132,10 @@ const CloudOptionControl: React.FC<{
     case "Boolean": {
       return (
         <label className="flex items-center gap-2 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={!!value}
-            onChange={(e) => onChange(e.target.checked)}
-            className="rounded border-muted/80 accent-[var(--color-accent)]"
-          />
+          <Checkbox checked={!!value} onChange={onChange} />
           <span className="text-xs text-text/60 font-medium">{label}</span>
           {option.description && (
-            <span className="text-xs text-text/40">
+            <span className="text-xs text-text/50">
               {t(option.description)}
             </span>
           )}
@@ -268,20 +265,22 @@ export const CloudProviderConfigCard: React.FC<
           <Badge variant="default">{t("modelSelector.active")}</Badge>
         )}
         {showVerifyHint && (
-          <span className="text-xs text-amber-400 font-medium animate-pulse">
+          <span className="text-xs text-warning font-medium animate-pulse">
             {t("settings.models.cloudProviders.verifyFirst")}
           </span>
         )}
         <button
           type="button"
-          className="ml-auto p-1 rounded text-text/40 hover:text-text/70 hover:bg-muted/20 transition-colors"
+          aria-expanded={expanded}
+          aria-label={expanded ? "Collapse" : "Expand"}
+          className="ml-auto p-1.5 rounded text-text/40 hover:text-text/70 hover:bg-muted/20 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring transition-colors"
           onClick={(e) => {
             e.stopPropagation();
             setExpanded((v) => !v);
           }}
         >
           <CaretDown
-            className={`w-4 h-4 transition-transform ${expanded ? "rotate-180" : ""}`}
+            className={`w-4 h-4 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`}
           />
         </button>
       </div>
@@ -297,7 +296,12 @@ export const CloudProviderConfigCard: React.FC<
 
       {/* Inline config fields */}
       {expanded && (
-        <>
+        <motion.div
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col gap-2"
+        >
           {/* biome-ignore lint/a11y/useKeyWithClickEvents: stopPropagation wrapper for input focus */}
           <div
             className="flex flex-wrap gap-2 items-center w-fit"
@@ -332,7 +336,7 @@ export const CloudProviderConfigCard: React.FC<
                 disabled={
                   isVerifying || !localApiKey.trim() || !localModel.trim()
                 }
-                className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-md bg-accent/10 text-accent hover:bg-accent/20 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-md bg-accent/10 text-accent hover:bg-accent/20 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 onClick={async () => {
                   setVerifyError(null);
                   try {
@@ -362,13 +366,13 @@ export const CloudProviderConfigCard: React.FC<
               </button>
             )}
             {verifyError && (
-              <span className="text-xs text-red-400">{verifyError}</span>
+              <span className="text-xs text-error">{verifyError}</span>
             )}
             {provider.backend.type === "Cloud" &&
               provider.backend.console_url && (
                 <button
                   type="button"
-                  className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-md text-text/60 hover:text-text hover:bg-muted/20 transition-colors"
+                  className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-md text-text/60 hover:text-text hover:bg-muted/20 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring transition-colors"
                   onClick={() => {
                     if (
                       provider.backend.type === "Cloud" &&
@@ -389,17 +393,15 @@ export const CloudProviderConfigCard: React.FC<
             // biome-ignore lint/a11y/useKeyWithClickEvents: stopPropagation wrapper
             <div onClick={stopPropagation}>
               <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
+                <Checkbox
                   checked={realtimeEnabled}
-                  onChange={(e) => onRealtimeChange(e.target.checked)}
-                  className="rounded border-muted/80 accent-[var(--color-accent)]"
+                  onChange={onRealtimeChange}
                 />
                 <span className="text-xs text-text/60 font-medium">
                   {t("settings.models.cloudProviders.realtimeTranscription")}
                 </span>
               </label>
-              <p className="text-[10px] text-text/40 mt-0.5 ml-6">
+              <p className="text-[11px] text-text/50 mt-0.5 ml-6">
                 {t("settings.models.cloudProviders.realtimeDescription")}
               </p>
             </div>
@@ -437,7 +439,7 @@ export const CloudProviderConfigCard: React.FC<
                 ))}
               </div>
             )}
-        </>
+        </motion.div>
       )}
 
       {/* Language/translation tags */}

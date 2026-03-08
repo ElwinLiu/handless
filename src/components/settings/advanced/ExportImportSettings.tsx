@@ -6,6 +6,7 @@ import { commands } from "@/bindings";
 import type { ImportPreview } from "@/bindings";
 import { SettingContainer } from "../../ui/SettingContainer";
 import { Button } from "../../ui/Button";
+import { Checkbox } from "../../ui/Checkbox";
 import { useSettingsStore } from "@/stores/settingsStore";
 
 export const ExportImportSettings: React.FC = () => {
@@ -125,27 +126,24 @@ export const ExportImportSettings: React.FC = () => {
       >
         {showExportOptions ? (
           <div className="flex items-center gap-2">
-            <label className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <input
-                type="checkbox"
+            <label className="flex items-center gap-1.5 text-xs text-muted-foreground cursor-pointer">
+              <Checkbox
                 checked={includeSettings}
-                onChange={(e) => setIncludeSettings(e.target.checked)}
+                onChange={setIncludeSettings}
               />
               {t("settings.advanced.exportData.includeSettings")}
             </label>
-            <label className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <input
-                type="checkbox"
+            <label className="flex items-center gap-1.5 text-xs text-muted-foreground cursor-pointer">
+              <Checkbox
                 checked={includeHistory}
-                onChange={(e) => setIncludeHistory(e.target.checked)}
+                onChange={setIncludeHistory}
               />
               {t("settings.advanced.exportData.includeHistory")}
             </label>
-            <label className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <input
-                type="checkbox"
+            <label className="flex items-center gap-1.5 text-xs text-muted-foreground cursor-pointer">
+              <Checkbox
                 checked={includeRecordings}
-                onChange={(e) => setIncludeRecordings(e.target.checked)}
+                onChange={setIncludeRecordings}
               />
               {t("settings.advanced.exportData.includeRecordings")}
             </label>
@@ -200,21 +198,19 @@ export const ExportImportSettings: React.FC = () => {
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 {validatedImport.preview.has_settings && (
-                  <label className="flex items-center gap-1.5">
-                    <input
-                      type="checkbox"
+                  <label className="flex items-center gap-1.5 cursor-pointer">
+                    <Checkbox
                       checked={importSettings}
-                      onChange={(e) => setImportSettings(e.target.checked)}
+                      onChange={setImportSettings}
                     />
                     {t("settings.advanced.importData.importSettings")}
                   </label>
                 )}
                 {validatedImport.preview.history_count > 0 && (
-                  <label className="flex items-center gap-1.5">
-                    <input
-                      type="checkbox"
+                  <label className="flex items-center gap-1.5 cursor-pointer">
+                    <Checkbox
                       checked={importHistory}
-                      onChange={(e) => setImportHistory(e.target.checked)}
+                      onChange={setImportHistory}
                     />
                     {t("settings.advanced.importData.historyCount", {
                       count: validatedImport.preview.history_count,
@@ -226,11 +222,10 @@ export const ExportImportSettings: React.FC = () => {
                   </label>
                 )}
                 {validatedImport.preview.recording_files_count > 0 && (
-                  <label className="flex items-center gap-1.5">
-                    <input
-                      type="checkbox"
+                  <label className="flex items-center gap-1.5 cursor-pointer">
+                    <Checkbox
                       checked={importRecordings}
-                      onChange={(e) => setImportRecordings(e.target.checked)}
+                      onChange={setImportRecordings}
                     />
                     {t("settings.advanced.importData.recordingsCount", {
                       count: validatedImport.preview.recording_files_count,
