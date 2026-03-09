@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef, memo } from "react";
+import React, { useState, useEffect, useCallback, useRef, memo, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { motion } from "motion/react";
 import { toast } from "sonner";
@@ -18,7 +18,6 @@ import { convertFileSrc } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { readFile } from "@tauri-apps/plugin-fs";
 import { commands, type HistoryEntry } from "@/bindings";
-import { formatRelativeTime, formatDateTime } from "@/utils/dateFormat";
 import { useOsType } from "@/hooks/useOsType";
 import { SimpleTooltip } from "../../ui/Tooltip";
 import { RecordingRetentionPeriodSelector } from "../RecordingRetentionPeriod";
@@ -293,7 +292,7 @@ interface HistoryEntryProps {
 
 const HistoryEntryComponent: React.FC<HistoryEntryProps> = memo(
   ({ entry, onToggleSaved, onCopy, getAudioUrl, onDelete }) => {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const [showCopied, setShowCopied] = useState(false);
     const [expanded, setExpanded] = useState(false);
 
@@ -315,60 +314,59 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = memo(
       onDelete(entry.id);
     };
 
-    const relativeTime = formatRelativeTime(
-      String(entry.timestamp),
-      i18n.language,
-    );
-    const fullDate = formatDateTime(String(entry.timestamp), i18n.language);
+    const formattedTime = useMemo(() => {
+      const date = new Date(Number(entry.timestamp) * 1000);
+      const y = date.getFullYear();
+      const mo = String(date.getMonth() + 1).padStart(2, "0");
+      const d = String(date.getDate()).padStart(2, "0");
+      const h = String(date.getHours()).padStart(2, "0");
+      const mi = String(date.getMinutes()).padStart(2, "0");
+      return `${y}-${mo}-${d} ${h}:${mi}`;
+    }, [entry.timestamp]);
 
     return (
-      <div className="group bg-background-translucent border border-glass-border rounded hover:border-glass-border-hover transition-colors px-3 py-2 flex flex-col gap-1.5">
-        {/* Header: timestamp + actions */}
-        <div className="flex justify-between items-center">
-          <SimpleTooltip content={fullDate}>
-            <span className="text-[11px] text-muted">{relativeTime}</span>
-          </SimpleTooltip>
-          <div className="flex items-center gap-0.5">
-            {/* Saved star - always visible when saved */}
-            {entry.saved && (
-              <SimpleTooltip content={t("settings.history.unsave")}>
+      <div className="group relative bg-background-translucent border border-glass-border rounded hover:border-glass-border-hover transition-colors px-3 py-2 flex flex-col gap-1.5">
+        {/* Action buttons - absolutely positioned top-right */}
+        <div className="absolute top-1.5 right-1.5 flex items-center gap-0.5">
+          {/* Saved star - always visible when saved */}
+          {entry.saved && (
+            <SimpleTooltip content={t("settings.history.unsave")}>
+              <button
+                onClick={() => onToggleSaved(entry.id)}
+                className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded text-accent hover:text-accent/80 transition-colors cursor-pointer"
+              >
+                <Star size={14} weight="fill" />
+              </button>
+            </SimpleTooltip>
+          )}
+          {/* Other actions - visible on hover */}
+          <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
+            <SimpleTooltip content={t("settings.history.copyToClipboard")}>
+              <button
+                onClick={handleCopyText}
+                className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded text-text/50 hover:text-accent transition-colors cursor-pointer"
+              >
+                {showCopied ? <Check size={14} /> : <Copy size={14} />}
+              </button>
+            </SimpleTooltip>
+            {!entry.saved && (
+              <SimpleTooltip content={t("settings.history.save")}>
                 <button
                   onClick={() => onToggleSaved(entry.id)}
-                  className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded text-accent hover:text-accent/80 transition-colors cursor-pointer"
+                  className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded text-text/50 hover:text-accent transition-colors cursor-pointer"
                 >
-                  <Star size={14} weight="fill" />
+                  <Star size={14} weight="light" />
                 </button>
               </SimpleTooltip>
             )}
-            {/* Other actions - visible on hover */}
-            <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
-              <SimpleTooltip content={t("settings.history.copyToClipboard")}>
-                <button
-                  onClick={handleCopyText}
-                  className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded text-text/50 hover:text-accent transition-colors cursor-pointer"
-                >
-                  {showCopied ? <Check size={14} /> : <Copy size={14} />}
-                </button>
-              </SimpleTooltip>
-              {!entry.saved && (
-                <SimpleTooltip content={t("settings.history.save")}>
-                  <button
-                    onClick={() => onToggleSaved(entry.id)}
-                    className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded text-text/50 hover:text-accent transition-colors cursor-pointer"
-                  >
-                    <Star size={14} weight="light" />
-                  </button>
-                </SimpleTooltip>
-              )}
-              <SimpleTooltip content={t("settings.history.delete")}>
-                <button
-                  onClick={handleDeleteEntry}
-                  className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded text-text/50 hover:text-error transition-colors cursor-pointer"
-                >
-                  <Trash size={14} />
-                </button>
-              </SimpleTooltip>
-            </div>
+            <SimpleTooltip content={t("settings.history.delete")}>
+              <button
+                onClick={handleDeleteEntry}
+                className="p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded text-text/50 hover:text-error transition-colors cursor-pointer"
+              >
+                <Trash size={14} />
+              </button>
+            </SimpleTooltip>
           </div>
         </div>
 
@@ -396,8 +394,11 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = memo(
           </motion.p>
         )}
 
-        {/* Audio player */}
-        <AudioPlayer onLoadRequest={handleLoadAudio} className="w-full" />
+        {/* Audio player + timestamp */}
+        <div className="flex items-center gap-2">
+          <AudioPlayer onLoadRequest={handleLoadAudio} className="flex-1" />
+          <span className="text-[11px] text-muted whitespace-nowrap shrink-0 tabular-nums">{formattedTime}</span>
+        </div>
       </div>
     );
   },
