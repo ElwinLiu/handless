@@ -53,7 +53,7 @@
       },
       "parakeet-tdt-0.6b-v3": {
         "name": "Parakeet V3",
-        "description": "快速且准确"
+        "description": "快速且准确。支持25种欧洲语言。"
       },
       "moonshine-base": {
         "name": "Moonshine Base",
@@ -107,11 +107,11 @@
     "cloud": {
       "openai_stt": {
         "name": "OpenAI",
-        "description": "OpenAI's cloud speech-to-text API. Fast and accurate with support for 57+ languages."
+        "description": "OpenAI 云端语音转文字 API。快速准确，支持 57 种以上语言。"
       },
       "soniox": {
         "name": "Soniox",
-        "description": "Soniox cloud speech-to-text. High accuracy with async transcription."
+        "description": "Soniox 云端语音转文字。高准确度，支持实时转录。"
       }
     }
   },
@@ -132,7 +132,7 @@
     "modelUnloaded": "模型已卸载",
     "noModelDownloadRequired": "无模型 - 需要下载",
     "deleteModel": "删除 {{modelName}}",
-    "downloadSpeed": "{{speed}} MB/s",
+    "downloadSpeed": "{{speed}} MB/秒",
     "capabilities": {
       "languageSelection": "支持多种输入语言",
       "multiLanguage": "多语言",
@@ -143,7 +143,7 @@
     },
     "cancel": "取消",
     "cancelDownload": "取消下载",
-    "notAvailable": "Not Available"
+    "notAvailable": "不可用"
   },
   "settings": {
     "modelSettings": {
@@ -168,60 +168,60 @@
       "yourModels": "已下载的模型",
       "availableModels": "可供下载",
       "tabs": {
-        "myModels": "My Models",
-        "library": "Library"
+        "myModels": "我的模型",
+        "library": "模型库"
       },
       "cloudProviders": {
-        "title": "Cloud Providers",
-        "badge": "Cloud",
-        "notConfigured": "Not configured",
-        "verify": "Verify",
-        "verifying": "Verifying...",
-        "verified": "Verified",
-        "verifyFailed": "Verification failed",
-        "verifyFirst": "Verify your API key first",
+        "title": "云端提供商",
+        "badge": "云端",
+        "notConfigured": "未配置",
+        "verify": "验证",
+        "verifying": "验证中...",
+        "verified": "已验证",
+        "verifyFailed": "验证失败",
+        "verifyFirst": "请先验证您的 API Key",
         "apiKey": {
           "title": "API Key",
           "placeholder": "sk-..."
         },
         "model": {
-          "title": "Model",
-          "placeholder": "Enter model name"
+          "title": "模型",
+          "placeholder": "输入模型名称"
         },
         "baseUrl": {
           "title": "Base URL"
         },
-        "getApiKey": "Get API key",
-        "realtimeTranscription": "Real-time transcription",
-        "realtimeDescription": "Uses a WebSocket connection instead of file upload for lower latency",
+        "getApiKey": "获取 API Key",
+        "realtimeTranscription": "实时转录",
+        "realtimeDescription": "使用 WebSocket 连接替代文件上传，以降低延迟",
         "options": {
-          "language": "Language",
-          "selectLanguage": "Auto detect",
-          "selectLanguageHint": "Leave empty to auto detect",
-          "selectLanguages": "Select languages...",
-          "selectTranslate": "Select languages...",
-          "prompt": "Prompt",
-          "promptDescription": "Optional text to guide the model's style or continue a previous segment. Not supported by gpt-4o-transcribe-diarize.",
-          "temperature": "Temperature",
-          "temperatureDescription": "Higher values produce more random results (0-1). Only supported by whisper-1.",
-          "languageHints": "Language Hints",
-          "languageHintsStrict": "Strict Language Hints",
-          "languageHintsStrictDescription": "Only transcribe in the specified languages",
-          "contextTerms": "Context Terms",
-          "contextTermsDescription": "Comma-separated terms to improve recognition accuracy",
-          "contextDescription": "Context Description",
-          "contextDescriptionDescription": "Freeform text providing general context about the audio content",
-          "enableSpeakerDiarization": "Speaker Diarization",
-          "enableSpeakerDiarizationDescription": "Identify and separate different speakers",
-          "enableLanguageIdentification": "Language Identification",
-          "enableLanguageIdentificationDescription": "Detect language for each segment"
+          "language": "语言",
+          "selectLanguage": "自动检测",
+          "selectLanguageHint": "留空以自动检测",
+          "selectLanguages": "选择语言...",
+          "selectTranslate": "选择语言...",
+          "prompt": "提示词",
+          "promptDescription": "可选文本，用于引导模型风格或续接上一段内容。gpt-4o-transcribe-diarize 不支持此功能。",
+          "temperature": "温度",
+          "temperatureDescription": "值越高结果越随机（0-1）。仅 whisper-1 支持。",
+          "languageHints": "语言提示",
+          "languageHintsStrict": "严格语言提示",
+          "languageHintsStrictDescription": "仅转录指定的语言",
+          "contextTerms": "上下文术语",
+          "contextTermsDescription": "以逗号分隔的术语，用于提高识别准确度",
+          "contextDescription": "上下文描述",
+          "contextDescriptionDescription": "自由文本，提供有关音频内容的一般上下文",
+          "enableSpeakerDiarization": "说话人分离",
+          "enableSpeakerDiarizationDescription": "识别并区分不同的说话人",
+          "enableLanguageIdentification": "语言识别",
+          "enableLanguageIdentificationDescription": "检测每个片段的语言"
         }
       },
       "localModels": {
-        "title": "Local Models"
+        "title": "本地模型"
       },
       "myModels": {
-        "noModelsConfigured": "No models configured. Visit the Library to download models or set up cloud providers."
+        "noModelsConfigured": "尚未配置模型。前往模型库下载模型或设置云端提供商。"
       }
     },
     "general": {
@@ -266,11 +266,11 @@
         "description": "按住录制，松开停止"
       },
       "shortcuts": {
-        "title": "Shortcuts",
-        "strategyNone": "None",
-        "addNew": "Add Shortcut",
-        "remove": "Remove shortcut",
-        "postProcessNotReady": "Configure a post-processing provider first"
+        "title": "快捷键",
+        "strategyNone": "无",
+        "addNew": "添加快捷键",
+        "remove": "移除快捷键",
+        "postProcessNotReady": "请先配置后处理提供商"
       }
     },
     "sound": {
@@ -299,7 +299,7 @@
         "output": "输出",
         "transcription": "转录",
         "history": "历史",
-        "data": "Data",
+        "data": "数据",
         "configuration": "配置"
       },
       "startHidden": {
@@ -334,7 +334,7 @@
           "none": "无",
           "externalScript": "外部脚本"
         },
-        "externalScriptPlaceholder": "/path/to/your/script.sh"
+        "externalScriptPlaceholder": "/你的/脚本/路径.sh"
       },
       "typingTool": {
         "title": "输入工具",
@@ -390,39 +390,39 @@
         "duplicate": "\"{{word}}\" 已存在"
       },
       "exportData": {
-        "title": "Export Data",
-        "description": "Export your settings, history, and recordings to a file",
-        "button": "Export...",
-        "includeSettings": "Settings",
-        "includeHistory": "Transcription History",
-        "includeRecordings": "Audio Recordings",
-        "success": "Data exported successfully",
-        "error": "Failed to export data"
+        "title": "导出数据",
+        "description": "将设置、历史记录和录音导出到文件",
+        "button": "导出...",
+        "includeSettings": "设置",
+        "includeHistory": "转录历史",
+        "includeRecordings": "音频录音",
+        "success": "数据导出成功",
+        "error": "数据导出失败"
       },
       "importData": {
-        "title": "Import Data",
-        "description": "Import settings and data from a previously exported file",
-        "button": "Import...",
-        "previewTitle": "Import Preview",
-        "exportDate": "Exported on {{date}}",
-        "appVersion": "App version: {{version}}",
-        "historyCount": "{{count}} history entries",
-        "recordingsCount": "{{count}} recordings",
-        "statsCount": "{{count}} speaking stats",
-        "importSettings": "Settings",
-        "importRecordings": "Recordings",
-        "warning": "Importing settings will overwrite your current configuration. The export file may contain API keys.",
-        "success": "Data imported successfully",
-        "error": "Failed to import data",
-        "invalidFile": "The selected file is not a valid Handless export"
+        "title": "导入数据",
+        "description": "从之前导出的文件中导入设置和数据",
+        "button": "导入...",
+        "previewTitle": "导入预览",
+        "exportDate": "导出于 {{date}}",
+        "appVersion": "应用版本: {{version}}",
+        "historyCount": "{{count}} 条历史记录",
+        "recordingsCount": "{{count}} 条录音",
+        "statsCount": "{{count}} 条语音统计",
+        "importSettings": "设置",
+        "importRecordings": "录音",
+        "warning": "导入设置将覆盖您当前的配置。导出文件可能包含 API Key。",
+        "success": "数据导入成功",
+        "error": "数据导入失败",
+        "invalidFile": "所选文件不是有效的 Handless 导出文件"
       },
       "theme": {
-        "title": "Theme",
-        "description": "Choose the app color theme",
+        "title": "主题",
+        "description": "选择应用颜色主题",
         "options": {
-          "dark": "Dark",
-          "light": "Light",
-          "system": "System"
+          "dark": "深色",
+          "light": "浅色",
+          "system": "跟随系统"
         }
       },
       "configFile": {
@@ -526,8 +526,8 @@
       "unsave": "从已保存中移除",
       "delete": "删除条目",
       "deleteError": "删除条目失败，请重试。",
-      "hideOriginal": "Hide original",
-      "showOriginal": "Show original"
+      "hideOriginal": "隐藏原文",
+      "showOriginal": "显示原文"
     },
     "debug": {
       "title": "调试",
@@ -546,7 +546,7 @@
       "soundTheme": {
         "label": "声音主题",
         "description": "选择录制开始和停止反馈的声音主题",
-        "preview": "Preview sound theme (plays start then stop)"
+        "preview": "预览声音主题（播放开始和停止声音）"
       },
       "wordCorrectionThreshold": {
         "title": "词汇修正阈值",
@@ -659,8 +659,8 @@
     "yes": "是",
     "no": "否",
     "noOptionsFound": "未找到选项",
-    "copyToClipboard": "Copy to clipboard",
-    "search": "Search..."
+    "copyToClipboard": "复制到剪贴板",
+    "search": "搜索..."
   },
   "accessibility": {
     "permissionsRequired": "需要辅助功能权限",

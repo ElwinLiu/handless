@@ -53,7 +53,7 @@
       },
       "parakeet-tdt-0.6b-v3": {
         "name": "Parakeet V3",
-        "description": "高速で正確"
+        "description": "高速で正確。25のヨーロッパ言語に対応。"
       },
       "moonshine-base": {
         "name": "Moonshine Base",
@@ -107,11 +107,11 @@
     "cloud": {
       "openai_stt": {
         "name": "OpenAI",
-        "description": "OpenAI's cloud speech-to-text API. Fast and accurate with support for 57+ languages."
+        "description": "OpenAIのクラウド音声テキスト変換API。高速・高精度で57以上の言語に対応。"
       },
       "soniox": {
         "name": "Soniox",
-        "description": "Soniox cloud speech-to-text. High accuracy with async transcription."
+        "description": "Sonioxクラウド音声テキスト変換。リアルタイム文字起こしによる高精度。"
       }
     }
   },
@@ -132,7 +132,7 @@
     "modelUnloaded": "モデルがアンロードされました",
     "noModelDownloadRequired": "モデルなし - ダウンロードが必要",
     "deleteModel": "{{modelName}}を削除",
-    "downloadSpeed": "{{speed}} MB/s",
+    "downloadSpeed": "{{speed}} MB/秒",
     "capabilities": {
       "languageSelection": "複数の入力言語をサポート",
       "multiLanguage": "多言語",
@@ -143,7 +143,7 @@
     },
     "cancel": "キャンセル",
     "cancelDownload": "ダウンロードをキャンセル",
-    "notAvailable": "Not Available"
+    "notAvailable": "利用不可"
   },
   "settings": {
     "modelSettings": {
@@ -168,60 +168,60 @@
       "yourModels": "ダウンロード済みモデル",
       "availableModels": "ダウンロード可能",
       "tabs": {
-        "myModels": "My Models",
-        "library": "Library"
+        "myModels": "マイモデル",
+        "library": "ライブラリ"
       },
       "cloudProviders": {
-        "title": "Cloud Providers",
-        "badge": "Cloud",
-        "notConfigured": "Not configured",
-        "verify": "Verify",
-        "verifying": "Verifying...",
-        "verified": "Verified",
-        "verifyFailed": "Verification failed",
-        "verifyFirst": "Verify your API key first",
+        "title": "クラウドプロバイダー",
+        "badge": "クラウド",
+        "notConfigured": "未設定",
+        "verify": "検証",
+        "verifying": "検証中...",
+        "verified": "検証済み",
+        "verifyFailed": "検証に失敗しました",
+        "verifyFirst": "先にAPI Keyを検証してください",
         "apiKey": {
           "title": "API Key",
           "placeholder": "sk-..."
         },
         "model": {
-          "title": "Model",
-          "placeholder": "Enter model name"
+          "title": "モデル",
+          "placeholder": "モデル名を入力"
         },
         "baseUrl": {
           "title": "Base URL"
         },
-        "getApiKey": "Get API key",
-        "realtimeTranscription": "Real-time transcription",
-        "realtimeDescription": "Uses a WebSocket connection instead of file upload for lower latency",
+        "getApiKey": "API Keyを取得",
+        "realtimeTranscription": "リアルタイム文字起こし",
+        "realtimeDescription": "低遅延のためにファイルアップロードの代わりにWebSocket接続を使用",
         "options": {
-          "language": "Language",
-          "selectLanguage": "Auto detect",
-          "selectLanguageHint": "Leave empty to auto detect",
-          "selectLanguages": "Select languages...",
-          "selectTranslate": "Select languages...",
-          "prompt": "Prompt",
-          "promptDescription": "Optional text to guide the model's style or continue a previous segment. Not supported by gpt-4o-transcribe-diarize.",
-          "temperature": "Temperature",
-          "temperatureDescription": "Higher values produce more random results (0-1). Only supported by whisper-1.",
-          "languageHints": "Language Hints",
-          "languageHintsStrict": "Strict Language Hints",
-          "languageHintsStrictDescription": "Only transcribe in the specified languages",
-          "contextTerms": "Context Terms",
-          "contextTermsDescription": "Comma-separated terms to improve recognition accuracy",
-          "contextDescription": "Context Description",
-          "contextDescriptionDescription": "Freeform text providing general context about the audio content",
-          "enableSpeakerDiarization": "Speaker Diarization",
-          "enableSpeakerDiarizationDescription": "Identify and separate different speakers",
-          "enableLanguageIdentification": "Language Identification",
-          "enableLanguageIdentificationDescription": "Detect language for each segment"
+          "language": "言語",
+          "selectLanguage": "自動検出",
+          "selectLanguageHint": "空欄のままにすると自動検出します",
+          "selectLanguages": "言語を選択...",
+          "selectTranslate": "言語を選択...",
+          "prompt": "プロンプト",
+          "promptDescription": "モデルのスタイルを指示したり、前のセグメントを継続するためのオプションテキスト。gpt-4o-transcribe-diarizeでは非対応。",
+          "temperature": "温度",
+          "temperatureDescription": "値が高いほどランダムな結果になります（0-1）。whisper-1のみ対応。",
+          "languageHints": "言語ヒント",
+          "languageHintsStrict": "厳密な言語ヒント",
+          "languageHintsStrictDescription": "指定した言語のみで文字起こし",
+          "contextTerms": "コンテキスト用語",
+          "contextTermsDescription": "認識精度を向上させるためのカンマ区切りの用語",
+          "contextDescription": "コンテキスト説明",
+          "contextDescriptionDescription": "音声コンテンツの一般的なコンテキストを提供する自由形式のテキスト",
+          "enableSpeakerDiarization": "話者分離",
+          "enableSpeakerDiarizationDescription": "異なる話者を識別して分離",
+          "enableLanguageIdentification": "言語識別",
+          "enableLanguageIdentificationDescription": "各セグメントの言語を検出"
         }
       },
       "localModels": {
-        "title": "Local Models"
+        "title": "ローカルモデル"
       },
       "myModels": {
-        "noModelsConfigured": "No models configured. Visit the Library to download models or set up cloud providers."
+        "noModelsConfigured": "モデルが設定されていません。ライブラリからモデルをダウンロードするか、クラウドプロバイダーを設定してください。"
       }
     },
     "general": {
@@ -266,11 +266,11 @@
         "description": "押し続けて録音、離して停止"
       },
       "shortcuts": {
-        "title": "Shortcuts",
-        "strategyNone": "None",
-        "addNew": "Add Shortcut",
-        "remove": "Remove shortcut",
-        "postProcessNotReady": "Configure a post-processing provider first"
+        "title": "ショートカット",
+        "strategyNone": "なし",
+        "addNew": "ショートカットを追加",
+        "remove": "ショートカットを削除",
+        "postProcessNotReady": "先に後処理プロバイダーを設定してください"
       }
     },
     "sound": {
@@ -299,7 +299,7 @@
         "output": "出力",
         "transcription": "文字起こし",
         "history": "履歴",
-        "data": "Data",
+        "data": "データ",
         "configuration": "設定ファイル"
       },
       "startHidden": {
@@ -334,7 +334,7 @@
           "none": "なし",
           "externalScript": "外部スクリプト"
         },
-        "externalScriptPlaceholder": "/path/to/your/script.sh"
+        "externalScriptPlaceholder": "/スクリプトへの/パス.sh"
       },
       "typingTool": {
         "title": "タイピングツール",
@@ -390,39 +390,39 @@
         "duplicate": "「{{word}}」は既に存在します"
       },
       "exportData": {
-        "title": "Export Data",
-        "description": "Export your settings, history, and recordings to a file",
-        "button": "Export...",
-        "includeSettings": "Settings",
-        "includeHistory": "Transcription History",
-        "includeRecordings": "Audio Recordings",
-        "success": "Data exported successfully",
-        "error": "Failed to export data"
+        "title": "データのエクスポート",
+        "description": "設定、履歴、録音をファイルにエクスポート",
+        "button": "エクスポート...",
+        "includeSettings": "設定",
+        "includeHistory": "文字起こし履歴",
+        "includeRecordings": "音声録音",
+        "success": "データのエクスポートに成功しました",
+        "error": "データのエクスポートに失敗しました"
       },
       "importData": {
-        "title": "Import Data",
-        "description": "Import settings and data from a previously exported file",
-        "button": "Import...",
-        "previewTitle": "Import Preview",
-        "exportDate": "Exported on {{date}}",
-        "appVersion": "App version: {{version}}",
-        "historyCount": "{{count}} history entries",
-        "recordingsCount": "{{count}} recordings",
-        "statsCount": "{{count}} speaking stats",
-        "importSettings": "Settings",
-        "importRecordings": "Recordings",
-        "warning": "Importing settings will overwrite your current configuration. The export file may contain API keys.",
-        "success": "Data imported successfully",
-        "error": "Failed to import data",
-        "invalidFile": "The selected file is not a valid Handless export"
+        "title": "データのインポート",
+        "description": "以前にエクスポートしたファイルから設定とデータをインポート",
+        "button": "インポート...",
+        "previewTitle": "インポートプレビュー",
+        "exportDate": "{{date}}にエクスポート",
+        "appVersion": "アプリバージョン: {{version}}",
+        "historyCount": "{{count}}件の履歴エントリー",
+        "recordingsCount": "{{count}}件の録音",
+        "statsCount": "{{count}}件の発話統計",
+        "importSettings": "設定",
+        "importRecordings": "録音",
+        "warning": "設定をインポートすると現在の設定が上書きされます。エクスポートファイルにはAPI Keyが含まれている場合があります。",
+        "success": "データのインポートに成功しました",
+        "error": "データのインポートに失敗しました",
+        "invalidFile": "選択したファイルは有効なHandlessエクスポートではありません"
       },
       "theme": {
-        "title": "Theme",
-        "description": "Choose the app color theme",
+        "title": "テーマ",
+        "description": "アプリのカラーテーマを選択",
         "options": {
-          "dark": "Dark",
-          "light": "Light",
-          "system": "System"
+          "dark": "ダーク",
+          "light": "ライト",
+          "system": "システム"
         }
       },
       "configFile": {
@@ -526,8 +526,8 @@
       "unsave": "保存から削除",
       "delete": "エントリーを削除",
       "deleteError": "エントリーの削除に失敗しました。もう一度お試しください。",
-      "hideOriginal": "Hide original",
-      "showOriginal": "Show original"
+      "hideOriginal": "原文を非表示",
+      "showOriginal": "原文を表示"
     },
     "debug": {
       "title": "デバッグ",
@@ -546,7 +546,7 @@
       "soundTheme": {
         "label": "サウンドテーマ",
         "description": "録音開始・停止フィードバックのサウンドテーマを選択",
-        "preview": "Preview sound theme (plays start then stop)"
+        "preview": "サウンドテーマをプレビュー（開始音と停止音を再生）"
       },
       "wordCorrectionThreshold": {
         "title": "単語修正しきい値",
@@ -659,8 +659,8 @@
     "yes": "はい",
     "no": "いいえ",
     "noOptionsFound": "オプションが見つかりません",
-    "copyToClipboard": "Copy to clipboard",
-    "search": "Search..."
+    "copyToClipboard": "クリップボードにコピー",
+    "search": "検索..."
   },
   "accessibility": {
     "permissionsRequired": "アクセシビリティ権限が必要です",

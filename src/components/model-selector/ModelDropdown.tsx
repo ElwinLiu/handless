@@ -2,10 +2,7 @@ import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Check, Cloud } from "@phosphor-icons/react";
 import type { SttProviderInfo } from "@/bindings";
-import {
-  getTranslatedModelName,
-  getTranslatedModelDescription,
-} from "../../lib/utils/modelTranslation";
+import { getTranslatedModelName } from "../../lib/utils/modelTranslation";
 
 interface DropdownItemProps {
   active: boolean;
@@ -114,7 +111,7 @@ const ModelDropdown: React.FC<ModelDropdownProps> = ({
                       )}
                   </div>
                   <div className="text-[11px] text-text/30 mt-0.5 leading-snug">
-                    {getTranslatedModelDescription(provider, t)}
+                    {t(provider.description)}
                   </div>
                 </DropdownItem>
               ))}
@@ -137,11 +134,11 @@ const ModelDropdown: React.FC<ModelDropdownProps> = ({
                   onClick={() => handleClick(provider)}
                 >
                   <div className="text-[13px] leading-tight flex items-center gap-1.5">
-                    {provider.name}
+                    {getTranslatedModelName(provider, t)}
                     <Cloud weight="fill" className="w-3 h-3 text-text/20" />
                   </div>
                   <div className="text-[11px] text-text/30 mt-0.5 leading-snug">
-                    {provider.description}
+                    {t(provider.description)}
                   </div>
                 </DropdownItem>
               ))}

@@ -53,7 +53,7 @@
       },
       "parakeet-tdt-0.6b-v3": {
         "name": "Parakeet V3",
-        "description": "Fast and accurate"
+        "description": "Fast and accurate. Supports 25 European languages."
       },
       "moonshine-base": {
         "name": "Moonshine Base",
@@ -87,7 +87,7 @@
       },
       "soniox": {
         "name": "Soniox",
-        "description": "Soniox cloud speech-to-text. High accuracy with async transcription."
+        "description": "Soniox cloud speech-to-text. High accuracy with realtime transcription."
       }
     },
     "errors": {

@@ -53,7 +53,7 @@
       },
       "parakeet-tdt-0.6b-v3": {
         "name": "Parakeet V3",
-        "description": ".سريع ودقيق"
+        "description": "سريع ودقيق. يدعم 25 لغة أوروبية."
       },
       "moonshine-base": {
         "name": "Moonshine Base",
@@ -107,11 +107,11 @@
     "cloud": {
       "openai_stt": {
         "name": "OpenAI",
-        "description": "OpenAI's cloud speech-to-text API. Fast and accurate with support for 57+ languages."
+        "description": "واجهة برمجة تطبيقات تحويل الكلام إلى نص السحابية من OpenAI. سريعة ودقيقة مع دعم لأكثر من 57 لغة."
       },
       "soniox": {
         "name": "Soniox",
-        "description": "Soniox cloud speech-to-text. High accuracy with async transcription."
+        "description": "تحويل الكلام إلى نص السحابي من Soniox. دقة عالية مع تفريغ في الوقت الفعلي."
       }
     }
   },
@@ -143,7 +143,7 @@
       "translation": "يدعم الترجمة",
       "translate": "ترجمة"
     },
-    "notAvailable": "Not Available"
+    "notAvailable": "غير متاح"
   },
   "settings": {
     "general": {
@@ -188,11 +188,11 @@
         "description": "استمر في الضغط للتسجيل، واترك للتوقف"
       },
       "shortcuts": {
-        "title": "Shortcuts",
-        "strategyNone": "None",
-        "addNew": "Add Shortcut",
-        "remove": "Remove shortcut",
-        "postProcessNotReady": "Configure a post-processing provider first"
+        "title": "الاختصارات",
+        "strategyNone": "بلا",
+        "addNew": "إضافة اختصار",
+        "remove": "إزالة الاختصار",
+        "postProcessNotReady": "قم بتكوين مزود المعالجة اللاحقة أولاً"
       }
     },
     "sound": {
@@ -221,7 +221,7 @@
         "output": "الإخراج",
         "transcription": "التفريغ الصوتي",
         "history": "السجل",
-        "data": "Data",
+        "data": "البيانات",
         "configuration": "الإعدادات"
       },
       "startHidden": {
@@ -256,7 +256,7 @@
           "none": "بلا",
           "externalScript": "نص برمجي خارجي"
         },
-        "externalScriptPlaceholder": "/path/to/your/script.sh"
+        "externalScriptPlaceholder": "/المسار/إلى/السكربت.sh"
       },
       "typingTool": {
         "title": "أداة الكتابة",
@@ -312,39 +312,39 @@
         "duplicate": "\"{{word}}\" موجود بالفعل"
       },
       "exportData": {
-        "title": "Export Data",
-        "description": "Export your settings, history, and recordings to a file",
-        "button": "Export...",
-        "includeSettings": "Settings",
-        "includeHistory": "Transcription History",
-        "includeRecordings": "Audio Recordings",
-        "success": "Data exported successfully",
-        "error": "Failed to export data"
+        "title": "تصدير البيانات",
+        "description": "تصدير إعداداتك وسجلك وتسجيلاتك إلى ملف",
+        "button": "...تصدير",
+        "includeSettings": "الإعدادات",
+        "includeHistory": "سجل التفريغ الصوتي",
+        "includeRecordings": "التسجيلات الصوتية",
+        "success": "تم تصدير البيانات بنجاح",
+        "error": "فشل تصدير البيانات"
       },
       "importData": {
-        "title": "Import Data",
-        "description": "Import settings and data from a previously exported file",
-        "button": "Import...",
-        "previewTitle": "Import Preview",
-        "exportDate": "Exported on {{date}}",
-        "appVersion": "App version: {{version}}",
-        "historyCount": "{{count}} history entries",
-        "recordingsCount": "{{count}} recordings",
-        "statsCount": "{{count}} speaking stats",
-        "importSettings": "Settings",
-        "importRecordings": "Recordings",
-        "warning": "Importing settings will overwrite your current configuration. The export file may contain API keys.",
-        "success": "Data imported successfully",
-        "error": "Failed to import data",
-        "invalidFile": "The selected file is not a valid Handless export"
+        "title": "استيراد البيانات",
+        "description": "استيراد الإعدادات والبيانات من ملف تم تصديره مسبقاً",
+        "button": "...استيراد",
+        "previewTitle": "معاينة الاستيراد",
+        "exportDate": "تم التصدير في {{date}}",
+        "appVersion": "إصدار التطبيق: {{version}}",
+        "historyCount": "{{count}} إدخالات في السجل",
+        "recordingsCount": "{{count}} تسجيلات",
+        "statsCount": "{{count}} إحصائيات التحدث",
+        "importSettings": "الإعدادات",
+        "importRecordings": "التسجيلات",
+        "warning": "سيؤدي استيراد الإعدادات إلى الكتابة فوق التكوين الحالي. قد يحتوي ملف التصدير على مفاتيح API.",
+        "success": "تم استيراد البيانات بنجاح",
+        "error": "فشل استيراد البيانات",
+        "invalidFile": "الملف المحدد ليس ملف تصدير Handless صالحاً"
       },
       "theme": {
-        "title": "Theme",
-        "description": "Choose the app color theme",
+        "title": "السمة",
+        "description": "اختر سمة ألوان التطبيق",
         "options": {
-          "dark": "Dark",
-          "light": "Light",
-          "system": "System"
+          "dark": "داكن",
+          "light": "فاتح",
+          "system": "النظام"
         }
       },
       "configFile": {
@@ -448,8 +448,8 @@
       "unsave": "إزالة من المحفوظات",
       "delete": "حذف الإدخال",
       "deleteError": ".فشل حذف الإدخال. يرجى المحاولة مرة أخرى",
-      "hideOriginal": "Hide original",
-      "showOriginal": "Show original"
+      "hideOriginal": "إخفاء الأصل",
+      "showOriginal": "إظهار الأصل"
     },
     "debug": {
       "title": "تصحيح الأخطاء",
@@ -468,7 +468,7 @@
       "soundTheme": {
         "label": "سمة الصوت",
         "description": "اختر سمة صوت لتنبيهات بدء وتوقف التسجيل",
-        "preview": "Preview sound theme (plays start then stop)"
+        "preview": "معاينة سمة الصوت (تشغيل البدء ثم التوقف)"
       },
       "wordCorrectionThreshold": {
         "title": "عتبة تصحيح الكلمات",
@@ -566,60 +566,60 @@
       },
       "noModelsMatch": "لا توجد نماذج مطابقة لهذا الفلتر.",
       "tabs": {
-        "myModels": "My Models",
-        "library": "Library"
+        "myModels": "نماذجي",
+        "library": "المكتبة"
       },
       "cloudProviders": {
-        "title": "Cloud Providers",
-        "badge": "Cloud",
-        "notConfigured": "Not configured",
-        "verify": "Verify",
-        "verifying": "Verifying...",
-        "verified": "Verified",
-        "verifyFailed": "Verification failed",
-        "verifyFirst": "Verify your API key first",
+        "title": "مزودو الخدمات السحابية",
+        "badge": "سحابي",
+        "notConfigured": "غير مُكوَّن",
+        "verify": "تحقق",
+        "verifying": "...جاري التحقق",
+        "verified": "تم التحقق",
+        "verifyFailed": "فشل التحقق",
+        "verifyFirst": "تحقق من مفتاح API الخاص بك أولاً",
         "apiKey": {
-          "title": "API Key",
+          "title": "مفتاح API",
           "placeholder": "sk-..."
         },
         "model": {
-          "title": "Model",
-          "placeholder": "Enter model name"
+          "title": "النموذج",
+          "placeholder": "أدخل اسم النموذج"
         },
         "baseUrl": {
-          "title": "Base URL"
+          "title": "عنوان URL الأساسي"
         },
-        "getApiKey": "Get API key",
-        "realtimeTranscription": "Real-time transcription",
-        "realtimeDescription": "Uses a WebSocket connection instead of file upload for lower latency",
+        "getApiKey": "الحصول على مفتاح API",
+        "realtimeTranscription": "التفريغ الفوري",
+        "realtimeDescription": "يستخدم اتصال WebSocket بدلاً من رفع الملفات لتقليل زمن الاستجابة",
         "options": {
-          "language": "Language",
-          "selectLanguage": "Auto detect",
-          "selectLanguageHint": "Leave empty to auto detect",
-          "selectLanguages": "Select languages...",
-          "selectTranslate": "Select languages...",
-          "prompt": "Prompt",
-          "promptDescription": "Optional text to guide the model's style or continue a previous segment. Not supported by gpt-4o-transcribe-diarize.",
-          "temperature": "Temperature",
-          "temperatureDescription": "Higher values produce more random results (0-1). Only supported by whisper-1.",
-          "languageHints": "Language Hints",
-          "languageHintsStrict": "Strict Language Hints",
-          "languageHintsStrictDescription": "Only transcribe in the specified languages",
-          "contextTerms": "Context Terms",
-          "contextTermsDescription": "Comma-separated terms to improve recognition accuracy",
-          "contextDescription": "Context Description",
-          "contextDescriptionDescription": "Freeform text providing general context about the audio content",
-          "enableSpeakerDiarization": "Speaker Diarization",
-          "enableSpeakerDiarizationDescription": "Identify and separate different speakers",
-          "enableLanguageIdentification": "Language Identification",
-          "enableLanguageIdentificationDescription": "Detect language for each segment"
+          "language": "اللغة",
+          "selectLanguage": "كشف تلقائي",
+          "selectLanguageHint": "اتركه فارغاً للكشف التلقائي",
+          "selectLanguages": "...اختر اللغات",
+          "selectTranslate": "...اختر اللغات",
+          "prompt": "المطالبة",
+          "promptDescription": "نص اختياري لتوجيه أسلوب النموذج أو متابعة مقطع سابق. غير مدعوم بواسطة gpt-4o-transcribe-diarize.",
+          "temperature": "درجة الحرارة",
+          "temperatureDescription": "القيم الأعلى تنتج نتائج أكثر عشوائية (0-1). مدعوم فقط بواسطة whisper-1.",
+          "languageHints": "تلميحات اللغة",
+          "languageHintsStrict": "تلميحات لغة صارمة",
+          "languageHintsStrictDescription": "التفريغ فقط باللغات المحددة",
+          "contextTerms": "مصطلحات السياق",
+          "contextTermsDescription": "مصطلحات مفصولة بفواصل لتحسين دقة التعرف",
+          "contextDescription": "وصف السياق",
+          "contextDescriptionDescription": "نص حر يوفر سياقاً عاماً حول محتوى الصوت",
+          "enableSpeakerDiarization": "تمييز المتحدثين",
+          "enableSpeakerDiarizationDescription": "تحديد وفصل المتحدثين المختلفين",
+          "enableLanguageIdentification": "تحديد اللغة",
+          "enableLanguageIdentificationDescription": "اكتشاف اللغة لكل مقطع"
         }
       },
       "localModels": {
-        "title": "Local Models"
+        "title": "النماذج المحلية"
       },
       "myModels": {
-        "noModelsConfigured": "No models configured. Visit the Library to download models or set up cloud providers."
+        "noModelsConfigured": "لم يتم تكوين أي نماذج. قم بزيارة المكتبة لتنزيل النماذج أو إعداد مزودي الخدمات السحابية."
       }
     }
   },
@@ -659,8 +659,8 @@
     "yes": "نعم",
     "no": "لا",
     "noOptionsFound": "لم يتم العثور على خيارات",
-    "copyToClipboard": "Copy to clipboard",
-    "search": "Search..."
+    "copyToClipboard": "نسخ إلى الحافظة",
+    "search": "...بحث"
   },
   "accessibility": {
     "permissionsRequired": "أذونات إمكانية الوصول مطلوبة",

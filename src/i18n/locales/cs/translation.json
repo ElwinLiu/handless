@@ -53,7 +53,7 @@
       },
       "parakeet-tdt-0.6b-v3": {
         "name": "Parakeet V3",
-        "description": "Rychlý a přesný"
+        "description": "Rychlý a přesný. Podporuje 25 evropských jazyků."
       },
       "moonshine-base": {
         "name": "Moonshine Base",
@@ -107,11 +107,11 @@
     "cloud": {
       "openai_stt": {
         "name": "OpenAI",
-        "description": "OpenAI's cloud speech-to-text API. Fast and accurate with support for 57+ languages."
+        "description": "Cloudové API pro převod řeči na text od OpenAI. Rychlé a přesné s podporou více než 57 jazyků."
       },
       "soniox": {
         "name": "Soniox",
-        "description": "Soniox cloud speech-to-text. High accuracy with async transcription."
+        "description": "Cloudový převod řeči na text Soniox. Vysoká přesnost s přepisem v reálném čase."
       }
     }
   },
@@ -143,7 +143,7 @@
     },
     "cancel": "Zrušit",
     "cancelDownload": "Zrušit stahování",
-    "notAvailable": "Not Available"
+    "notAvailable": "Nedostupné"
   },
   "settings": {
     "modelSettings": {
@@ -168,60 +168,60 @@
       "yourModels": "Stažené modely",
       "availableModels": "Dostupné ke stažení",
       "tabs": {
-        "myModels": "My Models",
-        "library": "Library"
+        "myModels": "Moje modely",
+        "library": "Knihovna"
       },
       "cloudProviders": {
-        "title": "Cloud Providers",
+        "title": "Cloudoví poskytovatelé",
         "badge": "Cloud",
-        "notConfigured": "Not configured",
-        "verify": "Verify",
-        "verifying": "Verifying...",
-        "verified": "Verified",
-        "verifyFailed": "Verification failed",
-        "verifyFirst": "Verify your API key first",
+        "notConfigured": "Nenastaveno",
+        "verify": "Ověřit",
+        "verifying": "Ověřování...",
+        "verified": "Ověřeno",
+        "verifyFailed": "Ověření selhalo",
+        "verifyFirst": "Nejprve ověřte svůj API klíč",
         "apiKey": {
-          "title": "API Key",
+          "title": "API klíč",
           "placeholder": "sk-..."
         },
         "model": {
           "title": "Model",
-          "placeholder": "Enter model name"
+          "placeholder": "Zadejte název modelu"
         },
         "baseUrl": {
           "title": "Base URL"
         },
-        "getApiKey": "Get API key",
-        "realtimeTranscription": "Real-time transcription",
-        "realtimeDescription": "Uses a WebSocket connection instead of file upload for lower latency",
+        "getApiKey": "Získat API klíč",
+        "realtimeTranscription": "Přepis v reálném čase",
+        "realtimeDescription": "Používá WebSocket připojení místo nahrání souboru pro nižší latenci",
         "options": {
-          "language": "Language",
-          "selectLanguage": "Auto detect",
-          "selectLanguageHint": "Leave empty to auto detect",
-          "selectLanguages": "Select languages...",
-          "selectTranslate": "Select languages...",
+          "language": "Jazyk",
+          "selectLanguage": "Automatická detekce",
+          "selectLanguageHint": "Ponechte prázdné pro automatickou detekci",
+          "selectLanguages": "Vyberte jazyky...",
+          "selectTranslate": "Vyberte jazyky...",
           "prompt": "Prompt",
-          "promptDescription": "Optional text to guide the model's style or continue a previous segment. Not supported by gpt-4o-transcribe-diarize.",
-          "temperature": "Temperature",
-          "temperatureDescription": "Higher values produce more random results (0-1). Only supported by whisper-1.",
-          "languageHints": "Language Hints",
-          "languageHintsStrict": "Strict Language Hints",
-          "languageHintsStrictDescription": "Only transcribe in the specified languages",
-          "contextTerms": "Context Terms",
-          "contextTermsDescription": "Comma-separated terms to improve recognition accuracy",
-          "contextDescription": "Context Description",
-          "contextDescriptionDescription": "Freeform text providing general context about the audio content",
-          "enableSpeakerDiarization": "Speaker Diarization",
-          "enableSpeakerDiarizationDescription": "Identify and separate different speakers",
-          "enableLanguageIdentification": "Language Identification",
-          "enableLanguageIdentificationDescription": "Detect language for each segment"
+          "promptDescription": "Volitelný text pro navádění stylu modelu nebo pokračování předchozího segmentu. Nepodporováno u gpt-4o-transcribe-diarize.",
+          "temperature": "Teplota",
+          "temperatureDescription": "Vyšší hodnoty produkují náhodnější výsledky (0–1). Podporováno pouze u whisper-1.",
+          "languageHints": "Jazykové nápovědy",
+          "languageHintsStrict": "Striktní jazykové nápovědy",
+          "languageHintsStrictDescription": "Přepisovat pouze v zadaných jazycích",
+          "contextTerms": "Kontextové výrazy",
+          "contextTermsDescription": "Výrazy oddělené čárkami pro zlepšení přesnosti rozpoznávání",
+          "contextDescription": "Popis kontextu",
+          "contextDescriptionDescription": "Volný text poskytující obecný kontext o obsahu zvuku",
+          "enableSpeakerDiarization": "Diarizace mluvčích",
+          "enableSpeakerDiarizationDescription": "Identifikovat a oddělit různé mluvčí",
+          "enableLanguageIdentification": "Identifikace jazyka",
+          "enableLanguageIdentificationDescription": "Detekovat jazyk pro každý segment"
         }
       },
       "localModels": {
-        "title": "Local Models"
+        "title": "Lokální modely"
       },
       "myModels": {
-        "noModelsConfigured": "No models configured. Visit the Library to download models or set up cloud providers."
+        "noModelsConfigured": "Žádné modely nejsou nastaveny. Navštivte Knihovnu pro stažení modelů nebo nastavení cloudových poskytovatelů."
       }
     },
     "general": {
@@ -259,18 +259,18 @@
         "descriptionUnsupported": "Model Parakeet rozpozná jazyk automaticky. Ruční výběr není potřeba.",
         "searchPlaceholder": "Hledat jazyky...",
         "noResults": "Žádné jazyky nenalezeny",
-        "auto": "Auto"
+        "auto": "Automaticky"
       },
       "pushToTalk": {
         "label": "Stisk a mluv",
         "description": "Podržte pro nahrávání, uvolněte pro zastavení"
       },
       "shortcuts": {
-        "title": "Shortcuts",
-        "strategyNone": "None",
-        "addNew": "Add Shortcut",
-        "remove": "Remove shortcut",
-        "postProcessNotReady": "Configure a post-processing provider first"
+        "title": "Zkratky",
+        "strategyNone": "Žádné",
+        "addNew": "Přidat zkratku",
+        "remove": "Odebrat zkratku",
+        "postProcessNotReady": "Nejprve nastavte poskytovatele následného zpracování"
       }
     },
     "sound": {
@@ -390,39 +390,39 @@
         "duplicate": "\"{{word}}\" již existuje"
       },
       "exportData": {
-        "title": "Export Data",
-        "description": "Export your settings, history, and recordings to a file",
-        "button": "Export...",
-        "includeSettings": "Settings",
-        "includeHistory": "Transcription History",
-        "includeRecordings": "Audio Recordings",
-        "success": "Data exported successfully",
-        "error": "Failed to export data"
+        "title": "Export dat",
+        "description": "Exportovat nastavení, historii a nahrávky do souboru",
+        "button": "Exportovat...",
+        "includeSettings": "Nastavení",
+        "includeHistory": "Historie přepisů",
+        "includeRecordings": "Zvukové nahrávky",
+        "success": "Data byla úspěšně exportována",
+        "error": "Export dat se nezdařil"
       },
       "importData": {
-        "title": "Import Data",
-        "description": "Import settings and data from a previously exported file",
-        "button": "Import...",
-        "previewTitle": "Import Preview",
-        "exportDate": "Exported on {{date}}",
-        "appVersion": "App version: {{version}}",
-        "historyCount": "{{count}} history entries",
-        "recordingsCount": "{{count}} recordings",
-        "statsCount": "{{count}} speaking stats",
-        "importSettings": "Settings",
-        "importRecordings": "Recordings",
-        "warning": "Importing settings will overwrite your current configuration. The export file may contain API keys.",
-        "success": "Data imported successfully",
-        "error": "Failed to import data",
-        "invalidFile": "The selected file is not a valid Handless export"
+        "title": "Import dat",
+        "description": "Importovat nastavení a data z dříve exportovaného souboru",
+        "button": "Importovat...",
+        "previewTitle": "Náhled importu",
+        "exportDate": "Exportováno dne {{date}}",
+        "appVersion": "Verze aplikace: {{version}}",
+        "historyCount": "{{count}} záznamů historie",
+        "recordingsCount": "{{count}} nahrávek",
+        "statsCount": "{{count}} statistik mluvení",
+        "importSettings": "Nastavení",
+        "importRecordings": "Nahrávky",
+        "warning": "Import nastavení přepíše vaši aktuální konfiguraci. Exportovaný soubor může obsahovat API klíče.",
+        "success": "Data byla úspěšně importována",
+        "error": "Import dat se nezdařil",
+        "invalidFile": "Vybraný soubor není platný export Handless"
       },
       "theme": {
-        "title": "Theme",
-        "description": "Choose the app color theme",
+        "title": "Motiv",
+        "description": "Vyberte barevný motiv aplikace",
         "options": {
-          "dark": "Dark",
-          "light": "Light",
-          "system": "System"
+          "dark": "Tmavý",
+          "light": "Světlý",
+          "system": "Systémový"
         }
       },
       "configFile": {
@@ -526,8 +526,8 @@
       "unsave": "Odebrat z uložených",
       "delete": "Smazat záznam",
       "deleteError": "Nepodařilo se smazat záznam. Zkuste to prosím znovu.",
-      "hideOriginal": "Hide original",
-      "showOriginal": "Show original"
+      "hideOriginal": "Skrýt originál",
+      "showOriginal": "Zobrazit originál"
     },
     "debug": {
       "title": "Ladění",
@@ -546,7 +546,7 @@
       "soundTheme": {
         "label": "Zvukový motiv",
         "description": "Vyberte zvukový motiv pro odezvu při startu a ukončení nahrávání",
-        "preview": "Preview sound theme (plays start then stop)"
+        "preview": "Přehrát ukázku zvukového motivu (přehraje start a poté stop)"
       },
       "wordCorrectionThreshold": {
         "title": "Práh korekce slov",
@@ -659,8 +659,8 @@
     "yes": "Ano",
     "no": "Ne",
     "noOptionsFound": "Nenalezeny žádné možnosti",
-    "copyToClipboard": "Copy to clipboard",
-    "search": "Search..."
+    "copyToClipboard": "Kopírovat do schránky",
+    "search": "Hledat..."
   },
   "accessibility": {
     "permissionsRequired": "Vyžadována oprávnění usnadnění přístupu",

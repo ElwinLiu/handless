@@ -99,7 +99,7 @@ impl ModelManager {
             ModelInfo {
                 id: "small".to_string(),
                 name: "Whisper Small".to_string(),
-                description: "Fast and fairly accurate.".to_string(),
+                description: "onboarding.models.small.description".to_string(),
                 filename: "ggml-small.bin".to_string(),
                 url: Some("https://blob.handy.computer/ggml-small.bin".to_string()),
                 size_mb: 487,
@@ -123,7 +123,7 @@ impl ModelManager {
             ModelInfo {
                 id: "medium".to_string(),
                 name: "Whisper Medium".to_string(),
-                description: "Good accuracy, medium speed".to_string(),
+                description: "onboarding.models.medium.description".to_string(),
                 filename: "whisper-medium-q4_1.bin".to_string(),
                 url: Some("https://blob.handy.computer/whisper-medium-q4_1.bin".to_string()),
                 size_mb: 492, // Approximate size
@@ -146,7 +146,7 @@ impl ModelManager {
             ModelInfo {
                 id: "turbo".to_string(),
                 name: "Whisper Turbo".to_string(),
-                description: "Balanced accuracy and speed.".to_string(),
+                description: "onboarding.models.turbo.description".to_string(),
                 filename: "ggml-large-v3-turbo.bin".to_string(),
                 url: Some("https://blob.handy.computer/ggml-large-v3-turbo.bin".to_string()),
                 size_mb: 1600, // Approximate size
@@ -169,7 +169,7 @@ impl ModelManager {
             ModelInfo {
                 id: "large".to_string(),
                 name: "Whisper Large".to_string(),
-                description: "Good accuracy, but slow.".to_string(),
+                description: "onboarding.models.large.description".to_string(),
                 filename: "ggml-large-v3-q5_0.bin".to_string(),
                 url: Some("https://blob.handy.computer/ggml-large-v3-q5_0.bin".to_string()),
                 size_mb: 1100, // Approximate size
@@ -192,8 +192,7 @@ impl ModelManager {
             ModelInfo {
                 id: "breeze-asr".to_string(),
                 name: "Breeze ASR".to_string(),
-                description: "Optimized for Taiwanese Mandarin. Code-switching support."
-                    .to_string(),
+                description: "onboarding.models.breeze-asr.description".to_string(),
                 filename: "breeze-asr-q5_k.bin".to_string(),
                 url: Some("https://blob.handy.computer/breeze-asr-q5_k.bin".to_string()),
                 size_mb: 1080,
@@ -217,7 +216,7 @@ impl ModelManager {
             ModelInfo {
                 id: "parakeet-tdt-0.6b-v2".to_string(),
                 name: "Parakeet V2".to_string(),
-                description: "English only. The best model for English speakers.".to_string(),
+                description: "onboarding.models.parakeet-tdt-0.6b-v2.description".to_string(),
                 filename: "parakeet-tdt-0.6b-v2-int8".to_string(), // Directory name
                 url: Some("https://blob.handy.computer/parakeet-v2-int8.tar.gz".to_string()),
                 size_mb: 473, // Approximate size for int8 quantized model
@@ -250,7 +249,7 @@ impl ModelManager {
             ModelInfo {
                 id: "parakeet-tdt-0.6b-v3".to_string(),
                 name: "Parakeet V3".to_string(),
-                description: "Fast and accurate. Supports 25 European languages.".to_string(),
+                description: "onboarding.models.parakeet-tdt-0.6b-v3.description".to_string(),
                 filename: "parakeet-tdt-0.6b-v3-int8".to_string(), // Directory name
                 url: Some("https://blob.handy.computer/parakeet-v3-int8.tar.gz".to_string()),
                 size_mb: 478, // Approximate size for int8 quantized model
@@ -273,7 +272,7 @@ impl ModelManager {
             ModelInfo {
                 id: "moonshine-base".to_string(),
                 name: "Moonshine Base".to_string(),
-                description: "Very fast, English only. Handles accents well.".to_string(),
+                description: "onboarding.models.moonshine-base.description".to_string(),
                 filename: "moonshine-base".to_string(),
                 url: Some("https://blob.handy.computer/moonshine-base.tar.gz".to_string()),
                 size_mb: 58,
@@ -296,7 +295,7 @@ impl ModelManager {
             ModelInfo {
                 id: "moonshine-tiny-streaming-en".to_string(),
                 name: "Moonshine V2 Tiny".to_string(),
-                description: "Ultra-fast, English only".to_string(),
+                description: "onboarding.models.moonshine-tiny-streaming-en.description".to_string(),
                 filename: "moonshine-tiny-streaming-en".to_string(),
                 url: Some(
                     "https://blob.handy.computer/moonshine-tiny-streaming-en.tar.gz".to_string(),
@@ -321,7 +320,7 @@ impl ModelManager {
             ModelInfo {
                 id: "moonshine-small-streaming-en".to_string(),
                 name: "Moonshine V2 Small".to_string(),
-                description: "Fast, English only. Good balance of speed and accuracy.".to_string(),
+                description: "onboarding.models.moonshine-small-streaming-en.description".to_string(),
                 filename: "moonshine-small-streaming-en".to_string(),
                 url: Some(
                     "https://blob.handy.computer/moonshine-small-streaming-en.tar.gz".to_string(),
@@ -346,7 +345,7 @@ impl ModelManager {
             ModelInfo {
                 id: "moonshine-medium-streaming-en".to_string(),
                 name: "Moonshine V2 Medium".to_string(),
-                description: "English only. High quality.".to_string(),
+                description: "onboarding.models.moonshine-medium-streaming-en.description".to_string(),
                 filename: "moonshine-medium-streaming-en".to_string(),
                 url: Some(
                     "https://blob.handy.computer/moonshine-medium-streaming-en.tar.gz".to_string(),
@@ -378,8 +377,7 @@ impl ModelManager {
             ModelInfo {
                 id: "sense-voice-int8".to_string(),
                 name: "SenseVoice".to_string(),
-                description: "Very fast. Chinese, English, Japanese, Korean, Cantonese."
-                    .to_string(),
+                description: "onboarding.models.sense-voice-int8.description".to_string(),
                 filename: "sense-voice-int8".to_string(),
                 url: Some("https://blob.handy.computer/sense-voice-int8.tar.gz".to_string()),
                 size_mb: 160,
@@ -688,7 +686,7 @@ impl ModelManager {
                 ModelInfo {
                     id: model_id,
                     name: display_name,
-                    description: "Not officially supported".to_string(),
+                    description: "onboarding.customModelDescription".to_string(),
                     filename,
                     url: None, // Custom models have no download URL
                     size_mb,
