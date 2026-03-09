@@ -132,7 +132,7 @@ function App() {
 
     document.addEventListener("keydown", handleSectionNav);
     return () => document.removeEventListener("keydown", handleSectionNav);
-  }, [settings?.debug_mode]);
+  }, [settings]);
 
   const checkOnboardingStatus = async () => {
     if (platform() === "macos") {

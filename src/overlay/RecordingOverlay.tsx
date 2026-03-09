@@ -15,7 +15,9 @@ type OverlayState = "recording" | "transcribing" | "processing";
 
 const DOT_COUNT = 11;
 const THINKING_DOT_COUNT = 6;
-const LERP_SPEED = 0.12;
+const ATTACK_SPEED = 0.22;
+const DECAY_SPEED = 0.07;
+const ACCENT_RGB = "239, 111, 47";
 const STREAMING_WIDTH = 300;
 const STREAMING_LINE_HEIGHT = 18;
 const MAX_LINES = 5;
@@ -36,7 +38,7 @@ const RecordingOverlay: React.FC = () => {
   const dotElementsRef = useRef<(HTMLDivElement | null)[]>([]);
   const rafIdRef = useRef<number>(0);
   const frameCountRef = useRef(0);
-  const idleJitterRef = useRef<number[]>(Array(DOT_COUNT).fill(0));
+  const overlayRef = useRef<HTMLDivElement>(null);
 
   // Progress bar refs
   const progressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
@@ -74,6 +76,8 @@ const RecordingOverlay: React.FC = () => {
     return 33;
   })();
 
+  const overlayRadius = hasStreamingText ? 14 : 999;
+
   // Track words (runs before paint to avoid flicker)
   useLayoutEffect(() => {
     if (streamingText) {
@@ -93,32 +97,74 @@ const RecordingOverlay: React.FC = () => {
     }
   }, [streamingText]);
 
-  // rAF loop: lerp current toward target levels, write directly to DOM
+  // rAF loop: lerp toward target with asymmetric attack/decay,
+  // layered sine-wave idle, per-dot glow, ambient overlay glow
   const animateDots = useCallback(() => {
     const current = currentLevelsRef.current;
     const target = targetLevelsRef.current;
     const frame = frameCountRef.current++;
-    const jitter = idleJitterRef.current;
+    let totalEnergy = 0;
 
     for (let i = 0; i < DOT_COUNT; i++) {
-      current[i] += (target[i] - current[i]) * LERP_SPEED;
+      // Asymmetric LERP: snappy attack, slow lingering decay
+      const speed = target[i] > current[i] ? ATTACK_SPEED : DECAY_SPEED;
+      current[i] += (target[i] - current[i]) * speed;
+
       const el = dotElementsRef.current[i];
       if (el) {
         const v = current[i];
+        totalEnergy += v;
         const idleStrength = Math.max(0, 1 - v * 4);
 
-        // Idle: slow, gentle drift — update one random dot every ~12 frames
-        if (frame % 12 === i % 12) {
-          jitter[i] = Math.random() * 3 * idleStrength; // subtle 0–3px
-        }
+        // Idle: layered sine waves create a rolling wave across the dot array
+        const wave1 = Math.sin(frame * 0.02 + i * 0.5) * 0.5 + 0.5;
+        const wave2 = Math.sin(frame * 0.035 + i * 1.1) * 0.3 + 0.5;
+        const idleH = (wave1 * 1.8 + wave2 * 1.0) * idleStrength;
 
-        // Speaking: very drastic height, pow(0.4) makes even moderate levels tall
+        // Active: subtle vibrato adds organic tremor to speaking dots
+        const vibrato =
+          v > 0.05 ? Math.sin(frame * 0.15 + i * 2.0) * v * 1.5 : 0;
+
         const audioH = Math.pow(v, 0.4) * 22;
-        const h = 3 + audioH + jitter[i];
+        const h = 3 + audioH + idleH + vibrato;
         el.style.height = `${h}px`;
-        el.style.borderRadius = h > 3 ? "1px" : "50%";
-        el.style.opacity = `${0.4 + Math.min(0.6, v * 2)}`;
+        el.style.borderRadius = h > 4 ? "1px" : "50%";
+
+        // Opacity: idle dots gently pulse with the primary wave
+        const baseOpacity = 0.4 + Math.min(0.6, v * 2);
+        const idleOpacityMod = idleStrength * (wave1 * 0.12 - 0.04);
+        el.style.opacity = `${baseOpacity + idleOpacityMod}`;
+
+        // Per-dot glow: breathes with idle wave, flares when speaking
+        const idleGlow = idleStrength * wave1 * 0.15;
+        const activeGlow = Math.min(1, v * 2) * 0.6;
+        const glow = Math.max(idleGlow, activeGlow);
+        const glowRadius = 2 + v * 8 + idleStrength * wave1 * 2;
+        el.style.boxShadow =
+          glow > 0.03
+            ? `0 0 ${glowRadius}px rgba(${ACCENT_RGB}, ${glow})`
+            : "none";
       }
+    }
+
+    // Ambient overlay glow — breathes when idle, flares with voice
+    const overlay = overlayRef.current;
+    if (overlay) {
+      const avgEnergy = totalEnergy / DOT_COUNT;
+      const breathe = Math.sin(frame * 0.02) * 0.5 + 0.5;
+      const idleAmbient = avgEnergy < 0.05 ? breathe * 0.12 : 0;
+      const e = Math.max(Math.min(1, avgEnergy * 3), idleAmbient);
+      const glowBlur = 8 + e * 18;
+      const glowSpread = e * 4;
+      const glowAlpha = e * 0.3;
+      const innerAlpha = 0.03 + e * 0.06;
+      overlay.style.boxShadow = [
+        `0 0 ${glowBlur}px ${glowSpread}px rgba(${ACCENT_RGB}, ${glowAlpha})`,
+        "0 4px 24px rgba(0, 0, 0, 0.45)",
+        "0 0 0 0.5px rgba(0, 0, 0, 0.5)",
+        `inset 0 1px 0 rgba(${ACCENT_RGB}, 0.04)`,
+        `inset 0 0 16px rgba(${ACCENT_RGB}, ${innerAlpha})`,
+      ].join(", ");
     }
 
     rafIdRef.current = requestAnimationFrame(animateDots);
@@ -128,6 +174,8 @@ const RecordingOverlay: React.FC = () => {
   useEffect(() => {
     if (isVisible && state === "recording") {
       rafIdRef.current = requestAnimationFrame(animateDots);
+    } else if (overlayRef.current) {
+      overlayRef.current.style.boxShadow = "";
     }
     return () => cancelAnimationFrame(rafIdRef.current);
   }, [isVisible, state, animateDots]);
@@ -224,8 +272,13 @@ const RecordingOverlay: React.FC = () => {
   return (
     <div className={`overlay-wrapper position-${overlayPosition}`}>
       <div
+        ref={overlayRef}
         dir={direction}
-        style={{ width: overlayWidth, height: overlayHeight }}
+        style={{
+          width: overlayWidth,
+          height: overlayHeight,
+          borderRadius: overlayRadius,
+        }}
         className={`recording-overlay ${isVisible ? "fade-in" : ""}`}
       >
         {state === "recording" &&
@@ -242,15 +295,21 @@ const RecordingOverlay: React.FC = () => {
             </div>
           ) : (
             <div className="dots-container">
-              {Array.from({ length: DOT_COUNT }, (_, i) => (
-                <div
-                  key={i}
-                  className="dot"
-                  ref={(el) => {
-                    dotElementsRef.current[i] = el;
-                  }}
-                />
-              ))}
+              {Array.from({ length: DOT_COUNT }, (_, i) => {
+                const center = (DOT_COUNT - 1) / 2;
+                const dist = Math.abs(i - center) / center;
+                const w = 1.5 + (1 - dist * dist) * 1;
+                return (
+                  <div
+                    key={i}
+                    className="dot"
+                    style={{ width: w }}
+                    ref={(el) => {
+                      dotElementsRef.current[i] = el;
+                    }}
+                  />
+                );
+              })}
             </div>
           ))}
 
@@ -265,7 +324,7 @@ const RecordingOverlay: React.FC = () => {
                 <div
                   key={i}
                   className="thinking-dot"
-                  style={{ animationDelay: `${i * 100}ms` }}
+                  style={{ animationDelay: `${i * 120}ms` }}
                 />
               ))}
             </div>
