@@ -77,17 +77,16 @@ jobs:
             echo "Build profile: release"
           fi
 
-      - name: Setup Bun (standard)
-        if: ${{ !(contains(inputs.platform, 'windows') && contains(inputs.target, 'aarch64')) }}
+      - name: Setup Bun
         uses: oven-sh/setup-bun@v2
 
-      # Bun does not fully support Windows ARM64 yet, so we pin the baseline build.
-      # See https://github.com/oven-sh/bun/issues/9824 for details.
-      - name: Setup Bun (Windows ARM64 baseline)
-        if: ${{ contains(inputs.platform, 'windows') && contains(inputs.target, 'aarch64') }}
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-download-url: "https://github.com/oven-sh/bun/releases/latest/download/bun-windows-x64-baseline.zip"
+      # # Bun does not fully support Windows ARM64 yet, so we pin the baseline build.
+      # # See https://github.com/oven-sh/bun/issues/9824 for details.
+      # - name: Setup Bun (Windows ARM64 baseline)
+      #   if: ${{ contains(inputs.platform, 'windows') && contains(inputs.target, 'aarch64') }}
+      #   uses: oven-sh/setup-bun@v2
+      #   with:
+      #     bun-download-url: "https://github.com/oven-sh/bun/releases/latest/download/bun-windows-x64-baseline.zip"
 
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
@@ -101,129 +100,128 @@ jobs:
           workspaces: "./src-tauri -> target"
           key: ${{ inputs.platform }}-${{ inputs.target }}
 
-      - name: install dependencies (ubuntu 24.04 x64)
-        if: contains(inputs.platform, 'ubuntu-24.04') && !contains(inputs.platform, 'arm')
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libappindicator3-dev librsvg2-dev patchelf libasound2-dev libopenblas-dev libx11-dev libxtst-dev libxrandr-dev libgtk-layer-shell0 libgtk-layer-shell-dev \
-            libwebkit2gtk-4.1-0=2.44.0-2 \
-            libwebkit2gtk-4.1-dev=2.44.0-2 \
-            libjavascriptcoregtk-4.1-0=2.44.0-2 \
-            libjavascriptcoregtk-4.1-dev=2.44.0-2 \
-            gir1.2-javascriptcoregtk-4.1=2.44.0-2 \
-            gir1.2-webkit2-4.1=2.44.0-2
+      # - name: install dependencies (ubuntu 24.04 x64)
+      #   if: contains(inputs.platform, 'ubuntu-24.04') && !contains(inputs.platform, 'arm')
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y libappindicator3-dev librsvg2-dev patchelf libasound2-dev libopenblas-dev libx11-dev libxtst-dev libxrandr-dev libgtk-layer-shell0 libgtk-layer-shell-dev \
+      #       libwebkit2gtk-4.1-0=2.44.0-2 \
+      #       libwebkit2gtk-4.1-dev=2.44.0-2 \
+      #       libjavascriptcoregtk-4.1-0=2.44.0-2 \
+      #       libjavascriptcoregtk-4.1-dev=2.44.0-2 \
+      #       gir1.2-javascriptcoregtk-4.1=2.44.0-2 \
+      #       gir1.2-webkit2-4.1=2.44.0-2
 
-      - name: install dependencies (ubuntu 24.04 arm64)
-        if: contains(inputs.platform, 'ubuntu-24.04-arm')
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libasound2-dev libopenblas-dev libx11-dev libxtst-dev libxrandr-dev libgtk-layer-shell0 libgtk-layer-shell-dev xdg-utils
+      # - name: install dependencies (ubuntu 24.04 arm64)
+      #   if: contains(inputs.platform, 'ubuntu-24.04-arm')
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libasound2-dev libopenblas-dev libx11-dev libxtst-dev libxrandr-dev libgtk-layer-shell0 libgtk-layer-shell-dev xdg-utils
 
-      - name: install dependencies (ubuntu 22.04)
-        if: contains(inputs.platform, 'ubuntu-22.04') && !contains(inputs.platform, 'arm')
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libasound2-dev libopenblas-dev libx11-dev libxtst-dev libxrandr-dev libgtk-layer-shell0 libgtk-layer-shell-dev
+      # - name: install dependencies (ubuntu 22.04)
+      #   if: contains(inputs.platform, 'ubuntu-22.04') && !contains(inputs.platform, 'arm')
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libasound2-dev libopenblas-dev libx11-dev libxtst-dev libxrandr-dev libgtk-layer-shell0 libgtk-layer-shell-dev
 
-      - name: Verify gtk-layer-shell runtime dependency (Ubuntu)
-        if: contains(inputs.platform, 'ubuntu')
-        run: |
-          dpkg-query -W -f='${Status}\n' libgtk-layer-shell0 | grep -q "install ok installed"
-          ldconfig -p | grep -q "libgtk-layer-shell.so.0"
+      # - name: Verify gtk-layer-shell runtime dependency (Ubuntu)
+      #   if: contains(inputs.platform, 'ubuntu')
+      #   run: |
+      #     dpkg-query -W -f='${Status}\n' libgtk-layer-shell0 | grep -q "install ok installed"
+      #     ldconfig -p | grep -q "libgtk-layer-shell.so.0"
 
-      - name: Install Vulkan SDK (Windows x64)
-        if: contains(inputs.platform, 'windows') && !contains(inputs.target, 'aarch64')
-        uses: humbletim/install-vulkan-sdk@v1.2
-        with:
-          version: 1.4.309.0
-          cache: true
+      # - name: Install Vulkan SDK (Windows x64)
+      #   if: contains(inputs.platform, 'windows') && !contains(inputs.target, 'aarch64')
+      #   uses: humbletim/install-vulkan-sdk@v1.2
+      #   with:
+      #     version: 1.4.309.0
+      #     cache: true
 
-      # humbletim/install-vulkan-sdk@v1.2 cannot target Windows ARM64 yet.
-      # Download prebuilt binaries (Bin) + build headers/libs from source.
-      # See https://github.com/humbletim/install-vulkan-sdk/pull/22 for prebuilt ARM64 support progress.
-      - name: Prepare Vulkan SDK env (Windows ARM64)
-        if: contains(inputs.platform, 'windows') && contains(inputs.target, 'aarch64')
-        shell: pwsh
-        run: |
-          $sdkDir = Join-Path $env:GITHUB_WORKSPACE "VULKAN_SDK"
-          New-Item -ItemType Directory -Force -Path $sdkDir | Out-Null
-          Add-Content -Path $env:GITHUB_ENV -Value "VULKAN_SDK=$sdkDir"
+      # # humbletim/install-vulkan-sdk@v1.2 cannot target Windows ARM64 yet.
+      # # Download prebuilt binaries (Bin) + build headers/libs from source.
+      # # See https://github.com/humbletim/install-vulkan-sdk/pull/22 for prebuilt ARM64 support progress.
+      # - name: Prepare Vulkan SDK env (Windows ARM64)
+      #   if: contains(inputs.platform, 'windows') && contains(inputs.target, 'aarch64')
+      #   shell: pwsh
+      #   run: |
+      #     $sdkDir = Join-Path $env:GITHUB_WORKSPACE "VULKAN_SDK"
+      #     New-Item -ItemType Directory -Force -Path $sdkDir | Out-Null
+      #     Add-Content -Path $env:GITHUB_ENV -Value "VULKAN_SDK=$sdkDir"
 
-      - name: Download Vulkan SDK binaries (Windows ARM64)
-        if: contains(inputs.platform, 'windows') && contains(inputs.target, 'aarch64')
-        shell: pwsh
-        run: |
-          $url = "https://sdk.lunarg.com/sdk/download/1.4.309.0/warm/InstallVulkanARM64-1.4.309.0.exe"
-          $outFile = "vulkan_sdk_arm.exe"
-          Write-Host "Downloading Vulkan SDK binaries from $url"
-          Invoke-WebRequest -Uri $url -OutFile $outFile
+      # - name: Download Vulkan SDK binaries (Windows ARM64)
+      #   if: contains(inputs.platform, 'windows') && contains(inputs.target, 'aarch64')
+      #   shell: pwsh
+      #   run: |
+      #     $url = "https://sdk.lunarg.com/sdk/download/1.4.309.0/warm/InstallVulkanARM64-1.4.309.0.exe"
+      #     $outFile = "vulkan_sdk_arm.exe"
+      #     Write-Host "Downloading Vulkan SDK binaries from $url"
+      #     Invoke-WebRequest -Uri $url -OutFile $outFile
 
-      - name: Extract Vulkan SDK binaries (Windows ARM64)
-        if: contains(inputs.platform, 'windows') && contains(inputs.target, 'aarch64')
-        shell: pwsh
-        run: |
-          $sdkDir = $env:VULKAN_SDK
-          $sevenZip = (Get-Command 7z.exe -ErrorAction Stop).Source
-          Write-Host "Extracting binaries to $sdkDir"
-          & $sevenZip x "./vulkan_sdk_arm.exe" "-o$sdkDir" -aoa
-          $binPath = Join-Path $sdkDir "Bin"
-          Add-Content -Path $env:GITHUB_PATH -Value $binPath
-          Write-Host "Verifying glslc..."
-          & (Join-Path $binPath "glslc.exe") --version
+      # - name: Extract Vulkan SDK binaries (Windows ARM64)
+      #   if: contains(inputs.platform, 'windows') && contains(inputs.target, 'aarch64')
+      #   shell: pwsh
+      #   run: |
+      #     $sdkDir = $env:VULKAN_SDK
+      #     $sevenZip = (Get-Command 7z.exe -ErrorAction Stop).Source
+      #     Write-Host "Extracting binaries to $sdkDir"
+      #     & $sevenZip x "./vulkan_sdk_arm.exe" "-o$sdkDir" -aoa
+      #     $binPath = Join-Path $sdkDir "Bin"
+      #     Add-Content -Path $env:GITHUB_PATH -Value $binPath
+      #     Write-Host "Verifying glslc..."
+      #     & (Join-Path $binPath "glslc.exe") --version
 
-      - name: Build Vulkan SDK headers and libs (Windows ARM64)
-        if: contains(inputs.platform, 'windows') && contains(inputs.target, 'aarch64')
-        uses: humbletim/setup-vulkan-sdk@v1.2.1
-        with:
-          vulkan-query-version: 1.4.309.0
-          vulkan-components: Vulkan-Headers, Vulkan-Loader
-          vulkan-use-cache: true
+      # - name: Build Vulkan SDK headers and libs (Windows ARM64)
+      #   if: contains(inputs.platform, 'windows') && contains(inputs.target, 'aarch64')
+      #   uses: humbletim/setup-vulkan-sdk@v1.2.1
+      #   with:
+      #     vulkan-query-version: 1.4.309.0
+      #     vulkan-components: Vulkan-Headers, Vulkan-Loader
+      #     vulkan-use-cache: true
 
-      - name: Install trusted-signing-cli
-        if: contains(inputs.platform, 'windows') && inputs.sign-binaries
-        run: cargo install trusted-signing-cli
+      # - name: Install trusted-signing-cli
+      #   if: contains(inputs.platform, 'windows') && inputs.sign-binaries
+      #   run: cargo install trusted-signing-cli
 
-      - name: Prepare Vulkan SDK for Ubuntu 24.04
-        if: contains(inputs.platform, 'ubuntu-24.04') && !contains(inputs.platform, 'arm')
-        run: |
-          wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo tee /etc/apt/trusted.gpg.d/lunarg.asc
-          sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-1.3.290-noble.list https://packages.lunarg.com/vulkan/1.3.290/lunarg-vulkan-1.3.290-noble.list
-          sudo apt update
-          sudo apt install vulkan-sdk -y
-          sudo apt-get install -y mesa-vulkan-drivers
+      # - name: Prepare Vulkan SDK for Ubuntu 24.04
+      #   if: contains(inputs.platform, 'ubuntu-24.04') && !contains(inputs.platform, 'arm')
+      #   run: |
+      #     wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo tee /etc/apt/trusted.gpg.d/lunarg.asc
+      #     sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-1.3.290-noble.list https://packages.lunarg.com/vulkan/1.3.290/lunarg-vulkan-1.3.290-noble.list
+      #     sudo apt update
+      #     sudo apt install vulkan-sdk -y
+      #     sudo apt-get install -y mesa-vulkan-drivers
 
-      - name: Prepare Vulkan SDK for Ubuntu ARM64
-        if: contains(inputs.platform, 'ubuntu') && contains(inputs.platform, 'arm')
-        uses: jakoch/install-vulkan-sdk-action@v1
-        with:
-          vulkan_version: 1.4.335.0
-          cache: true
+      # - name: Prepare Vulkan SDK for Ubuntu ARM64
+      #   if: contains(inputs.platform, 'ubuntu') && contains(inputs.platform, 'arm')
+      #   uses: jakoch/install-vulkan-sdk-action@v1
+      #   with:
+      #     vulkan_version: 1.4.335.0
+      #     cache: true
 
-      - name: Install Vulkan runtime libraries (Ubuntu ARM64)
-        if: contains(inputs.platform, 'ubuntu') && contains(inputs.platform, 'arm')
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libvulkan-dev mesa-vulkan-drivers
+      # - name: Install Vulkan runtime libraries (Ubuntu ARM64)
+      #   if: contains(inputs.platform, 'ubuntu') && contains(inputs.platform, 'arm')
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y libvulkan-dev mesa-vulkan-drivers
 
-      - name: Prepare Vulkan SDK for Ubuntu 22.04
-        if: contains(inputs.platform, 'ubuntu-22.04') && !contains(inputs.platform, 'arm')
-        run: |
-          wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo tee /etc/apt/trusted.gpg.d/lunarg.asc
-          sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-1.3.290-jammy.list https://packages.lunarg.com/vulkan/1.3.290/lunarg-vulkan-1.3.290-jammy.list
-          sudo apt update
-          sudo apt install vulkan-sdk -y
-          sudo apt-get install -y mesa-vulkan-drivers
+      # - name: Prepare Vulkan SDK for Ubuntu 22.04
+      #   if: contains(inputs.platform, 'ubuntu-22.04') && !contains(inputs.platform, 'arm')
+      #   run: |
+      #     wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo tee /etc/apt/trusted.gpg.d/lunarg.asc
+      #     sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-1.3.290-jammy.list https://packages.lunarg.com/vulkan/1.3.290/lunarg-vulkan-1.3.290-jammy.list
+      #     sudo apt update
+      #     sudo apt install vulkan-sdk -y
+      #     sudo apt-get install -y mesa-vulkan-drivers
 
       - name: install frontend dependencies
-        if: ${{ !(contains(inputs.platform, 'windows') && contains(inputs.target, 'aarch64')) }}
         run: bun install
 
-      - name: install frontend dependencies (Windows ARM64)
-        if: ${{ contains(inputs.platform, 'windows') && contains(inputs.target, 'aarch64') }}
-        run: bun install --cpu=arm64
+      # - name: install frontend dependencies (Windows ARM64)
+      #   if: ${{ contains(inputs.platform, 'windows') && contains(inputs.target, 'aarch64') }}
+      #   run: bun install --cpu=arm64
 
       - name: rustup install target
-        if: ${{ inputs.target != '' && !contains(inputs.target, 'x86_64-unknown-linux-gnu') && !contains(inputs.target, 'aarch64-unknown-linux-gnu') && !contains(inputs.target, 'x86_64-pc-windows-msvc') }}
+        if: ${{ inputs.target != '' }}
         run: rustup target add ${{ inputs.target }}
 
       - name: import Apple Developer Certificate
@@ -315,81 +313,81 @@ jobs:
             src-tauri/target/${{ inputs.target }}/${{ steps.build-profile.outputs.profile }}/bundle/macos/*.app
           retention-days: 30
 
-      - name: Install FUSE for AppImage processing
-        if: contains(inputs.platform, 'ubuntu')
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y fuse libfuse2
+      # - name: Install FUSE for AppImage processing
+      #   if: contains(inputs.platform, 'ubuntu')
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y fuse libfuse2
 
-      - name: Remove libwayland-client.so from AppImage
-        if: contains(inputs.platform, 'ubuntu')
-        run: |
-          # Find the AppImage file
-          APPIMAGE_PATH=$(find src-tauri/target/${{ steps.build-profile.outputs.profile }}/bundle/appimage -name "*.AppImage" | head -1)
+      # - name: Remove libwayland-client.so from AppImage
+      #   if: contains(inputs.platform, 'ubuntu')
+      #   run: |
+      #     # Find the AppImage file
+      #     APPIMAGE_PATH=$(find src-tauri/target/${{ steps.build-profile.outputs.profile }}/bundle/appimage -name "*.AppImage" | head -1)
 
-          if [ -n "$APPIMAGE_PATH" ]; then
-            echo "Processing AppImage: $APPIMAGE_PATH"
+      #     if [ -n "$APPIMAGE_PATH" ]; then
+      #       echo "Processing AppImage: $APPIMAGE_PATH"
 
-            # Make AppImage executable
-            chmod +x "$APPIMAGE_PATH"
+      #       # Make AppImage executable
+      #       chmod +x "$APPIMAGE_PATH"
 
-            # Extract AppImage
-            cd "$(dirname "$APPIMAGE_PATH")"
-            APPIMAGE_NAME=$(basename "$APPIMAGE_PATH")
+      #       # Extract AppImage
+      #       cd "$(dirname "$APPIMAGE_PATH")"
+      #       APPIMAGE_NAME=$(basename "$APPIMAGE_PATH")
 
-            # Extract using the AppImage itself
-            "./$APPIMAGE_NAME" --appimage-extract
+      #       # Extract using the AppImage itself
+      #       "./$APPIMAGE_NAME" --appimage-extract
 
-            # Remove libwayland-client.so files
-            echo "Removing libwayland-client.so files..."
-            find squashfs-root -name "libwayland-client.so*" -type f -delete
+      #       # Remove libwayland-client.so files
+      #       echo "Removing libwayland-client.so files..."
+      #       find squashfs-root -name "libwayland-client.so*" -type f -delete
 
-            # List what was removed for verification
-            echo "Files remaining in lib directories:"
-            find squashfs-root -name "lib*" -type d | head -5 | while read dir; do
-              echo "Contents of $dir:"
-              ls "$dir" | grep -E "(wayland|fuse)" || echo "  No wayland/fuse libraries found"
-            done
+      #       # List what was removed for verification
+      #       echo "Files remaining in lib directories:"
+      #       find squashfs-root -name "lib*" -type d | head -5 | while read dir; do
+      #         echo "Contents of $dir:"
+      #         ls "$dir" | grep -E "(wayland|fuse)" || echo "  No wayland/fuse libraries found"
+      #       done
 
-            # Detect architecture and get appropriate appimagetool
-            if [[ "$(uname -m)" == "aarch64" ]]; then
-              APPIMAGETOOL_ARCH="aarch64"
-            else
-              APPIMAGETOOL_ARCH="x86_64"
-            fi
+      #       # Detect architecture and get appropriate appimagetool
+      #       if [[ "$(uname -m)" == "aarch64" ]]; then
+      #         APPIMAGETOOL_ARCH="aarch64"
+      #       else
+      #         APPIMAGETOOL_ARCH="x86_64"
+      #       fi
 
-            wget -q "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-${APPIMAGETOOL_ARCH}.AppImage"
-            chmod +x "appimagetool-${APPIMAGETOOL_ARCH}.AppImage"
+      #       wget -q "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-${APPIMAGETOOL_ARCH}.AppImage"
+      #       chmod +x "appimagetool-${APPIMAGETOOL_ARCH}.AppImage"
 
-            # Repackage AppImage with no-appstream to avoid warnings
-            ARCH="${APPIMAGETOOL_ARCH}" "./appimagetool-${APPIMAGETOOL_ARCH}.AppImage" --no-appstream squashfs-root "$APPIMAGE_NAME"
+      #       # Repackage AppImage with no-appstream to avoid warnings
+      #       ARCH="${APPIMAGETOOL_ARCH}" "./appimagetool-${APPIMAGETOOL_ARCH}.AppImage" --no-appstream squashfs-root "$APPIMAGE_NAME"
 
-            # Clean up
-            rm -rf squashfs-root "appimagetool-${APPIMAGETOOL_ARCH}.AppImage"
+      #       # Clean up
+      #       rm -rf squashfs-root "appimagetool-${APPIMAGETOOL_ARCH}.AppImage"
 
-            echo "libwayland-client.so removed from AppImage successfully"
-          else
-            echo "No AppImage found to process"
-          fi
+      #       echo "libwayland-client.so removed from AppImage successfully"
+      #     else
+      #       echo "No AppImage found to process"
+      #     fi
 
-      - name: Upload artifacts (Linux)
-        if: inputs.upload-artifacts && contains(inputs.platform, 'ubuntu')
-        uses: actions/upload-artifact@v7
-        with:
-          name: ${{ inputs.asset-prefix }}-${{ inputs.platform }}-${{ inputs.target }}
-          path: |
-            src-tauri/target/${{ steps.build-profile.outputs.profile }}/bundle/deb/*.deb
-            src-tauri/target/${{ steps.build-profile.outputs.profile }}/bundle/appimage/*.AppImage
-            src-tauri/target/${{ steps.build-profile.outputs.profile }}/bundle/rpm/*.rpm
-          retention-days: 30
+      # - name: Upload artifacts (Linux)
+      #   if: inputs.upload-artifacts && contains(inputs.platform, 'ubuntu')
+      #   uses: actions/upload-artifact@v7
+      #   with:
+      #     name: ${{ inputs.asset-prefix }}-${{ inputs.platform }}-${{ inputs.target }}
+      #     path: |
+      #       src-tauri/target/${{ steps.build-profile.outputs.profile }}/bundle/deb/*.deb
+      #       src-tauri/target/${{ steps.build-profile.outputs.profile }}/bundle/appimage/*.AppImage
+      #       src-tauri/target/${{ steps.build-profile.outputs.profile }}/bundle/rpm/*.rpm
+      #     retention-days: 30
 
-      - name: Upload artifacts (Windows)
-        if: inputs.upload-artifacts && contains(inputs.platform, 'windows')
-        uses: actions/upload-artifact@v7
-        with:
-          name: ${{ inputs.asset-prefix }}-${{ inputs.target }}
-          # Default Windows builds place bundles under release/, but cross-compiles (ARM64) nest under target/<triple>/release.
-          path: |
-            src-tauri/target/${{ inputs.target != '' && inputs.target != 'x86_64-pc-windows-msvc' && format('{0}/{1}', inputs.target, steps.build-profile.outputs.profile) || steps.build-profile.outputs.profile }}/bundle/msi/*.msi
-            src-tauri/target/${{ inputs.target != '' && inputs.target != 'x86_64-pc-windows-msvc' && format('{0}/{1}', inputs.target, steps.build-profile.outputs.profile) || steps.build-profile.outputs.profile }}/bundle/nsis/*.exe
-          retention-days: 30
+      # - name: Upload artifacts (Windows)
+      #   if: inputs.upload-artifacts && contains(inputs.platform, 'windows')
+      #   uses: actions/upload-artifact@v7
+      #   with:
+      #     name: ${{ inputs.asset-prefix }}-${{ inputs.target }}
+      #     # Default Windows builds place bundles under release/, but cross-compiles (ARM64) nest under target/<triple>/release.
+      #     path: |
+      #       src-tauri/target/${{ inputs.target != '' && inputs.target != 'x86_64-pc-windows-msvc' && format('{0}/{1}', inputs.target, steps.build-profile.outputs.profile) || steps.build-profile.outputs.profile }}/bundle/msi/*.msi
+      #       src-tauri/target/${{ inputs.target != '' && inputs.target != 'x86_64-pc-windows-msvc' && format('{0}/{1}', inputs.target, steps.build-profile.outputs.profile) || steps.build-profile.outputs.profile }}/bundle/nsis/*.exe
+      #     retention-days: 30

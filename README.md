@@ -14,7 +14,7 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT" /></a>
 </p>
 
-Free, open-source, cross-platform speech-to-text. Press a shortcut, speak, get text in any app. Run locally for privacy or use cloud APIs.
+Free, open-source macOS speech-to-text. Press a shortcut, speak, get text in any app. Run locally for privacy or use cloud APIs.
 
 Forked from [Handy](https://github.com/cjpais/Handy) v0.7.8.
 
@@ -24,7 +24,7 @@ Forked from [Handy](https://github.com/cjpais/Handy) v0.7.8.
 - **Cloud STT** via OpenAI or Soniox
 - **Voice Activity Detection** (local models only)
 - **LLM post-processing** to clean up or reformat transcriptions
-- **macOS** (Intel & Apple Silicon), **Windows** (x64), **Linux** (x64)
+- **macOS** (Intel & Apple Silicon)
 - **17 languages**
 
 ## Install
@@ -35,8 +35,6 @@ Forked from [Handy](https://github.com/cjpais/Handy) v0.7.8.
 brew tap ElwinLiu/tap
 brew install --cask handless
 ```
-
-**Other platforms:** grab a build from the [releases page](https://github.com/ElwinLiu/handless/releases).
 
 Build from source: see [BUILD.md](BUILD.md).
 
@@ -63,69 +61,9 @@ Combine freely: `handless --start-hidden --no-tray`
 
 > **macOS:** invoke the binary directly: `/Applications/Handless.app/Contents/MacOS/Handless --toggle-transcription`
 
-## Linux
-
-### Text Input
-
-| Display Server | Tool | Install |
-| --- | --- | --- |
-| X11 | `xdotool` | `sudo apt install xdotool` |
-| Wayland | `wtype` | `sudo apt install wtype` |
-| Both | `dotool` | `sudo apt install dotool` (needs `input` group) |
-
-For `dotool`: `sudo usermod -aG input $USER`, then re-login.
-
-Without these, Handless falls back to enigo (limited Wayland support).
-
-### Dependencies
-
-If startup fails with `libgtk-layer-shell.so.0` not found:
-
-| Distro | Command |
-| --- | --- |
-| Ubuntu/Debian | `sudo apt install libgtk-layer-shell0` |
-| Fedora/RHEL | `sudo dnf install gtk-layer-shell` |
-| Arch | `sudo pacman -S gtk-layer-shell` |
-
-For building from source on Debian-based: also install `libgtk-layer-shell-dev`.
-
-### Wayland Shortcuts
-
-System-level shortcuts must go through your DE/WM. Use [CLI flags](#cli) as the command.
-
-<details>
-<summary>Examples</summary>
-
-**GNOME:** Settings > Keyboard > Custom Shortcuts > add `handless --toggle-transcription`
-
-**KDE:** System Settings > Shortcuts > Custom Shortcuts > add command
-
-**Sway/i3:**
-```ini
-bindsym $mod+o exec handless --toggle-transcription
-```
-
-**Hyprland:**
-```ini
-bind = $mainMod, O, exec, handless --toggle-transcription
-```
-</details>
-
-### Unix Signals
-
-| Signal | Action | Example |
-| --- | --- | --- |
-| `SIGUSR2` | Toggle transcription | `pkill -USR2 -n handless` |
-| `SIGUSR1` | Toggle + post-processing | `pkill -USR1 -n handless` |
-
-### Notes
-
-- Recording overlay is off by default (`Overlay Position: None`) -- some compositors treat it as the active window, stealing focus.
-- Try `WEBKIT_DISABLE_DMABUF_RENDERER=1` if you hit rendering issues.
-
 ## Troubleshooting
 
-`Cmd+Shift+D` (macOS) or `Ctrl+Shift+D` (Windows/Linux) opens the debug panel.
+`Cmd+Shift+D` opens the debug panel.
 
 ## Contributing
 

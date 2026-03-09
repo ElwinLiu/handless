@@ -22,15 +22,15 @@ A clear and concise description of what the bug is.
 
 **Operating System:**
 
-<!-- e.g., macOS 14.1, Windows 11, Ubuntu 22.04 -->
+<!-- e.g., macOS 14.1, macOS 15.0 -->
 
 **CPU:**
 
-<!-- e.g., Apple M2, Intel i7-12700K, AMD Ryzen 7 5800X -->
+<!-- e.g., Apple M2, Apple M4, Intel Core i9 -->
 
 **GPU:**
 
-<!-- e.g., Apple M2 GPU, NVIDIA RTX 4080, AMD RX 6800 XT, Intel UHD Graphics -->
+<!-- e.g., Apple M2 GPU, Intel UHD Graphics -->
 
 ## Logs
 

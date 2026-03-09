@@ -9,4 +9,4 @@ brew install --cask handless
 
 ## Casks
 
-- **handless** — Cross-platform desktop speech-to-text app
+- **handless** — macOS desktop speech-to-text app

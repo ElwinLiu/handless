@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.7",
   "type": "module",
-  "description": "Cross-platform desktop speech-to-text. Private, offline, open-source.",
+  "description": "macOS desktop speech-to-text. Private, offline, open-source.",
   "keywords": [
     "speech-to-text",
     "voice-recognition",

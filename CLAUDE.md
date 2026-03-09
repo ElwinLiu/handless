@@ -1,4 +1,4 @@
-Handless is a cross-platform desktop speech-to-text app built with Tauri 2.x (Rust backend + React/TypeScript frontend).
+Handless is a macOS desktop speech-to-text app built with Tauri 2.x (Rust backend + React/TypeScript frontend).
 
 ## Design Context
 
