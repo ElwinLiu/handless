@@ -407,13 +407,14 @@ impl HistoryManager {
     pub fn get_history_entries_page(&self, limit: i64, cursor: Option<i64>) -> Result<HistoryPage> {
         let conn = self.get_connection()?;
 
-        let total_count: i64 = conn.query_row(
-            "SELECT COUNT(*) FROM transcription_history",
-            [],
-            |row| row.get(0),
-        )?;
+        let total_count: i64 =
+            conn.query_row("SELECT COUNT(*) FROM transcription_history", [], |row| {
+                row.get(0)
+            })?;
 
-        let (query, cursor_params): (&str, Vec<Box<dyn rusqlite::types::ToSql>>) = if cursor.is_some() {
+        let (query, cursor_params): (&str, Vec<Box<dyn rusqlite::types::ToSql>>) = if cursor
+            .is_some()
+        {
             (
                 "SELECT id, file_name, timestamp, saved, title, transcription_text, post_processed_text, post_process_prompt
                  FROM transcription_history WHERE id < ?1 ORDER BY id DESC LIMIT ?2",

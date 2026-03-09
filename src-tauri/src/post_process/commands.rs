@@ -225,8 +225,7 @@ pub fn delete_post_process_prompt(app: AppHandle, id: String) -> Result<(), Stri
     // Update any bindings that referenced the deleted prompt
     for binding in settings.bindings.values_mut() {
         if binding.post_process_prompt_id.as_ref() == Some(&id) {
-            binding.post_process_prompt_id =
-                settings.post_process_selected_prompt_id.clone();
+            binding.post_process_prompt_id = settings.post_process_selected_prompt_id.clone();
         }
     }
 
@@ -236,10 +235,7 @@ pub fn delete_post_process_prompt(app: AppHandle, id: String) -> Result<(), Stri
 
 #[tauri::command]
 #[specta::specta]
-pub fn set_post_process_selected_prompt(
-    app: AppHandle,
-    id: Option<String>,
-) -> Result<(), String> {
+pub fn set_post_process_selected_prompt(app: AppHandle, id: Option<String>) -> Result<(), String> {
     let mut settings = settings::get_settings(&app);
 
     // Verify the prompt exists when a prompt is selected

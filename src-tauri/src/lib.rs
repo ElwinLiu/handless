@@ -36,7 +36,7 @@ use managers::transcription::TranscriptionManager;
 use signal_hook::consts::{SIGUSR1, SIGUSR2};
 #[cfg(unix)]
 use signal_hook::iterator::Signals;
-use std::sync::atomic::{AtomicU8, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicU8, Ordering};
 use std::sync::Arc;
 use tauri::image::Image;
 pub use transcription_coordinator::TranscriptionCoordinator;
@@ -51,6 +51,16 @@ use crate::settings::{get_settings, ModelUnloadTimeout};
 // Global atomic to store the file log level filter
 // We use u8 to store the log::LevelFilter as a number
 pub static FILE_LOG_LEVEL: AtomicU8 = AtomicU8::new(log::LevelFilter::Debug as u8);
+
+#[derive(Default)]
+struct AppLifecycleState {
+    startup_complete: AtomicBool,
+}
+
+enum MainWindowPresentation {
+    Visible,
+    Hidden,
+}
 
 fn level_filter_from_u8(value: u8) -> log::LevelFilter {
     match value {
@@ -86,26 +96,68 @@ fn build_console_filter() -> env_filter::Filter {
     builder.build()
 }
 
-fn show_main_window(app: &AppHandle) {
+fn is_tray_available(app: &AppHandle) -> bool {
+    let settings = get_settings(app);
+    settings.show_tray_icon && !app.state::<CliArgs>().no_tray
+}
+
+fn should_start_hidden(app: &AppHandle) -> bool {
+    let settings = get_settings(app);
+    settings.start_hidden || app.state::<CliArgs>().start_hidden
+}
+
+fn apply_main_window_presentation(app: &AppHandle, presentation: MainWindowPresentation) {
     if let Some(main_window) = app.get_webview_window("main") {
-        // First, ensure the window is visible
-        if let Err(e) = main_window.show() {
-            log::error!("Failed to show window: {}", e);
-        }
-        // Then, bring it to the front and give it focus
-        if let Err(e) = main_window.set_focus() {
-            log::error!("Failed to focus window: {}", e);
-        }
-        // Optional: On macOS, ensure the app becomes active if it was an accessory
-        #[cfg(target_os = "macos")]
-        {
-            if let Err(e) = app.set_activation_policy(tauri::ActivationPolicy::Regular) {
-                log::error!("Failed to set activation policy to Regular: {}", e);
+        match presentation {
+            MainWindowPresentation::Visible => {
+                #[cfg(target_os = "macos")]
+                {
+                    if let Err(e) = app.set_activation_policy(tauri::ActivationPolicy::Regular) {
+                        log::error!("Failed to set activation policy to Regular: {}", e);
+                    }
+                }
+
+                if let Err(e) = main_window.show() {
+                    log::error!("Failed to show window: {}", e);
+                }
+
+                if let Err(e) = main_window.set_focus() {
+                    log::error!("Failed to focus window: {}", e);
+                }
+            }
+            MainWindowPresentation::Hidden => {
+                if let Err(e) = main_window.hide() {
+                    log::error!("Failed to hide window: {}", e);
+                }
+
+                #[cfg(target_os = "macos")]
+                {
+                    if is_tray_available(app) {
+                        if let Err(e) =
+                            app.set_activation_policy(tauri::ActivationPolicy::Accessory)
+                        {
+                            log::error!("Failed to set activation policy to Accessory: {}", e);
+                        }
+                    }
+                }
             }
         }
     } else {
         log::error!("Main window not found.");
     }
+}
+
+fn show_main_window(app: &AppHandle) {
+    apply_main_window_presentation(app, MainWindowPresentation::Visible);
+}
+
+fn apply_startup_presentation(app: &AppHandle) {
+    let presentation = if should_start_hidden(app) && is_tray_available(app) {
+        MainWindowPresentation::Hidden
+    } else {
+        MainWindowPresentation::Visible
+    };
+    apply_main_window_presentation(app, presentation);
 }
 
 fn initialize_core_logic(app_handle: &AppHandle) {
@@ -162,15 +214,6 @@ fn initialize_core_logic(app_handle: &AppHandle) {
     #[cfg(unix)]
     signal_handle::setup_signal_handler(app_handle.clone(), signals);
 
-    // Apply macOS Accessory policy if starting hidden and tray is available.
-    // If the tray icon is disabled, keep the dock icon so the user can reopen.
-    #[cfg(target_os = "macos")]
-    {
-        let settings = settings::get_settings(app_handle);
-        if settings.start_hidden && settings.show_tray_icon {
-            let _ = app_handle.set_activation_policy(tauri::ActivationPolicy::Accessory);
-        }
-    }
     // Get the current theme to set the appropriate initial icon
     let initial_theme = tray::get_current_theme(app_handle);
 
@@ -454,6 +497,7 @@ pub fn run(cli_args: CliArgs) {
             Some(vec![]),
         ))
         .manage(cli_args.clone())
+        .manage(AppLifecycleState::default())
         .setup(move |app| {
             let mut settings = get_settings(&app.handle());
 
@@ -502,44 +546,21 @@ pub fn run(cli_args: CliArgs) {
                 tray::set_tray_visibility(&app_handle, false);
             }
 
-            // Show main window only if not starting hidden
-            // CLI --start-hidden flag overrides the setting
-            let should_hide = settings.start_hidden || cli_args.start_hidden;
-
-            // If start_hidden but tray is disabled, we must show the window
-            // anyway. Without a tray icon, the dock is the only way back in.
-            let tray_available = settings.show_tray_icon && !cli_args.no_tray;
-            if !should_hide || !tray_available {
-                if let Some(main_window) = app_handle.get_webview_window("main") {
-                    main_window.show().unwrap();
-                    main_window.set_focus().unwrap();
-                }
-            }
+            apply_startup_presentation(&app_handle);
+            app_handle
+                .state::<AppLifecycleState>()
+                .startup_complete
+                .store(true, Ordering::Relaxed);
 
             Ok(())
         })
         .on_window_event(|window, event| match event {
             tauri::WindowEvent::CloseRequested { api, .. } => {
                 api.prevent_close();
-                let _res = window.hide();
-
-                let settings = get_settings(&window.app_handle());
-                let tray_visible =
-                    settings.show_tray_icon && !window.app_handle().state::<CliArgs>().no_tray;
-
-                #[cfg(target_os = "macos")]
-                {
-                    if tray_visible {
-                        // Tray is available: hide the dock icon, app lives in the tray
-                        let res = window
-                            .app_handle()
-                            .set_activation_policy(tauri::ActivationPolicy::Accessory);
-                        if let Err(e) = res {
-                            log::error!("Failed to set activation policy: {}", e);
-                        }
-                    }
-                    // No tray: keep the dock icon visible so the user can reopen
-                }
+                apply_main_window_presentation(
+                    &window.app_handle(),
+                    MainWindowPresentation::Hidden,
+                );
             }
             tauri::WindowEvent::ThemeChanged(theme) => {
                 log::info!("Theme changed to: {:?}", theme);
@@ -554,7 +575,13 @@ pub fn run(cli_args: CliArgs) {
         .run(|app, event| {
             #[cfg(target_os = "macos")]
             if let tauri::RunEvent::Reopen { .. } = &event {
-                show_main_window(app);
+                if app
+                    .state::<AppLifecycleState>()
+                    .startup_complete
+                    .load(Ordering::Relaxed)
+                {
+                    show_main_window(app);
+                }
             }
             let _ = (app, event); // suppress unused warnings on non-macOS
         });
