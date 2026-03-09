@@ -292,89 +292,90 @@ export const CloudProviderConfigCard: React.FC<
           className="flex flex-col gap-2"
         >
           {/* biome-ignore lint/a11y/useKeyWithClickEvents: stopPropagation wrapper for input focus */}
-          <div
-            className="flex flex-wrap gap-2 items-center w-fit"
-            onClick={stopPropagation}
-          >
-            <ApiKeyField
-              value={apiKey}
-              onBlur={onApiKeyChange}
-              onChange={setLocalApiKey}
-              disabled={false}
-              placeholder={t(
-                "settings.models.cloudProviders.apiKey.placeholder",
-              )}
-              className="min-w-[180px] max-w-[240px]"
-            />
-            <Input
-              type="text"
-              value={localModel}
-              onChange={(e) => setLocalModel(e.target.value)}
-              onBlur={() => {
-                if (localModel !== cloudModel) onModelChange(localModel);
-              }}
-              placeholder={t(
-                "settings.models.cloudProviders.model.placeholder",
-              )}
-              variant="compact"
-              className="min-w-[140px] max-w-[200px]"
-            />
-            {onVerify && (
-              <button
-                type="button"
-                disabled={
-                  isVerifying || !localApiKey.trim() || !localModel.trim()
-                }
-                className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-md bg-accent/10 text-accent hover:bg-accent/20 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                onClick={async () => {
-                  setVerifyError(null);
-                  try {
-                    await onVerify(
-                      provider.id,
-                      localApiKey,
-                      localModel,
-                      realtimeEnabled,
-                    );
-                  } catch (e) {
-                    setVerifyError(
-                      e instanceof Error
-                        ? e.message
-                        : t("settings.models.cloudProviders.verifyFailed"),
-                    );
-                  }
-                }}
-              >
-                {isVerifying ? (
-                  <>
-                    <CircleNotch className="w-3 h-3 animate-spin" />
-                    {t("settings.models.cloudProviders.verifying")}
-                  </>
-                ) : (
-                  t("settings.models.cloudProviders.verify")
+          <div onClick={stopPropagation}>
+            <div className="flex flex-wrap gap-2 items-center">
+              <ApiKeyField
+                value={apiKey}
+                onBlur={onApiKeyChange}
+                onChange={setLocalApiKey}
+                disabled={false}
+                placeholder={t(
+                  "settings.models.cloudProviders.apiKey.placeholder",
                 )}
-              </button>
-            )}
-            {verifyError && (
-              <span className="text-xs text-error">{verifyError}</span>
-            )}
-            {provider.backend.type === "Cloud" &&
-              provider.backend.console_url && (
+                className="min-w-[180px] max-w-[240px]"
+              />
+              <Input
+                type="text"
+                value={localModel}
+                onChange={(e) => setLocalModel(e.target.value)}
+                onBlur={() => {
+                  if (localModel !== cloudModel) onModelChange(localModel);
+                }}
+                placeholder={t(
+                  "settings.models.cloudProviders.model.placeholder",
+                )}
+                variant="compact"
+                className="min-w-[140px] max-w-[200px]"
+              />
+              {onVerify && (
                 <button
                   type="button"
-                  className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-md text-text/60 hover:text-text hover:bg-muted/20 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring transition-colors"
-                  onClick={() => {
-                    if (
-                      provider.backend.type === "Cloud" &&
-                      provider.backend.console_url
-                    ) {
-                      openUrl(provider.backend.console_url);
+                  disabled={
+                    isVerifying || !localApiKey.trim() || !localModel.trim()
+                  }
+                  className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-md bg-accent/10 text-accent hover:bg-accent/20 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  onClick={async () => {
+                    setVerifyError(null);
+                    try {
+                      await onVerify(
+                        provider.id,
+                        localApiKey,
+                        localModel,
+                        realtimeEnabled,
+                      );
+                    } catch (e) {
+                      setVerifyError(
+                        e instanceof Error
+                          ? e.message
+                          : t("settings.models.cloudProviders.verifyFailed"),
+                      );
                     }
                   }}
                 >
-                  <ArrowSquareOut className="w-3 h-3" />
-                  {t("settings.models.cloudProviders.getApiKey")}
+                  {isVerifying ? (
+                    <>
+                      <CircleNotch className="w-3 h-3 animate-spin" />
+                      {t("settings.models.cloudProviders.verifying")}
+                    </>
+                  ) : (
+                    t("settings.models.cloudProviders.verify")
+                  )}
                 </button>
               )}
+              {provider.backend.type === "Cloud" &&
+                provider.backend.console_url && (
+                  <button
+                    type="button"
+                    className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-md text-text/60 hover:text-text hover:bg-muted/20 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring transition-colors"
+                    onClick={() => {
+                      if (
+                        provider.backend.type === "Cloud" &&
+                        provider.backend.console_url
+                      ) {
+                        openUrl(provider.backend.console_url);
+                      }
+                    }}
+                  >
+                    <ArrowSquareOut className="w-3 h-3" />
+                    {t("settings.models.cloudProviders.getApiKey")}
+                  </button>
+                )}
+            </div>
+            {verifyError && (
+              <p className="text-xs text-error mt-1.5 break-words">
+                {verifyError}
+              </p>
+            )}
           </div>
 
           {/* Real-time transcription toggle */}
