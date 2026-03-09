@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  Check,
   CaretDown,
   Cloud,
   ArrowSquareOut,
@@ -248,15 +247,9 @@ export const CloudProviderConfigCard: React.FC<
         >
           {provider.name}
         </h3>
-        <Badge variant="secondary">
+        <Badge variant={isVerified ? "success" : "secondary"}>
           <Cloud className="w-3 h-3" />
         </Badge>
-        {isVerified && (
-          <Badge variant="success">
-            <Check className="w-3 h-3 mr-1" />
-            {t("settings.models.cloudProviders.verified")}
-          </Badge>
-        )}
         {effectiveStatus === "active" && (
           <Badge variant="default">{t("modelSelector.active")}</Badge>
         )}
