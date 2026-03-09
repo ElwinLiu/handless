@@ -3,8 +3,10 @@ import { useTranslation } from "react-i18next";
 import {
   CaretDown,
   Cloud,
+  Crosshair,
   DownloadSimple,
   Globe,
+  Lightning,
   Translate,
   CircleNotch,
   Trash,
@@ -125,76 +127,33 @@ const ModelCard: React.FC<ModelCardProps> = ({
       className={cn(className, expanded && status === "active" && "bg-accent/5")}
       onClick={handleClick}
     >
-      {/* Top section: name/description + score bars */}
-      <div className="flex justify-between items-center w-full">
-        <div className="flex flex-col items-start flex-1 min-w-0">
-          <div className="flex items-center gap-3 flex-wrap">
-            <h3
-              className={`text-base font-semibold text-text ${isClickable ? "group-hover:text-accent" : ""} transition-colors`}
-            >
-              {displayName}
-            </h3>
-            {isCloud && (
-              <Badge variant="secondary">
-                <Cloud className="w-3 h-3" />
-              </Badge>
-            )}
-            {showRecommended && provider.is_recommended && (
-              <Badge variant="default">{t("onboarding.recommended")}</Badge>
-            )}
-            {status === "active" && (
-              <Badge variant="default">{t("modelSelector.active")}</Badge>
-            )}
-            {isCustom && (
-              <Badge variant="secondary">{t("modelSelector.custom")}</Badge>
-            )}
-            {status === "switching" && (
-              <Badge variant="secondary">
-                <CircleNotch className="w-3 h-3 mr-1 animate-spin" />
-                {t("modelSelector.switching")}
-              </Badge>
-            )}
-          </div>
-          <p
-            className={`text-text/60 text-sm ${compact ? "leading-snug" : "leading-relaxed"}`}
-          >
-            {isCloud && configuredModel ? configuredModel : displayDescription}
-          </p>
-        </div>
-        {provider.backend.type === "Local" &&
-          (provider.backend.accuracy_score > 0 ||
-            provider.backend.speed_score > 0) && (
-            <div className="hidden sm:flex items-center ml-4">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <p className="text-xs text-text/60 w-14 text-right">
-                    {t("onboarding.modelCard.accuracy")}
-                  </p>
-                  <div className="w-16 h-1.5 bg-muted/20 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-accent rounded-full"
-                      style={{
-                        width: `${provider.backend.accuracy_score * 100}%`,
-                      }}
-                    />
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <p className="text-xs text-text/60 w-14 text-right">
-                    {t("onboarding.modelCard.speed")}
-                  </p>
-                  <div className="w-16 h-1.5 bg-muted/20 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-accent rounded-full"
-                      style={{
-                        width: `${provider.backend.speed_score * 100}%`,
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+      {/* Header */}
+      <div className="flex items-center gap-3 flex-wrap">
+        <h3
+          className={`text-base font-semibold text-text ${isClickable ? "group-hover:text-accent" : ""} transition-colors`}
+        >
+          {displayName}
+        </h3>
+        {isCloud && (
+          <Badge variant="secondary">
+            <Cloud className="w-3 h-3" />
+          </Badge>
+        )}
+        {showRecommended && provider.is_recommended && (
+          <Badge variant="default">{t("onboarding.recommended")}</Badge>
+        )}
+        {status === "active" && (
+          <Badge variant="default">{t("modelSelector.active")}</Badge>
+        )}
+        {isCustom && (
+          <Badge variant="secondary">{t("modelSelector.custom")}</Badge>
+        )}
+        {status === "switching" && (
+          <Badge variant="secondary">
+            <CircleNotch className="w-3 h-3 mr-1 animate-spin" />
+            {t("modelSelector.switching")}
+          </Badge>
+        )}
         {showSettings && (
           <button
             type="button"
@@ -212,6 +171,13 @@ const ModelCard: React.FC<ModelCardProps> = ({
           </button>
         )}
       </div>
+
+      {/* Description */}
+      <p
+        className={`text-text/60 text-sm ${compact ? "leading-snug" : "leading-relaxed"}`}
+      >
+        {isCloud && configuredModel ? configuredModel : displayDescription}
+      </p>
 
       {/* Expandable model settings */}
       {showSettings && expanded && (
@@ -293,6 +259,28 @@ const ModelCard: React.FC<ModelCardProps> = ({
             </div>
           </SimpleTooltip>
         )}
+        {provider.backend.type === "Local" &&
+          provider.backend.accuracy_score > 0 && (
+            <SimpleTooltip
+              content={t("onboarding.modelCard.accuracy")}
+            >
+              <div className="flex items-center gap-1 text-xs text-accent/70 bg-accent/8 px-1.5 py-0.5 rounded">
+                <Crosshair className="w-3 h-3" />
+                <span>{Math.round(provider.backend.accuracy_score * 100)}%</span>
+              </div>
+            </SimpleTooltip>
+          )}
+        {provider.backend.type === "Local" &&
+          provider.backend.speed_score > 0 && (
+            <SimpleTooltip
+              content={t("onboarding.modelCard.speed")}
+            >
+              <div className="flex items-center gap-1 text-xs text-emerald-400/70 bg-emerald-400/8 px-1.5 py-0.5 rounded">
+                <Lightning className="w-3 h-3" />
+                <span>{Math.round(provider.backend.speed_score * 100)}%</span>
+              </div>
+            </SimpleTooltip>
+          )}
         {provider.backend.type === "Local" && status === "downloadable" && (
           <span className="flex items-center gap-1.5 ml-auto text-xs text-text/50 bg-muted/10 px-1.5 py-0.5 rounded">
             <DownloadSimple className="w-3 h-3" />
