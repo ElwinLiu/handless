@@ -53,7 +53,7 @@
       },
       "parakeet-tdt-0.6b-v3": {
         "name": "Parakeet V3",
-        "description": "Rapide et précis"
+        "description": "Rapide et précis. Prend en charge 25 langues européennes."
       },
       "moonshine-base": {
         "name": "Moonshine Base",
@@ -107,11 +107,11 @@
     "cloud": {
       "openai_stt": {
         "name": "OpenAI",
-        "description": "OpenAI's cloud speech-to-text API. Fast and accurate with support for 57+ languages."
+        "description": "API cloud de reconnaissance vocale d'OpenAI. Rapide et précise avec prise en charge de plus de 57 langues."
       },
       "soniox": {
         "name": "Soniox",
-        "description": "Soniox cloud speech-to-text. High accuracy with async transcription."
+        "description": "Reconnaissance vocale cloud Soniox. Haute précision avec transcription en temps réel."
       }
     }
   },
@@ -143,7 +143,7 @@
     },
     "cancel": "Annuler",
     "cancelDownload": "Annuler le téléchargement",
-    "notAvailable": "Not Available"
+    "notAvailable": "Non disponible"
   },
   "settings": {
     "modelSettings": {
@@ -168,60 +168,60 @@
       "yourModels": "Modèles téléchargés",
       "availableModels": "Disponibles au téléchargement",
       "tabs": {
-        "myModels": "My Models",
-        "library": "Library"
+        "myModels": "Mes modèles",
+        "library": "Bibliothèque"
       },
       "cloudProviders": {
-        "title": "Cloud Providers",
+        "title": "Fournisseurs cloud",
         "badge": "Cloud",
-        "notConfigured": "Not configured",
-        "verify": "Verify",
-        "verifying": "Verifying...",
-        "verified": "Verified",
-        "verifyFailed": "Verification failed",
-        "verifyFirst": "Verify your API key first",
+        "notConfigured": "Non configuré",
+        "verify": "Vérifier",
+        "verifying": "Vérification...",
+        "verified": "Vérifié",
+        "verifyFailed": "Échec de la vérification",
+        "verifyFirst": "Vérifiez d'abord votre clé API",
         "apiKey": {
-          "title": "API Key",
+          "title": "Clé API",
           "placeholder": "sk-..."
         },
         "model": {
-          "title": "Model",
-          "placeholder": "Enter model name"
+          "title": "Modèle",
+          "placeholder": "Entrez le nom du modèle"
         },
         "baseUrl": {
-          "title": "Base URL"
+          "title": "URL de base"
         },
-        "getApiKey": "Get API key",
-        "realtimeTranscription": "Real-time transcription",
-        "realtimeDescription": "Uses a WebSocket connection instead of file upload for lower latency",
+        "getApiKey": "Obtenir une clé API",
+        "realtimeTranscription": "Transcription en temps réel",
+        "realtimeDescription": "Utilise une connexion WebSocket au lieu d'un envoi de fichier pour une latence réduite",
         "options": {
-          "language": "Language",
-          "selectLanguage": "Auto detect",
-          "selectLanguageHint": "Leave empty to auto detect",
-          "selectLanguages": "Select languages...",
-          "selectTranslate": "Select languages...",
+          "language": "Langue",
+          "selectLanguage": "Détection automatique",
+          "selectLanguageHint": "Laissez vide pour la détection automatique",
+          "selectLanguages": "Sélectionner les langues...",
+          "selectTranslate": "Sélectionner les langues...",
           "prompt": "Prompt",
-          "promptDescription": "Optional text to guide the model's style or continue a previous segment. Not supported by gpt-4o-transcribe-diarize.",
-          "temperature": "Temperature",
-          "temperatureDescription": "Higher values produce more random results (0-1). Only supported by whisper-1.",
-          "languageHints": "Language Hints",
-          "languageHintsStrict": "Strict Language Hints",
-          "languageHintsStrictDescription": "Only transcribe in the specified languages",
-          "contextTerms": "Context Terms",
-          "contextTermsDescription": "Comma-separated terms to improve recognition accuracy",
-          "contextDescription": "Context Description",
-          "contextDescriptionDescription": "Freeform text providing general context about the audio content",
-          "enableSpeakerDiarization": "Speaker Diarization",
-          "enableSpeakerDiarizationDescription": "Identify and separate different speakers",
-          "enableLanguageIdentification": "Language Identification",
-          "enableLanguageIdentificationDescription": "Detect language for each segment"
+          "promptDescription": "Texte facultatif pour guider le style du modèle ou poursuivre un segment précédent. Non pris en charge par gpt-4o-transcribe-diarize.",
+          "temperature": "Température",
+          "temperatureDescription": "Des valeurs plus élevées produisent des résultats plus aléatoires (0-1). Pris en charge uniquement par whisper-1.",
+          "languageHints": "Indices de langue",
+          "languageHintsStrict": "Indices de langue stricts",
+          "languageHintsStrictDescription": "Transcrire uniquement dans les langues spécifiées",
+          "contextTerms": "Termes contextuels",
+          "contextTermsDescription": "Termes séparés par des virgules pour améliorer la précision de la reconnaissance",
+          "contextDescription": "Description du contexte",
+          "contextDescriptionDescription": "Texte libre fournissant un contexte général sur le contenu audio",
+          "enableSpeakerDiarization": "Diarisation des locuteurs",
+          "enableSpeakerDiarizationDescription": "Identifier et séparer les différents locuteurs",
+          "enableLanguageIdentification": "Identification de la langue",
+          "enableLanguageIdentificationDescription": "Détecter la langue pour chaque segment"
         }
       },
       "localModels": {
-        "title": "Local Models"
+        "title": "Modèles locaux"
       },
       "myModels": {
-        "noModelsConfigured": "No models configured. Visit the Library to download models or set up cloud providers."
+        "noModelsConfigured": "Aucun modèle configuré. Visitez la Bibliothèque pour télécharger des modèles ou configurer des fournisseurs cloud."
       }
     },
     "general": {
@@ -259,18 +259,18 @@
         "descriptionUnsupported": "Le modèle Parakeet détecte automatiquement la langue. Aucune sélection manuelle n'est nécessaire.",
         "searchPlaceholder": "Rechercher des langues...",
         "noResults": "Aucune langue trouvée",
-        "auto": "Auto"
+        "auto": "Automatique"
       },
       "pushToTalk": {
         "label": "Appuyer pour parler",
         "description": "Maintenez pour enregistrer, relâchez pour arrêter"
       },
       "shortcuts": {
-        "title": "Shortcuts",
-        "strategyNone": "None",
-        "addNew": "Add Shortcut",
-        "remove": "Remove shortcut",
-        "postProcessNotReady": "Configure a post-processing provider first"
+        "title": "Raccourcis",
+        "strategyNone": "Aucun",
+        "addNew": "Ajouter un raccourci",
+        "remove": "Supprimer le raccourci",
+        "postProcessNotReady": "Configurez d'abord un fournisseur de post-traitement"
       }
     },
     "sound": {
@@ -299,7 +299,7 @@
         "output": "Sortie",
         "transcription": "Transcription",
         "history": "Historique",
-        "data": "Data",
+        "data": "Données",
         "configuration": "Configuration"
       },
       "startHidden": {
@@ -330,7 +330,7 @@
           "clipboard": "Presse-papiers ({{modifier}}+V)",
           "clipboardCtrlShiftV": "Presse-papiers (Ctrl+Shift+V)",
           "clipboardShiftInsert": "Presse-papiers (Shift+Insert)",
-          "direct": "Direct",
+          "direct": "Directe",
           "none": "Aucun",
           "externalScript": "Script externe"
         },
@@ -390,39 +390,39 @@
         "duplicate": "\"{{word}}\" existe déjà"
       },
       "exportData": {
-        "title": "Export Data",
-        "description": "Export your settings, history, and recordings to a file",
-        "button": "Export...",
-        "includeSettings": "Settings",
-        "includeHistory": "Transcription History",
-        "includeRecordings": "Audio Recordings",
-        "success": "Data exported successfully",
-        "error": "Failed to export data"
+        "title": "Exporter les données",
+        "description": "Exportez vos paramètres, votre historique et vos enregistrements dans un fichier",
+        "button": "Exporter...",
+        "includeSettings": "Paramètres",
+        "includeHistory": "Historique de transcription",
+        "includeRecordings": "Enregistrements audio",
+        "success": "Données exportées avec succès",
+        "error": "Échec de l'exportation des données"
       },
       "importData": {
-        "title": "Import Data",
-        "description": "Import settings and data from a previously exported file",
-        "button": "Import...",
-        "previewTitle": "Import Preview",
-        "exportDate": "Exported on {{date}}",
-        "appVersion": "App version: {{version}}",
-        "historyCount": "{{count}} history entries",
-        "recordingsCount": "{{count}} recordings",
-        "statsCount": "{{count}} speaking stats",
-        "importSettings": "Settings",
-        "importRecordings": "Recordings",
-        "warning": "Importing settings will overwrite your current configuration. The export file may contain API keys.",
-        "success": "Data imported successfully",
-        "error": "Failed to import data",
-        "invalidFile": "The selected file is not a valid Handless export"
+        "title": "Importer les données",
+        "description": "Importez des paramètres et des données à partir d'un fichier précédemment exporté",
+        "button": "Importer...",
+        "previewTitle": "Aperçu de l'importation",
+        "exportDate": "Exporté le {{date}}",
+        "appVersion": "Version de l'application : {{version}}",
+        "historyCount": "{{count}} entrées d'historique",
+        "recordingsCount": "{{count}} enregistrements",
+        "statsCount": "{{count}} statistiques de parole",
+        "importSettings": "Paramètres",
+        "importRecordings": "Enregistrements",
+        "warning": "L'importation des paramètres écrasera votre configuration actuelle. Le fichier d'exportation peut contenir des clés API.",
+        "success": "Données importées avec succès",
+        "error": "Échec de l'importation des données",
+        "invalidFile": "Le fichier sélectionné n'est pas une exportation Handless valide"
       },
       "theme": {
-        "title": "Theme",
-        "description": "Choose the app color theme",
+        "title": "Thème",
+        "description": "Choisissez le thème de couleur de l'application",
         "options": {
-          "dark": "Dark",
-          "light": "Light",
-          "system": "System"
+          "dark": "Sombre",
+          "light": "Clair",
+          "system": "Système"
         }
       },
       "configFile": {
@@ -473,7 +473,7 @@
         "verified": "Vérifié"
       },
       "prompts": {
-        "title": "Prompt",
+        "title": "Consigne",
         "selectedPrompt": {
           "title": "Prompt sélectionné",
           "description": "Sélectionnez un modèle pour affiner les transcriptions ou créez-en un nouveau. La transcription capturée est automatiquement fournie au prompt."
@@ -526,8 +526,8 @@
       "unsave": "Retirer des favoris",
       "delete": "Supprimer l'entrée",
       "deleteError": "Échec de la suppression de l'entrée. Veuillez réessayer.",
-      "hideOriginal": "Hide original",
-      "showOriginal": "Show original"
+      "hideOriginal": "Masquer l'original",
+      "showOriginal": "Afficher l'original"
     },
     "debug": {
       "title": "Débogage",
@@ -546,7 +546,7 @@
       "soundTheme": {
         "label": "Thème sonore",
         "description": "Choisir un thème sonore pour les retours de début et de fin d'enregistrement",
-        "preview": "Preview sound theme (plays start then stop)"
+        "preview": "Aperçu du thème sonore (joue le son de début puis de fin)"
       },
       "wordCorrectionThreshold": {
         "title": "Seuil de correction des mots",
@@ -659,8 +659,8 @@
     "yes": "Oui",
     "no": "Non",
     "noOptionsFound": "Aucune option trouvée",
-    "copyToClipboard": "Copy to clipboard",
-    "search": "Search..."
+    "copyToClipboard": "Copier dans le presse-papiers",
+    "search": "Rechercher..."
   },
   "accessibility": {
     "permissionsRequired": "Autorisations d'accessibilité requises",

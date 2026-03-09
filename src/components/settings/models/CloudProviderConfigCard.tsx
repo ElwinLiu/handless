@@ -19,7 +19,7 @@ import { SelectableCard } from "@/components/ui/SelectableCard";
 import type { CloudProviderOption, SttProviderInfo } from "@/bindings";
 import type { ModelCardStatus } from "@/components/onboarding/ModelCard";
 import { LANGUAGES } from "@/lib/constants/languages";
-import { getLanguageDisplayText } from "@/lib/utils/modelTranslation";
+import { getLanguageDisplayText, getTranslatedModelName } from "@/lib/utils/modelTranslation";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { SimpleTooltip } from "@/components/ui/Tooltip";
 import { Checkbox } from "@/components/ui/Checkbox";
@@ -245,7 +245,7 @@ export const CloudProviderConfigCard: React.FC<
         <h3
           className={`text-base font-semibold text-text ${isClickable ? "group-hover:text-accent" : ""} transition-colors`}
         >
-          {provider.name}
+          {getTranslatedModelName(provider, t)}
         </h3>
         <Badge variant={isVerified ? "success" : "secondary"}>
           <Cloud className="w-3 h-3" />
@@ -275,13 +275,11 @@ export const CloudProviderConfigCard: React.FC<
       </div>
 
       {/* Description */}
-      {provider.description && (
-        <p
-          className={`text-text/60 text-sm ${compact ? "leading-snug" : "leading-relaxed"}`}
-        >
-          {provider.description}
-        </p>
-      )}
+      <p
+        className={`text-text/60 text-sm ${compact ? "leading-snug" : "leading-relaxed"}`}
+      >
+        {t(provider.description)}
+      </p>
 
       {/* Inline config fields */}
       {expanded && (

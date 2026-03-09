@@ -18,7 +18,6 @@ import { spring } from "../../lib/motion";
 import { formatModelSize } from "../../lib/utils/format";
 import {
   getLanguageDisplayText,
-  getTranslatedModelDescription,
   getTranslatedModelName,
 } from "../../lib/utils/modelTranslation";
 import Badge from "../ui/Badge";
@@ -102,7 +101,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
 
   // Get translated model name and description
   const displayName = getTranslatedModelName(provider, t);
-  const displayDescription = getTranslatedModelDescription(provider, t);
+  const displayDescription = t(provider.description);
 
   const handleClick = () => {
     if (status === "downloadable" && onDownload && isLocal) {

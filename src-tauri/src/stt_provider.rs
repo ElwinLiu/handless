@@ -62,7 +62,7 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
         SttProviderInfo {
             id: "openai_stt".to_string(),
             name: "OpenAI".to_string(),
-            description: "OpenAI's cloud speech-to-text API. Fast and accurate with support for 57+ languages.".to_string(),
+            description: "onboarding.cloud.openai_stt.description".to_string(),
             supported_languages: vec![
                 "af", "ar", "hy", "az", "be", "bs", "bg", "ca", "zh-Hans", "zh-Hant", "hr",
                 "cs", "da", "nl", "en", "et", "fi", "fr", "gl", "de", "el",
@@ -103,7 +103,7 @@ pub fn cloud_provider_registry() -> Vec<SttProviderInfo> {
         SttProviderInfo {
             id: "soniox".to_string(),
             name: "Soniox".to_string(),
-            description: "Soniox cloud speech-to-text. High accuracy with realtime transcription.".to_string(),
+            description: "onboarding.cloud.soniox.description".to_string(),
             supported_languages: vec![
                 "af", "sq", "ar", "az", "eu", "be", "bn", "bs", "bg", "ca",
                 "zh-Hans", "zh-Hant", "hr", "cs", "da", "nl", "en", "et", "fi", "fr",

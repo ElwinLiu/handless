@@ -53,7 +53,7 @@
       },
       "parakeet-tdt-0.6b-v3": {
         "name": "Parakeet V3",
-        "description": "Швидка та точна"
+        "description": "Швидка та точна. Підтримує 25 європейських мов."
       },
       "moonshine-base": {
         "name": "Moonshine Base",
@@ -107,11 +107,11 @@
     "cloud": {
       "openai_stt": {
         "name": "OpenAI",
-        "description": "OpenAI's cloud speech-to-text API. Fast and accurate with support for 57+ languages."
+        "description": "Хмарний API розпізнавання мовлення OpenAI. Швидкий і точний з підтримкою 57+ мов."
       },
       "soniox": {
         "name": "Soniox",
-        "description": "Soniox cloud speech-to-text. High accuracy with async transcription."
+        "description": "Хмарне розпізнавання мовлення Soniox. Висока точність з транскрипцією в реальному часі."
       }
     }
   },
@@ -132,7 +132,7 @@
     "noModelDownloadRequired": "Немає моделі - потрібно завантажити",
     "deleteModel": "Видалити {{modelName}}",
     "switching": "Перемикання...",
-    "downloadSpeed": "{{speed}} MB/s",
+    "downloadSpeed": "{{speed}} МБ/с",
     "capabilities": {
       "languageSelection": "Підтримує кілька мов введення",
       "multiLanguage": "Багатомовна",
@@ -143,7 +143,7 @@
     },
     "cancel": "Скасувати",
     "cancelDownload": "Скасувати завантаження",
-    "notAvailable": "Not Available"
+    "notAvailable": "Недоступно"
   },
   "settings": {
     "modelSettings": {
@@ -192,11 +192,11 @@
         "description": "Утримуйте для запису, відпустіть для зупинки"
       },
       "shortcuts": {
-        "title": "Shortcuts",
-        "strategyNone": "None",
-        "addNew": "Add Shortcut",
-        "remove": "Remove shortcut",
-        "postProcessNotReady": "Configure a post-processing provider first"
+        "title": "Гарячі клавіші",
+        "strategyNone": "Немає",
+        "addNew": "Додати гарячу клавішу",
+        "remove": "Видалити гарячу клавішу",
+        "postProcessNotReady": "Спочатку налаштуйте провайдера постобробки"
       }
     },
     "models": {
@@ -217,60 +217,60 @@
       "yourModels": "Завантажені моделі",
       "availableModels": "Доступні для завантаження",
       "tabs": {
-        "myModels": "My Models",
-        "library": "Library"
+        "myModels": "Мої моделі",
+        "library": "Бібліотека"
       },
       "cloudProviders": {
-        "title": "Cloud Providers",
-        "badge": "Cloud",
-        "notConfigured": "Not configured",
-        "verify": "Verify",
-        "verifying": "Verifying...",
-        "verified": "Verified",
-        "verifyFailed": "Verification failed",
-        "verifyFirst": "Verify your API key first",
+        "title": "Хмарні провайдери",
+        "badge": "Хмара",
+        "notConfigured": "Не налаштовано",
+        "verify": "Перевірити",
+        "verifying": "Перевірка...",
+        "verified": "Перевірено",
+        "verifyFailed": "Перевірка не вдалася",
+        "verifyFirst": "Спочатку перевірте ваш API Key",
         "apiKey": {
           "title": "API Key",
           "placeholder": "sk-..."
         },
         "model": {
-          "title": "Model",
-          "placeholder": "Enter model name"
+          "title": "Модель",
+          "placeholder": "Введіть назву моделі"
         },
         "baseUrl": {
           "title": "Base URL"
         },
-        "getApiKey": "Get API key",
-        "realtimeTranscription": "Real-time transcription",
-        "realtimeDescription": "Uses a WebSocket connection instead of file upload for lower latency",
+        "getApiKey": "Отримати API Key",
+        "realtimeTranscription": "Транскрипція в реальному часі",
+        "realtimeDescription": "Використовує WebSocket-з'єднання замість завантаження файлу для зменшення затримки",
         "options": {
-          "language": "Language",
-          "selectLanguage": "Auto detect",
-          "selectLanguageHint": "Leave empty to auto detect",
-          "selectLanguages": "Select languages...",
-          "selectTranslate": "Select languages...",
-          "prompt": "Prompt",
-          "promptDescription": "Optional text to guide the model's style or continue a previous segment. Not supported by gpt-4o-transcribe-diarize.",
-          "temperature": "Temperature",
-          "temperatureDescription": "Higher values produce more random results (0-1). Only supported by whisper-1.",
-          "languageHints": "Language Hints",
-          "languageHintsStrict": "Strict Language Hints",
-          "languageHintsStrictDescription": "Only transcribe in the specified languages",
-          "contextTerms": "Context Terms",
-          "contextTermsDescription": "Comma-separated terms to improve recognition accuracy",
-          "contextDescription": "Context Description",
-          "contextDescriptionDescription": "Freeform text providing general context about the audio content",
-          "enableSpeakerDiarization": "Speaker Diarization",
-          "enableSpeakerDiarizationDescription": "Identify and separate different speakers",
-          "enableLanguageIdentification": "Language Identification",
-          "enableLanguageIdentificationDescription": "Detect language for each segment"
+          "language": "Мова",
+          "selectLanguage": "Автовизначення",
+          "selectLanguageHint": "Залиште порожнім для автовизначення",
+          "selectLanguages": "Оберіть мови...",
+          "selectTranslate": "Оберіть мови...",
+          "prompt": "Промпт",
+          "promptDescription": "Необов'язковий текст для керування стилем моделі або продовження попереднього сегмента. Не підтримується gpt-4o-transcribe-diarize.",
+          "temperature": "Температура",
+          "temperatureDescription": "Вищі значення дають більш випадкові результати (0-1). Підтримується лише whisper-1.",
+          "languageHints": "Мовні підказки",
+          "languageHintsStrict": "Суворі мовні підказки",
+          "languageHintsStrictDescription": "Транскрибувати лише вказаними мовами",
+          "contextTerms": "Контекстні терміни",
+          "contextTermsDescription": "Терміни через кому для покращення точності розпізнавання",
+          "contextDescription": "Опис контексту",
+          "contextDescriptionDescription": "Довільний текст із загальним контекстом про аудіовміст",
+          "enableSpeakerDiarization": "Діаризація спікерів",
+          "enableSpeakerDiarizationDescription": "Визначати та розділяти різних мовців",
+          "enableLanguageIdentification": "Визначення мови",
+          "enableLanguageIdentificationDescription": "Визначати мову для кожного сегмента"
         }
       },
       "localModels": {
-        "title": "Local Models"
+        "title": "Локальні моделі"
       },
       "myModels": {
-        "noModelsConfigured": "No models configured. Visit the Library to download models or set up cloud providers."
+        "noModelsConfigured": "Моделі не налаштовані. Перейдіть до Бібліотеки, щоб завантажити моделі або налаштувати хмарних провайдерів."
       }
     },
     "sound": {
@@ -299,7 +299,7 @@
         "output": "Вивід",
         "transcription": "Транскрипція",
         "history": "Історія",
-        "data": "Data",
+        "data": "Дані",
         "configuration": "Конфігурація"
       },
       "startHidden": {
@@ -334,7 +334,7 @@
           "none": "Немає",
           "externalScript": "Зовнішній скрипт"
         },
-        "externalScriptPlaceholder": "/path/to/your/script.sh"
+        "externalScriptPlaceholder": "/шлях/до/вашого/скрипту.sh"
       },
       "typingTool": {
         "title": "Інструмент введення",
@@ -390,39 +390,39 @@
         "duplicate": "\"{{word}}\" вже існує"
       },
       "exportData": {
-        "title": "Export Data",
-        "description": "Export your settings, history, and recordings to a file",
-        "button": "Export...",
-        "includeSettings": "Settings",
-        "includeHistory": "Transcription History",
-        "includeRecordings": "Audio Recordings",
-        "success": "Data exported successfully",
-        "error": "Failed to export data"
+        "title": "Експорт даних",
+        "description": "Експортувати налаштування, історію та записи у файл",
+        "button": "Експорт...",
+        "includeSettings": "Налаштування",
+        "includeHistory": "Історія транскрипцій",
+        "includeRecordings": "Аудіозаписи",
+        "success": "Дані успішно експортовано",
+        "error": "Не вдалося експортувати дані"
       },
       "importData": {
-        "title": "Import Data",
-        "description": "Import settings and data from a previously exported file",
-        "button": "Import...",
-        "previewTitle": "Import Preview",
-        "exportDate": "Exported on {{date}}",
-        "appVersion": "App version: {{version}}",
-        "historyCount": "{{count}} history entries",
-        "recordingsCount": "{{count}} recordings",
-        "statsCount": "{{count}} speaking stats",
-        "importSettings": "Settings",
-        "importRecordings": "Recordings",
-        "warning": "Importing settings will overwrite your current configuration. The export file may contain API keys.",
-        "success": "Data imported successfully",
-        "error": "Failed to import data",
-        "invalidFile": "The selected file is not a valid Handless export"
+        "title": "Імпорт даних",
+        "description": "Імпортувати налаштування та дані з раніше експортованого файлу",
+        "button": "Імпорт...",
+        "previewTitle": "Попередній перегляд імпорту",
+        "exportDate": "Експортовано {{date}}",
+        "appVersion": "Версія додатку: {{version}}",
+        "historyCount": "{{count}} записів історії",
+        "recordingsCount": "{{count}} записів",
+        "statsCount": "{{count}} записів статистики мовлення",
+        "importSettings": "Налаштування",
+        "importRecordings": "Записи",
+        "warning": "Імпорт налаштувань перезапише поточну конфігурацію. Файл експорту може містити API-ключі.",
+        "success": "Дані успішно імпортовано",
+        "error": "Не вдалося імпортувати дані",
+        "invalidFile": "Обраний файл не є коректним експортом Handless"
       },
       "theme": {
-        "title": "Theme",
-        "description": "Choose the app color theme",
+        "title": "Тема",
+        "description": "Оберіть кольорову тему додатку",
         "options": {
-          "dark": "Dark",
-          "light": "Light",
-          "system": "System"
+          "dark": "Темна",
+          "light": "Світла",
+          "system": "Системна"
         }
       },
       "configFile": {
@@ -526,8 +526,8 @@
       "unsave": "Видалити зі збережених",
       "delete": "Видалити запис",
       "deleteError": "Не вдалося видалити запис. Спробуйте ще раз.",
-      "hideOriginal": "Hide original",
-      "showOriginal": "Show original"
+      "hideOriginal": "Сховати оригінал",
+      "showOriginal": "Показати оригінал"
     },
     "debug": {
       "title": "Дебаг",
@@ -546,7 +546,7 @@
       "soundTheme": {
         "label": "Звукова тема",
         "description": "Оберіть звукову тему для сповіщень про початок і зупинку запису",
-        "preview": "Preview sound theme (plays start then stop)"
+        "preview": "Прослухати звукову тему (відтворить старт і стоп)"
       },
       "wordCorrectionThreshold": {
         "title": "Поріг корекції слів",
@@ -659,8 +659,8 @@
     "yes": "Так",
     "no": "Ні",
     "noOptionsFound": "Опцій не знайдено",
-    "copyToClipboard": "Copy to clipboard",
-    "search": "Search..."
+    "copyToClipboard": "Скопіювати в буфер обміну",
+    "search": "Пошук..."
   },
   "accessibility": {
     "permissionsRequired": "Потрібні права доступу",

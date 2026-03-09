@@ -53,7 +53,7 @@
       },
       "parakeet-tdt-0.6b-v3": {
         "name": "Parakeet V3",
-        "description": "빠르고 정확함"
+        "description": "빠르고 정확함. 25개 유럽 언어 지원."
       },
       "moonshine-base": {
         "name": "Moonshine Base",
@@ -107,11 +107,11 @@
     "cloud": {
       "openai_stt": {
         "name": "OpenAI",
-        "description": "OpenAI's cloud speech-to-text API. Fast and accurate with support for 57+ languages."
+        "description": "OpenAI 클라우드 음성-텍스트 변환 API. 빠르고 정확하며 57개 이상의 언어를 지원합니다."
       },
       "soniox": {
         "name": "Soniox",
-        "description": "Soniox cloud speech-to-text. High accuracy with async transcription."
+        "description": "Soniox 클라우드 음성-텍스트 변환. 실시간 전사로 높은 정확도를 제공합니다."
       }
     }
   },
@@ -132,7 +132,7 @@
     "modelUnloaded": "모델 언로드됨",
     "noModelDownloadRequired": "모델 없음 - 다운로드 필요",
     "deleteModel": "{{modelName}} 삭제",
-    "downloadSpeed": "{{speed}} MB/s",
+    "downloadSpeed": "{{speed}} MB/초",
     "cancel": "취소",
     "cancelDownload": "다운로드 취소",
     "capabilities": {
@@ -143,7 +143,7 @@
       "translation": "영어로 번역 가능",
       "translate": "영어로 번역"
     },
-    "notAvailable": "Not Available"
+    "notAvailable": "사용 불가"
   },
   "settings": {
     "modelSettings": {
@@ -192,11 +192,11 @@
         "description": "누르고 있으면 녹음, 놓으면 정지"
       },
       "shortcuts": {
-        "title": "Shortcuts",
-        "strategyNone": "None",
-        "addNew": "Add Shortcut",
-        "remove": "Remove shortcut",
-        "postProcessNotReady": "Configure a post-processing provider first"
+        "title": "단축키",
+        "strategyNone": "없음",
+        "addNew": "단축키 추가",
+        "remove": "단축키 제거",
+        "postProcessNotReady": "먼저 후처리 제공자를 설정하세요"
       }
     },
     "sound": {
@@ -236,60 +236,60 @@
       },
       "noModelsMatch": "이 필터에 맞는 모델이 없습니다.",
       "tabs": {
-        "myModels": "My Models",
-        "library": "Library"
+        "myModels": "내 모델",
+        "library": "라이브러리"
       },
       "cloudProviders": {
-        "title": "Cloud Providers",
-        "badge": "Cloud",
-        "notConfigured": "Not configured",
-        "verify": "Verify",
-        "verifying": "Verifying...",
-        "verified": "Verified",
-        "verifyFailed": "Verification failed",
-        "verifyFirst": "Verify your API key first",
+        "title": "클라우드 제공자",
+        "badge": "클라우드",
+        "notConfigured": "미설정",
+        "verify": "검증",
+        "verifying": "검증 중...",
+        "verified": "검증됨",
+        "verifyFailed": "검증 실패",
+        "verifyFirst": "먼저 API Key를 검증하세요",
         "apiKey": {
           "title": "API Key",
           "placeholder": "sk-..."
         },
         "model": {
-          "title": "Model",
-          "placeholder": "Enter model name"
+          "title": "모델",
+          "placeholder": "모델 이름 입력"
         },
         "baseUrl": {
           "title": "Base URL"
         },
-        "getApiKey": "Get API key",
-        "realtimeTranscription": "Real-time transcription",
-        "realtimeDescription": "Uses a WebSocket connection instead of file upload for lower latency",
+        "getApiKey": "API Key 받기",
+        "realtimeTranscription": "실시간 전사",
+        "realtimeDescription": "낮은 지연 시간을 위해 파일 업로드 대신 WebSocket 연결을 사용",
         "options": {
-          "language": "Language",
-          "selectLanguage": "Auto detect",
-          "selectLanguageHint": "Leave empty to auto detect",
-          "selectLanguages": "Select languages...",
-          "selectTranslate": "Select languages...",
-          "prompt": "Prompt",
-          "promptDescription": "Optional text to guide the model's style or continue a previous segment. Not supported by gpt-4o-transcribe-diarize.",
-          "temperature": "Temperature",
-          "temperatureDescription": "Higher values produce more random results (0-1). Only supported by whisper-1.",
-          "languageHints": "Language Hints",
-          "languageHintsStrict": "Strict Language Hints",
-          "languageHintsStrictDescription": "Only transcribe in the specified languages",
-          "contextTerms": "Context Terms",
-          "contextTermsDescription": "Comma-separated terms to improve recognition accuracy",
-          "contextDescription": "Context Description",
-          "contextDescriptionDescription": "Freeform text providing general context about the audio content",
-          "enableSpeakerDiarization": "Speaker Diarization",
-          "enableSpeakerDiarizationDescription": "Identify and separate different speakers",
-          "enableLanguageIdentification": "Language Identification",
-          "enableLanguageIdentificationDescription": "Detect language for each segment"
+          "language": "언어",
+          "selectLanguage": "자동 감지",
+          "selectLanguageHint": "비워두면 자동으로 감지합니다",
+          "selectLanguages": "언어 선택...",
+          "selectTranslate": "언어 선택...",
+          "prompt": "프롬프트",
+          "promptDescription": "모델의 스타일을 안내하거나 이전 세그먼트를 계속하기 위한 선택적 텍스트. gpt-4o-transcribe-diarize에서는 지원되지 않습니다.",
+          "temperature": "온도",
+          "temperatureDescription": "높은 값은 더 무작위적인 결과를 생성합니다 (0-1). whisper-1에서만 지원됩니다.",
+          "languageHints": "언어 힌트",
+          "languageHintsStrict": "엄격한 언어 힌트",
+          "languageHintsStrictDescription": "지정된 언어로만 전사",
+          "contextTerms": "컨텍스트 용어",
+          "contextTermsDescription": "인식 정확도를 향상시키기 위한 쉼표로 구분된 용어",
+          "contextDescription": "컨텍스트 설명",
+          "contextDescriptionDescription": "오디오 콘텐츠에 대한 일반적인 컨텍스트를 제공하는 자유 형식 텍스트",
+          "enableSpeakerDiarization": "화자 분리",
+          "enableSpeakerDiarizationDescription": "서로 다른 화자를 식별하고 분리",
+          "enableLanguageIdentification": "언어 식별",
+          "enableLanguageIdentificationDescription": "각 세그먼트의 언어를 감지"
         }
       },
       "localModels": {
-        "title": "Local Models"
+        "title": "로컬 모델"
       },
       "myModels": {
-        "noModelsConfigured": "No models configured. Visit the Library to download models or set up cloud providers."
+        "noModelsConfigured": "설정된 모델이 없습니다. 라이브러리에서 모델을 다운로드하거나 클라우드 제공자를 설정하세요."
       }
     },
     "advanced": {
@@ -299,7 +299,7 @@
         "output": "출력",
         "transcription": "전사",
         "history": "히스토리",
-        "data": "Data",
+        "data": "데이터",
         "configuration": "구성"
       },
       "startHidden": {
@@ -334,7 +334,7 @@
           "none": "없음",
           "externalScript": "외부 스크립트"
         },
-        "externalScriptPlaceholder": "/path/to/your/script.sh"
+        "externalScriptPlaceholder": "/스크립트/경로.sh"
       },
       "typingTool": {
         "title": "타이핑 도구",
@@ -390,39 +390,39 @@
         "duplicate": "\"{{word}}\"이(가) 이미 존재합니다"
       },
       "exportData": {
-        "title": "Export Data",
-        "description": "Export your settings, history, and recordings to a file",
-        "button": "Export...",
-        "includeSettings": "Settings",
-        "includeHistory": "Transcription History",
-        "includeRecordings": "Audio Recordings",
-        "success": "Data exported successfully",
-        "error": "Failed to export data"
+        "title": "데이터 내보내기",
+        "description": "설정, 히스토리, 녹음을 파일로 내보내기",
+        "button": "내보내기...",
+        "includeSettings": "설정",
+        "includeHistory": "전사 히스토리",
+        "includeRecordings": "오디오 녹음",
+        "success": "데이터를 성공적으로 내보냈습니다",
+        "error": "데이터 내보내기에 실패했습니다"
       },
       "importData": {
-        "title": "Import Data",
-        "description": "Import settings and data from a previously exported file",
-        "button": "Import...",
-        "previewTitle": "Import Preview",
-        "exportDate": "Exported on {{date}}",
-        "appVersion": "App version: {{version}}",
-        "historyCount": "{{count}} history entries",
-        "recordingsCount": "{{count}} recordings",
-        "statsCount": "{{count}} speaking stats",
-        "importSettings": "Settings",
-        "importRecordings": "Recordings",
-        "warning": "Importing settings will overwrite your current configuration. The export file may contain API keys.",
-        "success": "Data imported successfully",
-        "error": "Failed to import data",
-        "invalidFile": "The selected file is not a valid Handless export"
+        "title": "데이터 가져오기",
+        "description": "이전에 내보낸 파일에서 설정 및 데이터 가져오기",
+        "button": "가져오기...",
+        "previewTitle": "가져오기 미리보기",
+        "exportDate": "{{date}}에 내보냄",
+        "appVersion": "앱 버전: {{version}}",
+        "historyCount": "{{count}}개의 히스토리 항목",
+        "recordingsCount": "{{count}}개의 녹음",
+        "statsCount": "{{count}}개의 발화 통계",
+        "importSettings": "설정",
+        "importRecordings": "녹음",
+        "warning": "설정을 가져오면 현재 구성이 덮어쓰기됩니다. 내보내기 파일에 API Key가 포함되어 있을 수 있습니다.",
+        "success": "데이터를 성공적으로 가져왔습니다",
+        "error": "데이터 가져오기에 실패했습니다",
+        "invalidFile": "선택한 파일은 유효한 Handless 내보내기 파일이 아닙니다"
       },
       "theme": {
-        "title": "Theme",
-        "description": "Choose the app color theme",
+        "title": "테마",
+        "description": "앱 색상 테마를 선택",
         "options": {
-          "dark": "Dark",
-          "light": "Light",
-          "system": "System"
+          "dark": "다크",
+          "light": "라이트",
+          "system": "시스템"
         }
       },
       "configFile": {
@@ -526,8 +526,8 @@
       "unsave": "저장에서 제거",
       "delete": "항목 삭제",
       "deleteError": "항목 삭제에 실패했습니다. 다시 시도해주세요.",
-      "hideOriginal": "Hide original",
-      "showOriginal": "Show original"
+      "hideOriginal": "원본 숨기기",
+      "showOriginal": "원본 보기"
     },
     "debug": {
       "title": "디버그",
@@ -546,7 +546,7 @@
       "soundTheme": {
         "label": "사운드 테마",
         "description": "녹음 시작 및 정지 피드백을 위한 사운드 테마를 선택하세요",
-        "preview": "Preview sound theme (plays start then stop)"
+        "preview": "사운드 테마 미리듣기 (시작음과 정지음 재생)"
       },
       "wordCorrectionThreshold": {
         "title": "단어 수정 임계값",
@@ -659,8 +659,8 @@
     "yes": "예",
     "no": "아니오",
     "noOptionsFound": "옵션을 찾을 수 없습니다",
-    "copyToClipboard": "Copy to clipboard",
-    "search": "Search..."
+    "copyToClipboard": "클립보드에 복사",
+    "search": "검색..."
   },
   "accessibility": {
     "permissionsRequired": "접근성 권한 필요",

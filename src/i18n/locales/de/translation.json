@@ -53,7 +53,7 @@
       },
       "parakeet-tdt-0.6b-v3": {
         "name": "Parakeet V3",
-        "description": "Schnell und genau"
+        "description": "Schnell und genau. Unterstützt 25 europäische Sprachen."
       },
       "moonshine-base": {
         "name": "Moonshine Base",
@@ -107,11 +107,11 @@
     "cloud": {
       "openai_stt": {
         "name": "OpenAI",
-        "description": "OpenAI's cloud speech-to-text API. Fast and accurate with support for 57+ languages."
+        "description": "OpenAIs Cloud-Sprache-zu-Text-API. Schnell und genau mit Unterstützung für über 57 Sprachen."
       },
       "soniox": {
         "name": "Soniox",
-        "description": "Soniox cloud speech-to-text. High accuracy with async transcription."
+        "description": "Soniox Cloud-Sprache-zu-Text. Hohe Genauigkeit mit Echtzeit-Transkription."
       }
     }
   },
@@ -143,7 +143,7 @@
     },
     "cancel": "Abbrechen",
     "cancelDownload": "Download abbrechen",
-    "notAvailable": "Not Available"
+    "notAvailable": "Nicht verfügbar"
   },
   "settings": {
     "modelSettings": {
@@ -168,60 +168,60 @@
       "yourModels": "Heruntergeladene Modelle",
       "availableModels": "Zum Download verfügbar",
       "tabs": {
-        "myModels": "My Models",
-        "library": "Library"
+        "myModels": "Meine Modelle",
+        "library": "Bibliothek"
       },
       "cloudProviders": {
-        "title": "Cloud Providers",
+        "title": "Cloud-Anbieter",
         "badge": "Cloud",
-        "notConfigured": "Not configured",
-        "verify": "Verify",
-        "verifying": "Verifying...",
-        "verified": "Verified",
-        "verifyFailed": "Verification failed",
-        "verifyFirst": "Verify your API key first",
+        "notConfigured": "Nicht konfiguriert",
+        "verify": "Verifizieren",
+        "verifying": "Verifiziere...",
+        "verified": "Verifiziert",
+        "verifyFailed": "Verifizierung fehlgeschlagen",
+        "verifyFirst": "Zuerst den API Key verifizieren",
         "apiKey": {
           "title": "API Key",
           "placeholder": "sk-..."
         },
         "model": {
-          "title": "Model",
-          "placeholder": "Enter model name"
+          "title": "Modell",
+          "placeholder": "Modellnamen eingeben"
         },
         "baseUrl": {
           "title": "Base URL"
         },
-        "getApiKey": "Get API key",
-        "realtimeTranscription": "Real-time transcription",
-        "realtimeDescription": "Uses a WebSocket connection instead of file upload for lower latency",
+        "getApiKey": "API Key erhalten",
+        "realtimeTranscription": "Echtzeit-Transkription",
+        "realtimeDescription": "Verwendet eine WebSocket-Verbindung statt Datei-Upload für geringere Latenz",
         "options": {
-          "language": "Language",
-          "selectLanguage": "Auto detect",
-          "selectLanguageHint": "Leave empty to auto detect",
-          "selectLanguages": "Select languages...",
-          "selectTranslate": "Select languages...",
+          "language": "Sprache",
+          "selectLanguage": "Automatisch erkennen",
+          "selectLanguageHint": "Leer lassen für automatische Erkennung",
+          "selectLanguages": "Sprachen auswählen...",
+          "selectTranslate": "Sprachen auswählen...",
           "prompt": "Prompt",
-          "promptDescription": "Optional text to guide the model's style or continue a previous segment. Not supported by gpt-4o-transcribe-diarize.",
-          "temperature": "Temperature",
-          "temperatureDescription": "Higher values produce more random results (0-1). Only supported by whisper-1.",
-          "languageHints": "Language Hints",
-          "languageHintsStrict": "Strict Language Hints",
-          "languageHintsStrictDescription": "Only transcribe in the specified languages",
-          "contextTerms": "Context Terms",
-          "contextTermsDescription": "Comma-separated terms to improve recognition accuracy",
-          "contextDescription": "Context Description",
-          "contextDescriptionDescription": "Freeform text providing general context about the audio content",
-          "enableSpeakerDiarization": "Speaker Diarization",
-          "enableSpeakerDiarizationDescription": "Identify and separate different speakers",
-          "enableLanguageIdentification": "Language Identification",
-          "enableLanguageIdentificationDescription": "Detect language for each segment"
+          "promptDescription": "Optionaler Text, um den Stil des Modells zu lenken oder ein vorheriges Segment fortzusetzen. Nicht unterstützt von gpt-4o-transcribe-diarize.",
+          "temperature": "Temperatur",
+          "temperatureDescription": "Höhere Werte erzeugen zufälligere Ergebnisse (0-1). Nur von whisper-1 unterstützt.",
+          "languageHints": "Sprachhinweise",
+          "languageHintsStrict": "Strikte Sprachhinweise",
+          "languageHintsStrictDescription": "Nur in den angegebenen Sprachen transkribieren",
+          "contextTerms": "Kontextbegriffe",
+          "contextTermsDescription": "Kommagetrennte Begriffe zur Verbesserung der Erkennungsgenauigkeit",
+          "contextDescription": "Kontextbeschreibung",
+          "contextDescriptionDescription": "Freitext mit allgemeinem Kontext zum Audioinhalt",
+          "enableSpeakerDiarization": "Sprechererkennung",
+          "enableSpeakerDiarizationDescription": "Verschiedene Sprecher identifizieren und trennen",
+          "enableLanguageIdentification": "Spracherkennung",
+          "enableLanguageIdentificationDescription": "Sprache für jedes Segment erkennen"
         }
       },
       "localModels": {
-        "title": "Local Models"
+        "title": "Lokale Modelle"
       },
       "myModels": {
-        "noModelsConfigured": "No models configured. Visit the Library to download models or set up cloud providers."
+        "noModelsConfigured": "Keine Modelle konfiguriert. Besuche die Bibliothek, um Modelle herunterzuladen oder Cloud-Anbieter einzurichten."
       }
     },
     "general": {
@@ -259,18 +259,18 @@
         "descriptionUnsupported": "Das Parakeet-Modell erkennt die Sprache automatisch. Keine manuelle Auswahl erforderlich.",
         "searchPlaceholder": "Sprachen suchen...",
         "noResults": "Keine Sprachen gefunden",
-        "auto": "Auto"
+        "auto": "Automatisch"
       },
       "pushToTalk": {
         "label": "Push-to-Talk",
         "description": "Gedrückt halten zum Aufnehmen, loslassen zum Stoppen"
       },
       "shortcuts": {
-        "title": "Shortcuts",
-        "strategyNone": "None",
-        "addNew": "Add Shortcut",
-        "remove": "Remove shortcut",
-        "postProcessNotReady": "Configure a post-processing provider first"
+        "title": "Tastenkürzel",
+        "strategyNone": "Keine",
+        "addNew": "Tastenkürzel hinzufügen",
+        "remove": "Tastenkürzel entfernen",
+        "postProcessNotReady": "Zuerst einen Nachbearbeitungsanbieter konfigurieren"
       }
     },
     "sound": {
@@ -299,7 +299,7 @@
         "output": "Ausgabe",
         "transcription": "Transkription",
         "history": "Verlauf",
-        "data": "Data",
+        "data": "Daten",
         "configuration": "Konfiguration"
       },
       "startHidden": {
@@ -390,38 +390,38 @@
         "duplicate": "\"{{word}}\" existiert bereits"
       },
       "exportData": {
-        "title": "Export Data",
-        "description": "Export your settings, history, and recordings to a file",
-        "button": "Export...",
-        "includeSettings": "Settings",
-        "includeHistory": "Transcription History",
-        "includeRecordings": "Audio Recordings",
-        "success": "Data exported successfully",
-        "error": "Failed to export data"
+        "title": "Daten exportieren",
+        "description": "Einstellungen, Verlauf und Aufnahmen in eine Datei exportieren",
+        "button": "Exportieren...",
+        "includeSettings": "Einstellungen",
+        "includeHistory": "Transkriptionsverlauf",
+        "includeRecordings": "Audioaufnahmen",
+        "success": "Daten erfolgreich exportiert",
+        "error": "Daten konnten nicht exportiert werden"
       },
       "importData": {
-        "title": "Import Data",
-        "description": "Import settings and data from a previously exported file",
-        "button": "Import...",
-        "previewTitle": "Import Preview",
-        "exportDate": "Exported on {{date}}",
-        "appVersion": "App version: {{version}}",
-        "historyCount": "{{count}} history entries",
-        "recordingsCount": "{{count}} recordings",
-        "statsCount": "{{count}} speaking stats",
-        "importSettings": "Settings",
-        "importRecordings": "Recordings",
-        "warning": "Importing settings will overwrite your current configuration. The export file may contain API keys.",
-        "success": "Data imported successfully",
-        "error": "Failed to import data",
-        "invalidFile": "The selected file is not a valid Handless export"
+        "title": "Daten importieren",
+        "description": "Einstellungen und Daten aus einer zuvor exportierten Datei importieren",
+        "button": "Importieren...",
+        "previewTitle": "Import-Vorschau",
+        "exportDate": "Exportiert am {{date}}",
+        "appVersion": "App-Version: {{version}}",
+        "historyCount": "{{count}} Verlaufseinträge",
+        "recordingsCount": "{{count}} Aufnahmen",
+        "statsCount": "{{count}} Sprechstatistiken",
+        "importSettings": "Einstellungen",
+        "importRecordings": "Aufnahmen",
+        "warning": "Das Importieren von Einstellungen überschreibt deine aktuelle Konfiguration. Die Exportdatei kann API Keys enthalten.",
+        "success": "Daten erfolgreich importiert",
+        "error": "Daten konnten nicht importiert werden",
+        "invalidFile": "Die ausgewählte Datei ist kein gültiger Handless-Export"
       },
       "theme": {
-        "title": "Theme",
-        "description": "Choose the app color theme",
+        "title": "Design",
+        "description": "Farbthema der App auswählen",
         "options": {
-          "dark": "Dark",
-          "light": "Light",
+          "dark": "Dunkel",
+          "light": "Hell",
           "system": "System"
         }
       },
@@ -526,8 +526,8 @@
       "unsave": "Aus Gespeicherten entfernen",
       "delete": "Eintrag löschen",
       "deleteError": "Eintrag konnte nicht gelöscht werden. Bitte versuche es erneut.",
-      "hideOriginal": "Hide original",
-      "showOriginal": "Show original"
+      "hideOriginal": "Original ausblenden",
+      "showOriginal": "Original anzeigen"
     },
     "debug": {
       "title": "Debug",
@@ -546,7 +546,7 @@
       "soundTheme": {
         "label": "Sound-Thema",
         "description": "Sound-Thema für Aufnahme-Start und -Stop-Feedback auswählen",
-        "preview": "Preview sound theme (plays start then stop)"
+        "preview": "Sound-Thema vorhören (spielt Start- und dann Stopp-Ton)"
       },
       "wordCorrectionThreshold": {
         "title": "Wortkorrektur-Schwelle",
@@ -659,8 +659,8 @@
     "yes": "Ja",
     "no": "Nein",
     "noOptionsFound": "Keine Optionen gefunden",
-    "copyToClipboard": "Copy to clipboard",
-    "search": "Search..."
+    "copyToClipboard": "In Zwischenablage kopieren",
+    "search": "Suchen..."
   },
   "accessibility": {
     "permissionsRequired": "Bedienungshilfen-Berechtigungen erforderlich",
