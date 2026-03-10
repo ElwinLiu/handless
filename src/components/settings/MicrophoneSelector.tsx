@@ -16,7 +16,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { DotsSixVertical, MicrophoneSlash, X } from "@phosphor-icons/react";
+import { ArrowsDownUp, MicrophoneSlash, X } from "@phosphor-icons/react";
 import { SettingContainer } from "../ui/SettingContainer";
 import { useSettings } from "../../hooks/useSettings";
 
@@ -65,7 +65,7 @@ const SortableItem: React.FC<SortableItemProps> = ({
         {...attributes}
         {...listeners}
       >
-        <DotsSixVertical className="w-3.5 h-3.5" />
+        <ArrowsDownUp className="w-3.5 h-3.5" />
       </button>
       <span className="truncate flex-1">{name}</span>
       {isActive && (
