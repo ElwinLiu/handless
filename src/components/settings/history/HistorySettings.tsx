@@ -258,8 +258,8 @@ export const HistorySettings: React.FC = () => {
       animate="animate"
     >
       <h1 className="sr-only">{t("sidebar.history")}</h1>
-      <motion.div variants={staggerItem}>{retentionSection}</motion.div>
-      <motion.div className="space-y-1.5" variants={staggerItem}>
+      <motion.div variants={staggerItem} style={{ willChange: "transform" }}>{retentionSection}</motion.div>
+      <motion.div className="space-y-1.5" variants={staggerItem} style={{ willChange: "transform" }}>
         <div className="px-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <h2 className="text-xs font-medium text-muted uppercase tracking-wide">

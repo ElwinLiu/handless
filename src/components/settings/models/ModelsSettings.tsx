@@ -20,7 +20,7 @@ export const ModelsSettings: React.FC = () => {
       initial="initial"
       animate="animate"
     >
-      <motion.div className="mb-4" variants={staggerItem}>
+      <motion.div className="mb-4" variants={staggerItem} style={{ willChange: "transform" }}>
         <h1 className="text-xl font-semibold mb-2">
           {t("settings.models.title")}
         </h1>
@@ -29,7 +29,7 @@ export const ModelsSettings: React.FC = () => {
         </p>
       </motion.div>
 
-      <motion.div variants={staggerItem}>
+      <motion.div variants={staggerItem} style={{ willChange: "transform" }}>
         <div role="tablist" className="flex gap-1 border-b border-muted/20 mb-4">
           <button
             type="button"

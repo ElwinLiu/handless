@@ -33,7 +33,7 @@ export const SettingsGroup: React.FC<SettingsGroupProps> = ({
       >
         <div className="divide-y divide-glass-border">
           {React.Children.map(children, (child, i) => (
-            <motion.div key={i} variants={staggerItem}>
+            <motion.div key={i} variants={staggerItem} style={{ willChange: "transform" }}>
               {child}
             </motion.div>
           ))}
