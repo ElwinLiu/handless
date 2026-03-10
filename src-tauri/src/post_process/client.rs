@@ -101,27 +101,15 @@ fn create_client(provider: &PostProcessProvider, api_key: &str) -> Result<reqwes
         .map_err(|e| format!("Failed to build HTTP client: {}", e))
 }
 
-/// Send a chat completion request to an OpenAI-compatible API
-/// Returns Ok(Some(content)) on success, Ok(None) if response has no content,
-/// or Err on actual errors (HTTP, parsing, etc.)
+/// Send a chat completion request to an OpenAI-compatible API.
+/// Always uses system + user message structure.
+/// When json_schema is provided, includes response_format for structured outputs.
 pub async fn send_chat_completion(
     provider: &PostProcessProvider,
     api_key: String,
     model: &str,
-    prompt: String,
-) -> Result<(Option<String>, Option<Usage>), String> {
-    send_chat_completion_with_schema(provider, api_key, model, prompt, None, None).await
-}
-
-/// Send a chat completion request with structured output support
-/// When json_schema is provided, uses structured outputs mode
-/// system_prompt is used as the system message when provided
-pub async fn send_chat_completion_with_schema(
-    provider: &PostProcessProvider,
-    api_key: String,
-    model: &str,
     user_content: String,
-    system_prompt: Option<String>,
+    system_prompt: String,
     json_schema: Option<Value>,
 ) -> Result<(Option<String>, Option<Usage>), String> {
     let base_url = provider.base_url.trim_end_matches('/');
@@ -131,22 +119,16 @@ pub async fn send_chat_completion_with_schema(
 
     let client = create_client(provider, &api_key)?;
 
-    // Build messages vector
-    let mut messages = Vec::new();
-
-    // Add system prompt if provided
-    if let Some(system) = system_prompt {
-        messages.push(ChatMessage {
+    let messages = vec![
+        ChatMessage {
             role: "system".to_string(),
-            content: system,
-        });
-    }
-
-    // Add user message
-    messages.push(ChatMessage {
-        role: "user".to_string(),
-        content: user_content,
-    });
+            content: system_prompt,
+        },
+        ChatMessage {
+            role: "user".to_string(),
+            content: user_content,
+        },
+    ];
 
     // Build response_format if schema is provided
     let response_format = json_schema.map(|schema| ResponseFormat {
