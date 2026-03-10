@@ -233,7 +233,6 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
     if (!expandedPrompt || isCreating) return;
     setDraftName(expandedPrompt.name);
     setDraftText(expandedPrompt.prompt);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expandedId]);
 
   const handleToggle = (promptId: string) => {
