@@ -269,9 +269,15 @@ pub fn create_recording_overlay(app_handle: &AppHandle) {
             }))
             .has_shadow(false)
             .transparent(true)
-            .no_activate(true)
             .corner_radius(0.0)
-            .with_window(|w| w.decorations(false).transparent(true))
+            // Build the backing window hidden so panel creation does not need
+            // to temporarily flip the app activation policy and flash the dock icon.
+            .with_window(|w| {
+                w.decorations(false)
+                    .transparent(true)
+                    .visible(false)
+                    .focused(false)
+            })
             .collection_behavior(
                 CollectionBehavior::new()
                     .can_join_all_spaces()

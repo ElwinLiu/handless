@@ -295,7 +295,8 @@ impl ModelManager {
             ModelInfo {
                 id: "moonshine-tiny-streaming-en".to_string(),
                 name: "Moonshine V2 Tiny".to_string(),
-                description: "onboarding.models.moonshine-tiny-streaming-en.description".to_string(),
+                description: "onboarding.models.moonshine-tiny-streaming-en.description"
+                    .to_string(),
                 filename: "moonshine-tiny-streaming-en".to_string(),
                 url: Some(
                     "https://blob.handy.computer/moonshine-tiny-streaming-en.tar.gz".to_string(),
@@ -320,7 +321,8 @@ impl ModelManager {
             ModelInfo {
                 id: "moonshine-small-streaming-en".to_string(),
                 name: "Moonshine V2 Small".to_string(),
-                description: "onboarding.models.moonshine-small-streaming-en.description".to_string(),
+                description: "onboarding.models.moonshine-small-streaming-en.description"
+                    .to_string(),
                 filename: "moonshine-small-streaming-en".to_string(),
                 url: Some(
                     "https://blob.handy.computer/moonshine-small-streaming-en.tar.gz".to_string(),
@@ -345,7 +347,8 @@ impl ModelManager {
             ModelInfo {
                 id: "moonshine-medium-streaming-en".to_string(),
                 name: "Moonshine V2 Medium".to_string(),
-                description: "onboarding.models.moonshine-medium-streaming-en.description".to_string(),
+                description: "onboarding.models.moonshine-medium-streaming-en.description"
+                    .to_string(),
                 filename: "moonshine-medium-streaming-en".to_string(),
                 url: Some(
                     "https://blob.handy.computer/moonshine-medium-streaming-en.tar.gz".to_string(),

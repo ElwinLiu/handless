@@ -11,22 +11,7 @@
   },
   "app": {
     "macOSPrivateApi": true,
-    "windows": [
-      {
-        "label": "main",
-        "title": "Handless",
-        "width": 900,
-        "height": 587,
-        "minWidth": 900,
-        "minHeight": 587,
-        "resizable": true,
-        "maximizable": false,
-        "visible": false,
-        "transparent": true,
-        "titleBarStyle": "Overlay",
-        "hiddenTitle": true
-      }
-    ],
+    "windows": [],
     "security": {
       "csp": null,
       "assetProtocol": {

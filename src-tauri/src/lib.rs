@@ -455,6 +455,20 @@ pub fn run(cli_args: CliArgs) {
         ))
         .manage(cli_args.clone())
         .setup(move |app| {
+            // Build the main window during setup so startup window creation follows
+            // the same lifecycle as Handy and does not flash the dock icon on macOS.
+            tauri::WebviewWindowBuilder::new(app, "main", tauri::WebviewUrl::App("/".into()))
+                .title("Handless")
+                .inner_size(900.0, 587.0)
+                .min_inner_size(900.0, 587.0)
+                .resizable(true)
+                .maximizable(false)
+                .visible(false)
+                .transparent(true)
+                .title_bar_style(tauri::TitleBarStyle::Overlay)
+                .hidden_title(true)
+                .build()?;
+
             let mut settings = get_settings(&app.handle());
 
             // CLI --debug flag overrides debug_mode and log level (runtime-only, not persisted)

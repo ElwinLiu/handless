@@ -94,7 +94,9 @@ pub async fn post_process_transcription(
 
     // Skip post-processing if the provider is not verified (except Apple Intelligence)
     if provider.id != "apple_intelligence"
-        && !settings.post_process_verified_providers.contains(&provider.id)
+        && !settings
+            .post_process_verified_providers
+            .contains(&provider.id)
     {
         debug!(
             "Post-processing skipped because provider '{}' is not verified",
