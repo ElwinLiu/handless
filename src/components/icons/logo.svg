@@ -1,11 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
-  <!-- Option 4: Minimal Bold — only 5 thick bars, ultra-clean -->
-  <!-- Bolder, more iconic. Works great at small sizes. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-13 -13 154 154" width="128" height="128">
   <rect x="4" y="4" width="120" height="120" rx="28" fill="#141414"/>
   <rect x="4" y="4" width="120" height="120" rx="28" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
   <g transform="translate(24, 64)">
-    <!-- bar width=10, gap=10, total=90 → start at (128-90)/2 = 19, adjusted to 24 -->
-    <!-- Using 5 bars: dot, short, tall, short, dot -->
     <rect x="0"  y="-5"  width="10" height="10" rx="5"  fill="#ff8c00" opacity="0.5"/>
     <rect x="20" y="-18" width="10" height="36" rx="4"  fill="#ff8c00" opacity="0.75"/>
     <rect x="40" y="-32" width="10" height="64" rx="4"  fill="#ff8c00" opacity="1"/>
