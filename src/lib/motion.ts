@@ -2,9 +2,9 @@ import type { Transition, Variants } from "motion/react";
 
 // ── Spring presets ──────────────────────────────────────────────────
 export const spring = {
-  gentle: { type: "spring", stiffness: 120, damping: 20 } as Transition,
-  snappy: { type: "spring", stiffness: 300, damping: 25 } as Transition,
-  stiff: { type: "spring", stiffness: 400, damping: 30 } as Transition,
+  gentle: { type: "spring", stiffness: 120, damping: 20, restDelta: 0.1, restSpeed: 0.5 } as Transition,
+  snappy: { type: "spring", stiffness: 300, damping: 25, restDelta: 0.1, restSpeed: 0.5 } as Transition,
+  stiff: { type: "spring", stiffness: 400, damping: 30, restDelta: 0.1, restSpeed: 0.5 } as Transition,
 };
 
 // ── Micro-interaction presets ───────────────────────────────────────

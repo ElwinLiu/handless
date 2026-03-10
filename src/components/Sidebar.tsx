@@ -132,6 +132,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 role="tab"
                 aria-selected={isActive}
                 className="relative flex gap-2.5 items-center py-1.5 px-2.5 w-full rounded-lg cursor-pointer bg-transparent border-none text-inherit text-left"
+                style={{ willChange: "transform" }}
                 onClick={() => onSectionChange(section.id)}
                 whileHover={{
                   backgroundColor: isActive
@@ -159,6 +160,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   size={20}
                   weight={isActive ? "bold" : "regular"}
                   className={`shrink-0 relative z-10 ${isActive ? "text-accent" : "text-muted"}`}
+
                 />
                 <p
                   className={`text-sm truncate relative z-10 ${isActive ? "font-bold" : "font-medium text-muted"}`}
