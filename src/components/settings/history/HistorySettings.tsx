@@ -61,11 +61,11 @@ export const HistorySettings: React.FC = () => {
   const { t } = useTranslation();
   const osType = useOsType();
   const shortcutDisplay = useTranscribeShortcut();
-  const [activeTab, setActiveTab] = useState<HistoryTab>("recordings");
+  const [activeTab, setActiveTab] = useState<HistoryTab>("stats");
   const tabs: TabItem[] = useMemo(
     () => [
-      { id: "recordings", label: t("settings.history.tabs.recordings") },
       { id: "stats", label: t("settings.history.tabs.stats") },
+      { id: "recordings", label: t("settings.history.tabs.recordings") },
     ],
     [t],
   );
@@ -299,6 +299,14 @@ export const HistorySettings: React.FC = () => {
       <motion.div variants={staggerItem} style={{ willChange: "transform" }}>
         <div
           role="tabpanel"
+          id="tabpanel-stats"
+          aria-labelledby="tab-stats"
+          className={activeTab !== "stats" ? "hidden" : undefined}
+        >
+          {activeTab === "stats" && <StatsSettings />}
+        </div>
+        <div
+          role="tabpanel"
           id="tabpanel-recordings"
           aria-labelledby="tab-recordings"
           className={activeTab !== "recordings" ? "hidden" : undefined}
@@ -325,14 +333,6 @@ export const HistorySettings: React.FC = () => {
               {recordingsContent}
             </div>
           </div>
-        </div>
-        <div
-          role="tabpanel"
-          id="tabpanel-stats"
-          aria-labelledby="tab-stats"
-          className={activeTab !== "stats" ? "hidden" : undefined}
-        >
-          {activeTab === "stats" && <StatsSettings />}
         </div>
       </motion.div>
     </motion.div>
