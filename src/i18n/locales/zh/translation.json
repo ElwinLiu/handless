@@ -12,12 +12,9 @@
     "general": "通用",
     "shortcuts": "快捷键",
     "models": "模型",
-    "advanced": "高级",
     "postProcessing": "后处理",
     "history": "历史记录",
-    "stats": "统计",
-    "debug": "调试",
-    "about": "关于"
+    "debug": "调试"
   },
   "onboarding": {
     "subtitle": "请选择一个转录模型以开始使用",
@@ -520,6 +517,10 @@
     },
     "history": {
       "title": "历史记录",
+      "tabs": {
+        "recordings": "录音",
+        "stats": "统计"
+      },
       "openFolder": "打开录音文件夹",
       "loading": "加载历史记录中...",
       "empty": "还没有转录记录。开始录制以建立您的历史记录！",
@@ -616,7 +617,6 @@
         "button": "在 GitHub 上查看"
       },
       "acknowledgments": {
-        "title": "致谢",
         "whisper": {
           "title": "Whisper.cpp",
           "description": "OpenAI Whisper 自动语音识别模型的高性能推理",

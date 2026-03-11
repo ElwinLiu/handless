@@ -6,11 +6,7 @@ import { commands } from "@/bindings";
 import type { ShortcutBinding } from "@/bindings";
 
 import { Alert } from "../../ui/Alert";
-import {
-  SettingContainer,
-  SettingsGroup,
-  Textarea,
-} from "@/components/ui";
+import { SettingContainer, SettingsGroup, Textarea } from "@/components/ui";
 import { Button } from "../../ui/Button";
 import { ResetButton } from "../../ui/ResetButton";
 import { Input } from "../../ui/Input";
@@ -237,7 +233,9 @@ const PromptFields: React.FC<PromptFieldsProps> = ({
           type="text"
           value={name}
           onChange={(e) => onNameChange(e.target.value)}
-          placeholder={t("settings.postProcessing.prompts.promptLabelPlaceholder")}
+          placeholder={t(
+            "settings.postProcessing.prompts.promptLabelPlaceholder",
+          )}
           disabled={disabled}
           className="rounded-b-none border-b-0 text-sm font-semibold"
           autoFocus={autoFocus}
@@ -245,7 +243,9 @@ const PromptFields: React.FC<PromptFieldsProps> = ({
         <Textarea
           value={text}
           onChange={(e) => onTextChange(e.target.value)}
-          placeholder={t("settings.postProcessing.prompts.promptInstructionsPlaceholder")}
+          placeholder={t(
+            "settings.postProcessing.prompts.promptInstructionsPlaceholder",
+          )}
           disabled={disabled}
           className="min-h-[200px] rounded-t-none"
         />
@@ -272,7 +272,10 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
   const [formError, setFormError] = useState<string | null>(null);
 
   const prompts = getSetting("post_process_prompts") || [];
-  const bindings = (getSetting("bindings") || {}) as Record<string, ShortcutBinding>;
+  const bindings = (getSetting("bindings") || {}) as Record<
+    string,
+    ShortcutBinding
+  >;
   const shortcutMap = usePromptShortcuts(bindings, osType);
 
   const expandedPrompt = prompts.find((p) => p.id === expandedId) || null;
@@ -416,12 +419,19 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-1.5 shrink-0">
                   {shortcuts.map((s) => (
-                    <Badge key={s.id} variant="outline" className="text-[10px] px-1.5 py-0 font-mono">
+                    <Badge
+                      key={s.id}
+                      variant="outline"
+                      className="text-[10px] px-1.5 py-0 font-mono"
+                    >
                       {s.shortcut}
                     </Badge>
                   ))}
                   {isBuiltIn && (
-                    <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+                    <Badge
+                      variant="secondary"
+                      className="text-[10px] px-1.5 py-0"
+                    >
                       {t("settings.postProcessing.prompts.builtIn")}
                     </Badge>
                   )}
@@ -464,9 +474,7 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
                               !isDirty
                             }
                           >
-                            {t(
-                              "settings.postProcessing.prompts.updatePrompt",
-                            )}
+                            {t("settings.postProcessing.prompts.updatePrompt")}
                           </Button>
                           <Button
                             onClick={() => handleDeletePrompt(prompt.id)}
@@ -474,9 +482,7 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
                             size="default"
                             disabled={isSubmitting || prompts.length <= 1}
                           >
-                            {t(
-                              "settings.postProcessing.prompts.deletePrompt",
-                            )}
+                            {t("settings.postProcessing.prompts.deletePrompt")}
                           </Button>
                         </div>
                         {formError && isExpanded && (
@@ -510,7 +516,9 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
                     onClick={handleCreatePrompt}
                     variant="default"
                     size="default"
-                    disabled={isSubmitting || !draftName.trim() || !draftText.trim()}
+                    disabled={
+                      isSubmitting || !draftName.trim() || !draftText.trim()
+                    }
                   >
                     {t("settings.postProcessing.prompts.createPrompt")}
                   </Button>

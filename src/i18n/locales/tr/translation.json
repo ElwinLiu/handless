@@ -12,12 +12,9 @@
     "general": "Genel",
     "shortcuts": "Kısayollar",
     "models": "Modeller",
-    "advanced": "Gelişmiş",
     "postProcessing": "Son İşlem",
     "history": "Geçmiş",
-    "stats": "İstatistikler",
-    "debug": "Hata Ayıklama",
-    "about": "Hakkında"
+    "debug": "Hata Ayıklama"
   },
   "onboarding": {
     "subtitle": "Başlamak için bir transkripsiyon modeli seçin",
@@ -520,6 +517,10 @@
     },
     "history": {
       "title": "Geçmiş",
+      "tabs": {
+        "recordings": "Kayıtlar",
+        "stats": "İstatistikler"
+      },
       "openFolder": "Kayıtlar Klasörünü Aç",
       "loading": "Geçmiş yükleniyor...",
       "empty": "Henüz transkripsiyon yok. Geçmişinizi oluşturmak için kayda başlayın!",
@@ -616,7 +617,6 @@
         "button": "GitHub'da Görüntüle"
       },
       "acknowledgments": {
-        "title": "Teşekkürler",
         "whisper": {
           "title": "Whisper.cpp",
           "description": "OpenAI'nin Whisper otomatik konuşma tanıma modelinin yüksek performanslı çıkarımı",

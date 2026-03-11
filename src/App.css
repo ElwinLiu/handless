@@ -59,12 +59,14 @@
   /* Glass tokens */
   --color-glass-bg: rgba(200, 170, 140, 0.06);
   --color-glass-border: rgba(200, 170, 140, 0.12);
-  --color-glass-border-hover: rgba(200, 170, 140, 0.20);
-  --color-glass-highlight: rgba(200, 170, 140, 0.10);
+  --color-glass-border-hover: rgba(200, 170, 140, 0.2);
+  --color-glass-highlight: rgba(200, 170, 140, 0.1);
 
   --shadow-glass: 0 1px 4px rgba(0, 0, 0, 0.16), 0 0 1px rgba(0, 0, 0, 0.1);
-  --shadow-glass-hover: 0 4px 16px rgba(0, 0, 0, 0.22), 0 0 1px rgba(0, 0, 0, 0.1);
-  --shadow-accent-glow: 0 0 8px rgba(239, 111, 47, 0.18), 0 0 2px rgba(239, 111, 47, 0.1);
+  --shadow-glass-hover:
+    0 4px 16px rgba(0, 0, 0, 0.22), 0 0 1px rgba(0, 0, 0, 0.1);
+  --shadow-accent-glow:
+    0 0 8px rgba(239, 111, 47, 0.18), 0 0 2px rgba(239, 111, 47, 0.1);
 
   --color-glass-bg-solid: #1c1916;
 
@@ -132,8 +134,10 @@ body {
     --color-glass-highlight: rgba(80, 50, 20, 0.08);
 
     --shadow-glass: 0 1px 4px rgba(0, 0, 0, 0.08), 0 0 1px rgba(0, 0, 0, 0.05);
-    --shadow-glass-hover: 0 4px 16px rgba(0, 0, 0, 0.12), 0 0 1px rgba(0, 0, 0, 0.06);
-    --shadow-accent-glow: 0 0 8px rgba(239, 111, 47, 0.14), 0 0 2px rgba(239, 111, 47, 0.08);
+    --shadow-glass-hover:
+      0 4px 16px rgba(0, 0, 0, 0.12), 0 0 1px rgba(0, 0, 0, 0.06);
+    --shadow-accent-glow:
+      0 0 8px rgba(239, 111, 47, 0.14), 0 0 2px rgba(239, 111, 47, 0.08);
   }
 }
 

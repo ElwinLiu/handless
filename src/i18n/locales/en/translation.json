@@ -12,12 +12,9 @@
     "general": "General",
     "shortcuts": "Shortcuts",
     "models": "Models",
-    "advanced": "Advanced",
     "postProcessing": "Polish",
     "history": "History",
-    "stats": "Stats",
-    "debug": "Debug",
-    "about": "About"
+    "debug": "Debug"
   },
   "onboarding": {
     "subtitle": "To get started, choose a transcription model",
@@ -520,6 +517,10 @@
     },
     "history": {
       "title": "History",
+      "tabs": {
+        "recordings": "Recordings",
+        "stats": "Stats"
+      },
       "openFolder": "Open Recordings Folder",
       "loading": "Loading history...",
       "empty": "No transcriptions yet. Start recording to build your history!",
@@ -616,7 +617,6 @@
         "button": "View on GitHub"
       },
       "acknowledgments": {
-        "title": "Acknowledgments",
         "whisper": {
           "title": "Whisper.cpp",
           "description": "High-performance inference of OpenAI's Whisper automatic speech recognition model",

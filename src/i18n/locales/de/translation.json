@@ -12,12 +12,9 @@
     "general": "Allgemein",
     "shortcuts": "Tastenkürzel",
     "models": "Modelle",
-    "advanced": "Erweitert",
     "postProcessing": "Nachbearbeitung",
     "history": "Verlauf",
-    "stats": "Statistiken",
-    "debug": "Debug",
-    "about": "Info"
+    "debug": "Debug"
   },
   "onboarding": {
     "subtitle": "Wähle ein Transkriptionsmodell, um loszulegen",
@@ -520,6 +517,10 @@
     },
     "history": {
       "title": "Verlauf",
+      "tabs": {
+        "recordings": "Aufnahmen",
+        "stats": "Statistiken"
+      },
       "openFolder": "Aufnahmeordner öffnen",
       "loading": "Verlauf wird geladen...",
       "empty": "Noch keine Transkriptionen. Starte eine Aufnahme, um deinen Verlauf aufzubauen!",
@@ -616,7 +617,6 @@
         "button": "Auf GitHub ansehen"
       },
       "acknowledgments": {
-        "title": "Danksagungen",
         "whisper": {
           "title": "Whisper.cpp",
           "description": "Hochleistungs-Inferenz des Whisper-Spracherkennungsmodells von OpenAI",

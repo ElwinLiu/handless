@@ -22,7 +22,6 @@ export function getTranslatedModelName(
   return translated !== "" ? translated : provider.name;
 }
 
-
 export function getLanguageDisplayText(
   supportedLanguages: string[],
   t: (key: string, options?: Record<string, unknown>) => string,

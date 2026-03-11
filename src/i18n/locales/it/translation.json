@@ -12,12 +12,9 @@
     "general": "Generale",
     "shortcuts": "Scorciatoie",
     "models": "Modelli",
-    "advanced": "Avanzate",
     "postProcessing": "Post-Elaborazione",
     "history": "Cronologia",
-    "stats": "Statistiche",
-    "debug": "Debug",
-    "about": "Informazioni"
+    "debug": "Debug"
   },
   "onboarding": {
     "subtitle": "Per cominciare, scegli un modello di riconoscimento vocale",
@@ -520,6 +517,10 @@
     },
     "history": {
       "title": "Cronologia",
+      "tabs": {
+        "recordings": "Registrazioni",
+        "stats": "Statistiche"
+      },
       "openFolder": "Apri la cartella delle registrazioni",
       "loading": "Caricamento cronologia...",
       "empty": "Non ci sono ancora trascrizioni. Comincia a registrare per costruire la tua cronologia!",
@@ -616,7 +617,6 @@
         "button": "Vedi su GitHub"
       },
       "acknowledgments": {
-        "title": "Ringraziamenti",
         "whisper": {
           "title": "Whisper.cpp",
           "description": "Inferenza ad alte prestazioni del modello di riconoscimento vocale automatico Whisper di OpenAI",

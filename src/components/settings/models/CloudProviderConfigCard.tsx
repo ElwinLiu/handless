@@ -19,7 +19,10 @@ import { SelectableCard } from "@/components/ui/SelectableCard";
 import type { CloudProviderOption, SttProviderInfo } from "@/bindings";
 import type { ModelCardStatus } from "@/components/onboarding/ModelCard";
 import { LANGUAGES } from "@/lib/constants/languages";
-import { getLanguageDisplayText, getTranslatedModelName } from "@/lib/utils/modelTranslation";
+import {
+  getLanguageDisplayText,
+  getTranslatedModelName,
+} from "@/lib/utils/modelTranslation";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { SimpleTooltip } from "@/components/ui/Tooltip";
 import { Checkbox } from "@/components/ui/Checkbox";

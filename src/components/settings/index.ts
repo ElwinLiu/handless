@@ -1,13 +1,10 @@
 // Settings section components
 export { GeneralSettings } from "./general/GeneralSettings";
 export { ShortcutsSettings } from "./shortcuts/ShortcutsSettings";
-export { AdvancedSettings } from "./advanced/AdvancedSettings";
 export { DebugSettings } from "./debug/DebugSettings";
 export { HistorySettings } from "./history/HistorySettings";
-export { AboutSettings } from "./about/AboutSettings";
 export { PostProcessingSettings } from "./post-processing/PostProcessingSettings";
 export { ModelsSettings } from "./models/ModelsSettings";
-export { StatsSettings } from "./stats/StatsSettings";
 
 // Individual setting components
 export { MicrophoneSelector } from "./MicrophoneSelector";

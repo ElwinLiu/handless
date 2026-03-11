@@ -12,12 +12,9 @@
     "general": "Ogólne",
     "shortcuts": "Skróty",
     "models": "Modele",
-    "advanced": "Zaawansowane",
     "postProcessing": "Postproces",
     "history": "Historia",
-    "stats": "Statystyki",
-    "debug": "Debugowanie",
-    "about": "O programie"
+    "debug": "Debugowanie"
   },
   "onboarding": {
     "subtitle": "Aby rozpocząć, wybierz model transkrypcji",
@@ -520,6 +517,10 @@
     },
     "history": {
       "title": "Historia",
+      "tabs": {
+        "recordings": "Nagrania",
+        "stats": "Statystyki"
+      },
       "openFolder": "Otwórz folder nagrań",
       "loading": "Wczytywanie historii...",
       "empty": "Brak transkrypcji. Rozpocznij nagrywanie, aby zbudować historię!",
@@ -616,7 +617,6 @@
         "button": "Zobacz na GitHub"
       },
       "acknowledgments": {
-        "title": "Podziękowania",
         "whisper": {
           "title": "Whisper.cpp",
           "description": "Wydajne wykonywanie modelu rozpoznawania mowy Whisper od OpenAI",

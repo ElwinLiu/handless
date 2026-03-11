@@ -12,12 +12,9 @@
     "general": "Obecné",
     "shortcuts": "Zkratky",
     "models": "Modely",
-    "advanced": "Pokročilé",
     "postProcessing": "Následné zpracování",
     "history": "Historie",
-    "stats": "Statistiky",
-    "debug": "Ladění",
-    "about": "O aplikaci"
+    "debug": "Ladění"
   },
   "onboarding": {
     "subtitle": "Pro začátek vyberte model pro přepis",
@@ -520,6 +517,10 @@
     },
     "history": {
       "title": "Historie",
+      "tabs": {
+        "recordings": "Nahrávky",
+        "stats": "Statistiky"
+      },
       "openFolder": "Otevřít složku nahrávek",
       "loading": "Načítám historii...",
       "empty": "Zatím žádné přepisy. Začněte nahrávat a vytvořte si historii!",
@@ -616,7 +617,6 @@
         "button": "Zobrazit na GitHubu"
       },
       "acknowledgments": {
-        "title": "Poděkování",
         "whisper": {
           "title": "Whisper.cpp",
           "description": "Vysoce výkonné inferenční zpracování modelu automatického rozpoznávání řeči Whisper od OpenAI",
