@@ -31,3 +31,5 @@ export {
 export { Switch } from "./Switch";
 export { Checkbox } from "./Checkbox";
 export { Label } from "./Label";
+export { TabBar } from "./TabBar";
+export type { TabItem } from "./TabBar";

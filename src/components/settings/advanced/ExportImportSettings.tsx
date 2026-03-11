@@ -134,10 +134,7 @@ export const ExportImportSettings: React.FC = () => {
               {t("settings.advanced.exportData.includeSettings")}
             </label>
             <label className="flex items-center gap-1.5 text-xs text-muted-foreground cursor-pointer">
-              <Checkbox
-                checked={includeHistory}
-                onChange={setIncludeHistory}
-              />
+              <Checkbox checked={includeHistory} onChange={setIncludeHistory} />
               {t("settings.advanced.exportData.includeHistory")}
             </label>
             <label className="flex items-center gap-1.5 text-xs text-muted-foreground cursor-pointer">

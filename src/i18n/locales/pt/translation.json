@@ -12,12 +12,9 @@
     "general": "Geral",
     "shortcuts": "Atalhos",
     "models": "Modelos",
-    "advanced": "Avançado",
     "postProcessing": "Pós-Processamento",
     "history": "Histórico",
-    "stats": "Estatísticas",
-    "debug": "Depuração",
-    "about": "Sobre"
+    "debug": "Depuração"
   },
   "onboarding": {
     "subtitle": "Para começar, escolha um modelo de transcrição",
@@ -520,6 +517,10 @@
     },
     "history": {
       "title": "Histórico",
+      "tabs": {
+        "recordings": "Gravações",
+        "stats": "Estatísticas"
+      },
       "openFolder": "Abrir Pasta de Gravações",
       "loading": "Carregando histórico...",
       "empty": "Nenhuma transcrição ainda. Comece a gravar para construir seu histórico!",
@@ -616,7 +617,6 @@
         "button": "Ver no GitHub"
       },
       "acknowledgments": {
-        "title": "Agradecimentos",
         "whisper": {
           "title": "Whisper.cpp",
           "description": "Inferência de alto desempenho do modelo de reconhecimento automático de fala Whisper da OpenAI",

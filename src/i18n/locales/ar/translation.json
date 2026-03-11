@@ -11,12 +11,9 @@
   "sidebar": {
     "general": "عام",
     "shortcuts": "اختصارات",
-    "advanced": "متقدم",
     "postProcessing": "معالجة لاحقة",
     "history": "السجل",
-    "stats": "إحصائيات",
     "debug": "تصحيح الأخطاء",
-    "about": "حول",
     "models": "النماذج"
   },
   "onboarding": {
@@ -442,6 +439,10 @@
     },
     "history": {
       "title": "السجل",
+      "tabs": {
+        "recordings": "التسجيلات",
+        "stats": "إحصائيات"
+      },
       "openFolder": "فتح مجلد التسجيلات",
       "loading": "...جاري تحميل السجل",
       "empty": "!لا يوجد تفريغ صوتي بعد. ابدأ التسجيل لبناء سجلك",
@@ -538,7 +539,6 @@
         "button": "عرض على GitHub"
       },
       "acknowledgments": {
-        "title": "شكر وتقدير",
         "whisper": {
           "title": "Whisper.cpp",
           "description": "استنتاج عالي الأداء لنموذج التعرف التلقائي على الكلام Whisper من OpenAI",

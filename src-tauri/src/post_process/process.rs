@@ -132,9 +132,7 @@ pub async fn post_process_transcription(
         #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
         {
             if !apple_intelligence::check_apple_intelligence_availability() {
-                debug!(
-                    "Apple Intelligence selected but not currently available on this device"
-                );
+                debug!("Apple Intelligence selected but not currently available on this device");
                 return None;
             }
 

@@ -8,20 +8,14 @@ import {
   Cube,
   PencilSimple,
   ClockCounterClockwise,
-  ChartLineUp,
   Bug,
-  Sliders,
-  Info,
 } from "@phosphor-icons/react";
 import { useSettings } from "../hooks/useSettings";
 import {
   GeneralSettings,
   ShortcutsSettings,
-  AdvancedSettings,
   HistorySettings,
-  StatsSettings,
   DebugSettings,
-  AboutSettings,
   PostProcessingSettings,
   ModelsSettings,
 } from "./settings";
@@ -74,29 +68,11 @@ export const SECTIONS_CONFIG = {
     component: HistorySettings,
     enabled: () => true,
   },
-  stats: {
-    labelKey: "sidebar.stats",
-    icon: ChartLineUp,
-    component: StatsSettings,
-    enabled: () => true,
-  },
   debug: {
     labelKey: "sidebar.debug",
     icon: Bug,
     component: DebugSettings,
     enabled: (settings) => settings?.debug_mode ?? false,
-  },
-  advanced: {
-    labelKey: "sidebar.advanced",
-    icon: Sliders,
-    component: AdvancedSettings,
-    enabled: () => true,
-  },
-  about: {
-    labelKey: "sidebar.about",
-    icon: Info,
-    component: AboutSettings,
-    enabled: () => true,
   },
 } as const satisfies Record<string, SectionConfig>;
 
@@ -117,7 +93,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
     .map(([id, config]) => ({ id: id as SidebarSection, ...config }));
 
   return (
-    <div className="flex flex-col h-full border-e border-glass-border glass-panel-heavy items-center px-2" style={{ width: "var(--sidebar-width)" }}>
+    <div
+      className="flex flex-col h-full border-e border-glass-border glass-panel-heavy items-center px-2"
+      style={{ width: "var(--sidebar-width)" }}
+    >
       <DragRegion />
       <LayoutGroup>
         <div role="tablist" className="flex flex-col w-full items-center gap-1">
@@ -160,7 +139,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   size={20}
                   weight={isActive ? "bold" : "regular"}
                   className={`shrink-0 relative z-10 ${isActive ? "text-accent" : "text-muted"}`}
-
                 />
                 <p
                   className={`text-sm truncate relative z-10 ${isActive ? "font-bold" : "font-medium text-muted"}`}

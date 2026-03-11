@@ -123,7 +123,10 @@ const ModelCard: React.FC<ModelCardProps> = ({
       clickable={isClickable && !expanded}
       disabled={disabled}
       compact={compact}
-      className={cn(className, expanded && status === "active" && "bg-accent/5")}
+      className={cn(
+        className,
+        expanded && status === "active" && "bg-accent/5",
+      )}
       onClick={handleClick}
     >
       {/* Header */}
@@ -260,20 +263,18 @@ const ModelCard: React.FC<ModelCardProps> = ({
         )}
         {provider.backend.type === "Local" &&
           provider.backend.accuracy_score > 0 && (
-            <SimpleTooltip
-              content={t("onboarding.modelCard.accuracy")}
-            >
+            <SimpleTooltip content={t("onboarding.modelCard.accuracy")}>
               <div className="flex items-center gap-1 text-xs text-accent/70 bg-accent/8 px-1.5 py-0.5 rounded">
                 <Crosshair className="w-3 h-3" />
-                <span>{Math.round(provider.backend.accuracy_score * 100)}%</span>
+                <span>
+                  {Math.round(provider.backend.accuracy_score * 100)}%
+                </span>
               </div>
             </SimpleTooltip>
           )}
         {provider.backend.type === "Local" &&
           provider.backend.speed_score > 0 && (
-            <SimpleTooltip
-              content={t("onboarding.modelCard.speed")}
-            >
+            <SimpleTooltip content={t("onboarding.modelCard.speed")}>
               <div className="flex items-center gap-1 text-xs text-emerald-400/70 bg-emerald-400/8 px-1.5 py-0.5 rounded">
                 <Lightning className="w-3 h-3" />
                 <span>{Math.round(provider.backend.speed_score * 100)}%</span>

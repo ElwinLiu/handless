@@ -12,12 +12,9 @@
     "general": "Chung",
     "shortcuts": "Phím tắt",
     "models": "Mô hình",
-    "advanced": "Nâng cao",
     "postProcessing": "Xử lý sau",
     "history": "Lịch sử",
-    "stats": "Thống kê",
-    "debug": "Gỡ lỗi",
-    "about": "Giới thiệu"
+    "debug": "Gỡ lỗi"
   },
   "onboarding": {
     "subtitle": "Để bắt đầu, hãy chọn một mô hình chuyển đổi giọng nói",
@@ -520,6 +517,10 @@
     },
     "history": {
       "title": "Lịch sử",
+      "tabs": {
+        "recordings": "Bản ghi",
+        "stats": "Thống kê"
+      },
       "openFolder": "Mở thư mục ghi âm",
       "loading": "Đang tải lịch sử...",
       "empty": "Chưa có bản ghi nào. Bắt đầu ghi âm để xây dựng lịch sử của bạn!",
@@ -616,7 +617,6 @@
         "button": "Xem trên GitHub"
       },
       "acknowledgments": {
-        "title": "Lời cảm ơn",
         "whisper": {
           "title": "Whisper.cpp",
           "description": "Suy luận hiệu suất cao của mô hình nhận dạng giọng nói tự động Whisper của OpenAI",

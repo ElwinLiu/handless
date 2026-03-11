@@ -12,12 +12,9 @@
     "general": "일반",
     "shortcuts": "단축키",
     "models": "모델",
-    "advanced": "고급",
     "postProcessing": "후처리",
     "history": "히스토리",
-    "stats": "통계",
-    "debug": "디버그",
-    "about": "정보"
+    "debug": "디버그"
   },
   "onboarding": {
     "subtitle": "시작하려면 음성 인식 모델을 선택하세요",
@@ -520,6 +517,10 @@
     },
     "history": {
       "title": "히스토리",
+      "tabs": {
+        "recordings": "녹음",
+        "stats": "통계"
+      },
       "openFolder": "녹음 폴더 열기",
       "loading": "히스토리 로딩 중...",
       "empty": "아직 변환된 내용이 없습니다. 녹음을 시작하여 히스토리를 만드세요!",
@@ -616,7 +617,6 @@
         "button": "GitHub에서 보기"
       },
       "acknowledgments": {
-        "title": "감사의 말",
         "whisper": {
           "title": "Whisper.cpp",
           "description": "OpenAI의 Whisper 자동 음성 인식 모델의 고성능 추론",

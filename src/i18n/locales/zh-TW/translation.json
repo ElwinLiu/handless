@@ -12,12 +12,9 @@
     "general": "一般",
     "shortcuts": "快捷鍵",
     "models": "模型",
-    "advanced": "進階",
     "postProcessing": "後處理",
     "history": "歷史紀錄",
-    "stats": "統計",
-    "debug": "偵錯",
-    "about": "關於"
+    "debug": "偵錯"
   },
   "onboarding": {
     "subtitle": "首先，請選擇一種模型",
@@ -520,6 +517,10 @@
     },
     "history": {
       "title": "歷史紀錄",
+      "tabs": {
+        "recordings": "錄音",
+        "stats": "統計"
+      },
       "openFolder": "開啟錄音資料夾",
       "loading": "載入歷史紀錄中...",
       "empty": "還沒有轉錄紀錄。開始錄製以建立您的歷史紀錄！",
@@ -616,7 +617,6 @@
         "button": "在 GitHub 上檢視"
       },
       "acknowledgments": {
-        "title": "致謝",
         "whisper": {
           "title": "Whisper.cpp",
           "description": "針對 OpenAI Whisper 自動語音識別模型的高效能推理引擎",

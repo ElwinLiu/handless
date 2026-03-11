@@ -1,4 +1,11 @@
-import React, { useState, useEffect, useCallback, useRef, memo, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  memo,
+  useMemo,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { motion } from "motion/react";
 import { toast } from "sonner";
@@ -20,9 +27,13 @@ import { readFile } from "@tauri-apps/plugin-fs";
 import { commands, type HistoryEntry } from "@/bindings";
 import { useOsType } from "@/hooks/useOsType";
 import { SimpleTooltip } from "../../ui/Tooltip";
+import { TabBar, type TabItem } from "../../ui/TabBar";
 import { RecordingRetentionPeriodSelector } from "../RecordingRetentionPeriod";
+import { StatsSettings } from "../stats/StatsSettings";
 
 const PAGE_SIZE = 50;
+
+type HistoryTab = "recordings" | "stats";
 
 interface OpenRecordingsButtonProps {
   onClick: () => void;
@@ -48,6 +59,14 @@ const OpenRecordingsButton: React.FC<OpenRecordingsButtonProps> = ({
 export const HistorySettings: React.FC = () => {
   const { t } = useTranslation();
   const osType = useOsType();
+  const [activeTab, setActiveTab] = useState<HistoryTab>("recordings");
+  const tabs: TabItem[] = useMemo(
+    () => [
+      { id: "recordings", label: t("settings.history.tabs.recordings") },
+      { id: "stats", label: t("settings.history.tabs.stats") },
+    ],
+    [t],
+  );
   const [historyEntries, setHistoryEntries] = useState<HistoryEntry[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -104,7 +123,11 @@ export const HistorySettings: React.FC = () => {
   // Infinite scroll via IntersectionObserver.
   // Use a ref for mutable state so the observer is created once and doesn't
   // churn on every page load or real-time event.
-  const scrollStateRef = useRef({ hasMore, loadingMore, lastId: null as number | null });
+  const scrollStateRef = useRef({
+    hasMore,
+    loadingMore,
+    lastId: null as number | null,
+  });
   scrollStateRef.current = {
     hasMore,
     loadingMore,
@@ -120,9 +143,7 @@ export const HistorySettings: React.FC = () => {
         const { hasMore, loadingMore, lastId } = scrollStateRef.current;
         if (entry.isIntersecting && hasMore && !loadingMore) {
           setLoadingMore(true);
-          loadPage(lastId, false).finally(() =>
-            setLoadingMore(false),
-          );
+          loadPage(lastId, false).finally(() => setLoadingMore(false));
         }
       },
       { rootMargin: "200px" },
@@ -176,17 +197,20 @@ export const HistorySettings: React.FC = () => {
     [osType],
   );
 
-  const deleteEntry = useCallback(async (id: number) => {
-    setHistoryEntries((prev) => prev.filter((e) => e.id !== id));
-    setTotalCount((prev) => prev - 1);
-    try {
-      await commands.deleteHistoryEntry(id);
-    } catch (error) {
-      console.error("Failed to delete entry:", error);
-      // Reload on error to restore correct state
-      loadPage(null, true);
-    }
-  }, [loadPage]);
+  const deleteEntry = useCallback(
+    async (id: number) => {
+      setHistoryEntries((prev) => prev.filter((e) => e.id !== id));
+      setTotalCount((prev) => prev - 1);
+      try {
+        await commands.deleteHistoryEntry(id);
+      } catch (error) {
+        console.error("Failed to delete entry:", error);
+        // Reload on error to restore correct state
+        loadPage(null, true);
+      }
+    },
+    [loadPage],
+  );
 
   const openRecordingsFolder = async () => {
     try {
@@ -203,20 +227,18 @@ export const HistorySettings: React.FC = () => {
     />
   );
 
-  let content;
+  let recordingsContent;
   if (loading) {
-    content = (
+    recordingsContent = (
       <div className="bg-background-translucent border border-glass-border rounded overflow-visible">
         <div className="px-3 py-8 flex flex-col items-center gap-3">
           <div className="w-5 h-5 border-2 border-muted/40 border-t-accent rounded-full animate-spin" />
-          <p className="text-sm text-muted">
-            {t("settings.history.loading")}
-          </p>
+          <p className="text-sm text-muted">{t("settings.history.loading")}</p>
         </div>
       </div>
     );
   } else if (historyEntries.length === 0) {
-    content = (
+    recordingsContent = (
       <div className="bg-background-translucent border border-glass-border rounded overflow-visible">
         <div className="px-3 py-10 flex flex-col items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-muted/10 flex items-center justify-center">
@@ -229,7 +251,7 @@ export const HistorySettings: React.FC = () => {
       </div>
     );
   } else {
-    content = (
+    recordingsContent = (
       <div className="flex flex-col gap-2">
         {historyEntries.map((entry) => (
           <HistoryEntryComponent
@@ -258,25 +280,53 @@ export const HistorySettings: React.FC = () => {
       animate="animate"
     >
       <h1 className="sr-only">{t("sidebar.history")}</h1>
-      <motion.div variants={staggerItem} style={{ willChange: "transform" }}>{retentionSection}</motion.div>
-      <motion.div className="space-y-1.5" variants={staggerItem} style={{ willChange: "transform" }}>
-        <div className="px-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <h2 className="text-xs font-medium text-muted uppercase tracking-wide">
-              {t("settings.history.title")}
-            </h2>
-            {!loading && totalCount > 0 && (
-              <span className="text-[10px] text-muted/60 tabular-nums">
-                {totalCount}
-              </span>
-            )}
+
+      <motion.div variants={staggerItem} style={{ willChange: "transform" }}>
+        <TabBar
+          tabs={tabs}
+          activeTab={activeTab}
+          onTabChange={(id) => setActiveTab(id as HistoryTab)}
+        />
+      </motion.div>
+
+      <motion.div variants={staggerItem} style={{ willChange: "transform" }}>
+        <div
+          role="tabpanel"
+          id="tabpanel-recordings"
+          aria-labelledby="tab-recordings"
+          className={activeTab !== "recordings" ? "hidden" : undefined}
+        >
+          <div className="space-y-8">
+            {retentionSection}
+            <div className="space-y-1.5">
+              <div className="px-3 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <h2 className="text-xs font-medium text-muted uppercase tracking-wide">
+                    {t("settings.history.title")}
+                  </h2>
+                  {!loading && totalCount > 0 && (
+                    <span className="text-[10px] text-muted/60 tabular-nums">
+                      {totalCount}
+                    </span>
+                  )}
+                </div>
+                <OpenRecordingsButton
+                  onClick={openRecordingsFolder}
+                  label={t("settings.history.openFolder")}
+                />
+              </div>
+              {recordingsContent}
+            </div>
           </div>
-          <OpenRecordingsButton
-            onClick={openRecordingsFolder}
-            label={t("settings.history.openFolder")}
-          />
         </div>
-        {content}
+        <div
+          role="tabpanel"
+          id="tabpanel-stats"
+          aria-labelledby="tab-stats"
+          className={activeTab !== "stats" ? "hidden" : undefined}
+        >
+          {activeTab === "stats" && <StatsSettings />}
+        </div>
       </motion.div>
     </motion.div>
   );
@@ -380,7 +430,11 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = memo(
             className="flex items-center gap-1 text-[11px] text-muted/60 hover:text-muted transition-colors cursor-pointer"
           >
             <Sparkle size={10} />
-            <span>{expanded ? t("settings.history.hideOriginal") : t("settings.history.showOriginal")}</span>
+            <span>
+              {expanded
+                ? t("settings.history.hideOriginal")
+                : t("settings.history.showOriginal")}
+            </span>
           </button>
         )}
         {hasPostProcessed && expanded && (
@@ -397,7 +451,9 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = memo(
         {/* Audio player + timestamp */}
         <div className="flex items-center gap-2">
           <AudioPlayer onLoadRequest={handleLoadAudio} className="flex-1" />
-          <span className="text-[11px] text-muted whitespace-nowrap shrink-0 tabular-nums">{formattedTime}</span>
+          <span className="text-[11px] text-muted whitespace-nowrap shrink-0 tabular-nums">
+            {formattedTime}
+          </span>
         </div>
       </div>
     );

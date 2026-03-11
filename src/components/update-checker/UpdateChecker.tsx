@@ -181,7 +181,8 @@ const UpdateChecker: React.FC<UpdateCheckerProps> = ({ className = "" }) => {
   const isUpdateDisabled = !updateChecksEnabled || isChecking || isInstalling;
   const isUpdateClickable =
     !isUpdateDisabled &&
-    ((updateAvailable && !isHomebrew) || (!isChecking && !showUpToDate && !updateAvailable));
+    ((updateAvailable && !isHomebrew) ||
+      (!isChecking && !showUpToDate && !updateAvailable));
 
   return (
     <div className={`flex items-center gap-3 ${className}`}>

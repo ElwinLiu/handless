@@ -31,9 +31,7 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
           className="sr-only"
           {...props}
         />
-        {checked && (
-          <Check weight="bold" className="h-3 w-3 text-white" />
-        )}
+        {checked && <Check weight="bold" className="h-3 w-3 text-white" />}
       </span>
     );
   },
