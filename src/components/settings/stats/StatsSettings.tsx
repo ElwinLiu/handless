@@ -310,7 +310,11 @@ export const StatsSettings: React.FC = () => {
           <button
             onClick={handleClear}
             onBlur={() => setConfirmClear(false)}
-            className="flex items-center gap-1.5 text-xs text-muted/70 hover:text-red-400 transition-colors"
+            className={`flex items-center gap-1.5 text-xs transition-colors ${
+              confirmClear
+                ? "text-red-400 animate-shake"
+                : "text-muted/70 hover:text-red-400"
+            }`}
           >
             <Trash size={12} />
             {confirmClear
