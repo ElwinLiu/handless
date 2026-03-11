@@ -483,13 +483,17 @@
         "promptLabelPlaceholder": "プロンプト名を入力",
         "promptInstructions": "プロンプトの指示",
         "promptInstructionsPlaceholder": "文字起こし後に実行する指示を記述します。文字起こしは自動的に追加されます。",
-        "promptTip": "ヒント：文字起こしテキストはプロンプトへの入力として自動的に提供されます。",
+        "promptTip": "Tip: Focus on formatting and correction style. The transcript is always appended automatically.",
         "updatePrompt": "プロンプトを更新",
         "deletePrompt": "プロンプトを削除",
         "createPrompt": "作成",
         "cancel": "キャンセル",
-        "createFirst": "上の「新しいプロンプトを作成」をクリックして、最初の後処理プロンプトを作成してください。",
-        "builtIn": "Built-in"
+        "createFirst": "Use the button below to create your first prompt.",
+        "builtIn": "Built-in",
+        "builtInReadOnly": "Built-in prompts are read-only.",
+        "errorCreate": "Failed to create prompt. Please try again.",
+        "errorUpdate": "Failed to update prompt. Please try again.",
+        "errorDelete": "Failed to delete prompt. Please try again."
       }
     },
     "stats": {

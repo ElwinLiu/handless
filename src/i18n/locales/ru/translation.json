@@ -483,13 +483,17 @@
         "promptLabelPlaceholder": "Введите имя подсказки",
         "promptInstructions": "Оперативная инструкция",
         "promptInstructionsPlaceholder": "Напишите инструкции для запуска после транскрипции. Стенограмма добавляется автоматически.",
-        "promptTip": "Совет: Расшифрованный текст автоматически предоставляется как входные данные для промпта.",
+        "promptTip": "Tip: Focus on formatting and correction style. The transcript is always appended automatically.",
         "updatePrompt": "Обновить запрос",
         "deletePrompt": "Удалить подсказку",
         "createPrompt": "Создать",
         "cancel": "Отмена",
-        "createFirst": "Нажмите «Создать новое приглашение» выше, чтобы создать первое приглашение для постобработки.",
-        "builtIn": "Built-in"
+        "createFirst": "Use the button below to create your first prompt.",
+        "builtIn": "Built-in",
+        "builtInReadOnly": "Built-in prompts are read-only.",
+        "errorCreate": "Failed to create prompt. Please try again.",
+        "errorUpdate": "Failed to update prompt. Please try again.",
+        "errorDelete": "Failed to delete prompt. Please try again."
       }
     },
     "stats": {
