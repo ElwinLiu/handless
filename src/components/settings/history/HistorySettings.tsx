@@ -390,7 +390,7 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = memo(
             </SimpleTooltip>
           )}
           {/* Other actions - visible on hover */}
-          <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
+          <div className="flex items-center gap-0.5 opacity-30 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
             <SimpleTooltip content={t("settings.history.copyToClipboard")}>
               <button
                 onClick={handleCopyText}
@@ -421,7 +421,7 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = memo(
         </div>
 
         {/* Text content */}
-        <p className="text-[13px] leading-snug text-text/90 select-text cursor-text">
+        <p className="text-[13px] leading-snug text-text/90 select-text cursor-text pr-28">
           {displayText}
         </p>
         {hasPostProcessed && (
