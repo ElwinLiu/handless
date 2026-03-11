@@ -22,13 +22,21 @@ import { pageVariants, pageTransition } from "@/lib/motion";
 
 type OnboardingStep = "accessibility" | "done";
 
+const LAST_SECTION_KEY = "lastSection";
+
 function App() {
   const { i18n } = useTranslation();
   const [onboardingStep, setOnboardingStep] = useState<OnboardingStep | null>(
     null,
   );
-  const [currentSection, setCurrentSection] =
-    useState<SidebarSection>("general");
+  const [currentSection, setCurrentSection] = useState<SidebarSection>(() => {
+    const saved = localStorage.getItem(LAST_SECTION_KEY);
+    return saved && saved in SECTIONS_CONFIG ? (saved as SidebarSection) : "general";
+  });
+  const handleSectionChange = useCallback((section: SidebarSection) => {
+    setCurrentSection(section);
+    localStorage.setItem(LAST_SECTION_KEY, section);
+  }, []);
   const ActiveComponent =
     SECTIONS_CONFIG[currentSection]?.component ||
     SECTIONS_CONFIG.general.component;
@@ -43,6 +51,13 @@ function App() {
   const resolvedTheme = useTheme();
   const direction = getLanguageDirection(i18n.language);
   const hasCompletedPostOnboardingInit = useRef(false);
+
+  // If the restored section is disabled (e.g. debug mode off), fall back
+  useEffect(() => {
+    if (settings && !SECTIONS_CONFIG[currentSection]?.enabled(settings)) {
+      handleSectionChange("general");
+    }
+  }, [settings, currentSection, handleSectionChange]);
 
   useEffect(() => {
     checkOnboardingStatus();
@@ -118,21 +133,21 @@ function App() {
       event.preventDefault();
 
       const delta = event.key === "[" ? -1 : 1;
-      setCurrentSection((prev) => {
-        const availableSections = (
-          Object.keys(SECTIONS_CONFIG) as SidebarSection[]
-        ).filter((id) => SECTIONS_CONFIG[id].enabled(settings));
-        const idx = availableSections.indexOf(prev);
-        if (idx === -1) return prev;
-        return availableSections[
+      const availableSections = (
+        Object.keys(SECTIONS_CONFIG) as SidebarSection[]
+      ).filter((id) => SECTIONS_CONFIG[id].enabled(settings));
+      const idx = availableSections.indexOf(currentSection);
+      if (idx === -1) return;
+      const next =
+        availableSections[
           (idx + delta + availableSections.length) % availableSections.length
         ];
-      });
+      handleSectionChange(next);
     };
 
     document.addEventListener("keydown", handleSectionNav);
     return () => document.removeEventListener("keydown", handleSectionNav);
-  }, [settings]);
+  }, [settings, currentSection, handleSectionChange]);
 
   const checkOnboardingStatus = async () => {
     if (platform() === "macos") {
@@ -210,7 +225,7 @@ function App() {
             <div className="flex-1 flex overflow-hidden">
               <Sidebar
                 activeSection={currentSection}
-                onSectionChange={setCurrentSection}
+                onSectionChange={handleSectionChange}
               />
               {/* Scrollable content area */}
               <div className="flex-1 flex flex-col overflow-hidden">
