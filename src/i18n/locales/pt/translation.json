@@ -483,13 +483,17 @@
         "promptLabelPlaceholder": "Digite o nome do prompt",
         "promptInstructions": "Instruções do Prompt",
         "promptInstructionsPlaceholder": "Escreva as instruções para executar após a transcrição. A transcrição é adicionada automaticamente.",
-        "promptTip": "Dica: O texto transcrito é fornecido automaticamente como entrada ao prompt.",
+        "promptTip": "Tip: Focus on formatting and correction style. The transcript is always appended automatically.",
         "updatePrompt": "Atualizar Prompt",
         "deletePrompt": "Excluir Prompt",
         "createPrompt": "Criar",
         "cancel": "Cancelar",
-        "createFirst": "Clique em 'Criar Novo Prompt' acima para criar seu primeiro prompt de pós-processamento.",
-        "builtIn": "Built-in"
+        "createFirst": "Use the button below to create your first prompt.",
+        "builtIn": "Built-in",
+        "builtInReadOnly": "Built-in prompts are read-only.",
+        "errorCreate": "Failed to create prompt. Please try again.",
+        "errorUpdate": "Failed to update prompt. Please try again.",
+        "errorDelete": "Failed to delete prompt. Please try again."
       }
     },
     "stats": {

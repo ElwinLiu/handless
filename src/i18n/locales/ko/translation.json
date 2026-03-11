@@ -483,13 +483,17 @@
         "promptLabelPlaceholder": "프롬프트 이름 입력",
         "promptInstructions": "프롬프트 지시사항",
         "promptInstructionsPlaceholder": "텍스트 변환 후 실행할 지시사항을 작성하세요. 텍스트 변환 결과는 자동으로 추가됩니다.",
-        "promptTip": "팁: 변환된 텍스트는 프롬프트에 입력으로 자동 제공됩니다.",
+        "promptTip": "Tip: Focus on formatting and correction style. The transcript is always appended automatically.",
         "updatePrompt": "프롬프트 업데이트",
         "deletePrompt": "프롬프트 삭제",
         "createPrompt": "만들기",
         "cancel": "취소",
-        "createFirst": "첫 번째 후처리 프롬프트를 만들려면 위의 '새 프롬프트 만들기'를 클릭하세요.",
-        "builtIn": "Built-in"
+        "createFirst": "Use the button below to create your first prompt.",
+        "builtIn": "Built-in",
+        "builtInReadOnly": "Built-in prompts are read-only.",
+        "errorCreate": "Failed to create prompt. Please try again.",
+        "errorUpdate": "Failed to update prompt. Please try again.",
+        "errorDelete": "Failed to delete prompt. Please try again."
       }
     },
     "stats": {

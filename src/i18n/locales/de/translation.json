@@ -483,13 +483,17 @@
         "promptLabelPlaceholder": "Prompt-Namen eingeben",
         "promptInstructions": "Prompt-Anweisungen",
         "promptInstructionsPlaceholder": "Schreibe die Anweisungen, die nach der Transkription ausgeführt werden sollen. Das Transkript wird automatisch angehängt.",
-        "promptTip": "Tipp: Der transkribierte Text wird dem Prompt automatisch als Eingabe bereitgestellt.",
+        "promptTip": "Tip: Focus on formatting and correction style. The transcript is always appended automatically.",
         "updatePrompt": "Prompt aktualisieren",
         "deletePrompt": "Prompt löschen",
         "createPrompt": "Erstellen",
         "cancel": "Abbrechen",
-        "createFirst": "Klicke oben auf 'Neuen Prompt erstellen', um deinen ersten Nachbearbeitungs-Prompt zu erstellen.",
-        "builtIn": "Built-in"
+        "createFirst": "Use the button below to create your first prompt.",
+        "builtIn": "Built-in",
+        "builtInReadOnly": "Built-in prompts are read-only.",
+        "errorCreate": "Failed to create prompt. Please try again.",
+        "errorUpdate": "Failed to update prompt. Please try again.",
+        "errorDelete": "Failed to delete prompt. Please try again."
       }
     },
     "stats": {

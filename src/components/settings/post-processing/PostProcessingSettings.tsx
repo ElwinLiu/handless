@@ -119,7 +119,7 @@ const PostProcessingSettingsApiComponent: React.FC = () => {
               <FieldAlignmentSpacer>
                 {state.isVerified && (
                   <Check
-                    className="w-4 h-4 text-green-500"
+                    className="w-4 h-4 text-green-400"
                     aria-label={t("settings.postProcessing.api.verified")}
                   />
                 )}
@@ -212,6 +212,53 @@ function usePromptShortcuts(
   }, [bindings, osType]);
 }
 
+interface PromptFieldsProps {
+  name: string;
+  text: string;
+  onNameChange: (value: string) => void;
+  onTextChange: (value: string) => void;
+  disabled?: boolean;
+  autoFocus?: boolean;
+}
+
+const PromptFields: React.FC<PromptFieldsProps> = ({
+  name,
+  text,
+  onNameChange,
+  onTextChange,
+  disabled,
+  autoFocus,
+}) => {
+  const { t } = useTranslation();
+  return (
+    <>
+      <div>
+        <Input
+          type="text"
+          value={name}
+          onChange={(e) => onNameChange(e.target.value)}
+          placeholder={t("settings.postProcessing.prompts.promptLabelPlaceholder")}
+          disabled={disabled}
+          className="rounded-b-none border-b-0 text-sm font-semibold"
+          autoFocus={autoFocus}
+        />
+        <Textarea
+          value={text}
+          onChange={(e) => onTextChange(e.target.value)}
+          placeholder={t("settings.postProcessing.prompts.promptInstructionsPlaceholder")}
+          disabled={disabled}
+          className="min-h-[200px] rounded-t-none"
+        />
+      </div>
+      <p className="text-xs text-muted/70">
+        {disabled
+          ? t("settings.postProcessing.prompts.builtInReadOnly")
+          : t("settings.postProcessing.prompts.promptTip")}
+      </p>
+    </>
+  );
+};
+
 const PostProcessingSettingsPromptsComponent: React.FC = () => {
   const { t } = useTranslation();
   const { getSetting, refreshSettings } = useSettings();
@@ -221,6 +268,8 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
   const isCreating = expandedId === CREATING_ID;
   const [draftName, setDraftName] = useState("");
   const [draftText, setDraftText] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
   const prompts = getSetting("post_process_prompts") || [];
   const bindings = (getSetting("bindings") || {}) as Record<string, ShortcutBinding>;
@@ -236,21 +285,26 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
   }, [expandedId]);
 
   const handleToggle = (promptId: string) => {
+    setFormError(null);
     setExpandedId((prev) => (prev === promptId ? null : promptId));
   };
 
   const handleStartCreate = () => {
+    setFormError(null);
     setExpandedId(CREATING_ID);
     setDraftName("");
     setDraftText("");
   };
 
   const handleCancelCreate = () => {
+    setFormError(null);
     setExpandedId(null);
   };
 
   const handleCreatePrompt = async () => {
     if (!draftName.trim() || !draftText.trim()) return;
+    setIsSubmitting(true);
+    setFormError(null);
     try {
       const result = await commands.addPostProcessPrompt(
         draftName.trim(),
@@ -262,11 +316,16 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
       }
     } catch (error) {
       console.error("Failed to create prompt:", error);
+      setFormError(t("settings.postProcessing.prompts.errorCreate"));
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleUpdatePrompt = async () => {
     if (!expandedId || !draftName.trim() || !draftText.trim()) return;
+    setIsSubmitting(true);
+    setFormError(null);
     try {
       await commands.updatePostProcessPrompt(
         expandedId,
@@ -276,45 +335,27 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
       await refreshSettings();
     } catch (error) {
       console.error("Failed to update prompt:", error);
+      setFormError(t("settings.postProcessing.prompts.errorUpdate"));
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleDeletePrompt = async (promptId: string) => {
     if (!promptId) return;
+    setIsSubmitting(true);
+    setFormError(null);
     try {
       await commands.deletePostProcessPrompt(promptId);
       await refreshSettings();
       if (expandedId === promptId) setExpandedId(null);
     } catch (error) {
       console.error("Failed to delete prompt:", error);
+      setFormError(t("settings.postProcessing.prompts.errorDelete"));
+    } finally {
+      setIsSubmitting(false);
     }
   };
-
-  const promptFields = (options?: { disabled?: boolean; autoFocus?: boolean }) => (
-    <>
-      <div>
-        <Input
-          type="text"
-          value={draftName}
-          onChange={(e) => setDraftName(e.target.value)}
-          placeholder={t("settings.postProcessing.prompts.promptLabelPlaceholder")}
-          disabled={options?.disabled}
-          className="rounded-b-none border-b-0 text-sm font-semibold"
-          autoFocus={options?.autoFocus}
-        />
-        <Textarea
-          value={draftText}
-          onChange={(e) => setDraftText(e.target.value)}
-          placeholder={t("settings.postProcessing.prompts.promptInstructionsPlaceholder")}
-          disabled={options?.disabled}
-          className="min-h-[200px] rounded-t-none"
-        />
-      </div>
-      <p className="text-xs text-muted/70">
-        {t("settings.postProcessing.prompts.promptTip")}
-      </p>
-    </>
-  );
 
   return (
     <div className="px-3 py-1.5">
@@ -341,9 +382,19 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
               {/* Header row — always visible */}
               <div
                 className={`flex items-center gap-2 ${isExpanded ? "cursor-pointer" : ""}`}
+                role={isExpanded ? "button" : undefined}
+                tabIndex={isExpanded ? 0 : undefined}
+                aria-expanded={isExpanded}
                 onClick={() => {
                   if (!isExpanded) return;
                   handleToggle(prompt.id);
+                }}
+                onKeyDown={(e) => {
+                  if (!isExpanded) return;
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleToggle(prompt.id);
+                  }
                 }}
               >
                 <motion.div
@@ -364,16 +415,16 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
                   )}
                 </div>
                 <div className="flex items-center gap-1.5 shrink-0">
-                  {isBuiltIn && (
-                    <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
-                      {t("settings.postProcessing.prompts.builtIn")}
-                    </Badge>
-                  )}
                   {shortcuts.map((s) => (
                     <Badge key={s.id} variant="outline" className="text-[10px] px-1.5 py-0 font-mono">
                       {s.shortcut}
                     </Badge>
                   ))}
+                  {isBuiltIn && (
+                    <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+                      {t("settings.postProcessing.prompts.builtIn")}
+                    </Badge>
+                  )}
                 </div>
               </div>
 
@@ -391,34 +442,48 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
               >
                 <div className="overflow-hidden min-h-0">
                   <div className="space-y-3 pt-2">
-                    {promptFields({ disabled: isBuiltIn })}
+                    <PromptFields
+                      name={draftName}
+                      text={draftText}
+                      onNameChange={setDraftName}
+                      onTextChange={setDraftText}
+                      disabled={isBuiltIn}
+                    />
 
                     {!isBuiltIn && (
-                      <div className="flex gap-2 pt-1">
-                        <Button
-                          onClick={handleUpdatePrompt}
-                          variant="default"
-                          size="default"
-                          disabled={
-                            !draftName.trim() ||
-                            !draftText.trim() ||
-                            !isDirty
-                          }
-                        >
-                          {t(
-                            "settings.postProcessing.prompts.updatePrompt",
-                          )}
-                        </Button>
-                        <Button
-                          onClick={() => handleDeletePrompt(prompt.id)}
-                          variant="secondary"
-                          size="default"
-                          disabled={prompts.length <= 1}
-                        >
-                          {t(
-                            "settings.postProcessing.prompts.deletePrompt",
-                          )}
-                        </Button>
+                      <div className="space-y-2">
+                        <div className="flex gap-2 pt-1">
+                          <Button
+                            onClick={handleUpdatePrompt}
+                            variant="default"
+                            size="default"
+                            disabled={
+                              isSubmitting ||
+                              !draftName.trim() ||
+                              !draftText.trim() ||
+                              !isDirty
+                            }
+                          >
+                            {t(
+                              "settings.postProcessing.prompts.updatePrompt",
+                            )}
+                          </Button>
+                          <Button
+                            onClick={() => handleDeletePrompt(prompt.id)}
+                            variant="danger-ghost"
+                            size="default"
+                            disabled={isSubmitting || prompts.length <= 1}
+                          >
+                            {t(
+                              "settings.postProcessing.prompts.deletePrompt",
+                            )}
+                          </Button>
+                        </div>
+                        {formError && isExpanded && (
+                          <Alert variant="destructive" contained>
+                            {formError}
+                          </Alert>
+                        )}
                       </div>
                     )}
                   </div>
@@ -432,23 +497,36 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
         {isCreating && (
           <SelectableCard active compact>
             <div className="space-y-3">
-              {promptFields({ autoFocus: true })}
-              <div className="flex gap-2 pt-1">
-                <Button
-                  onClick={handleCreatePrompt}
-                  variant="default"
-                  size="default"
-                  disabled={!draftName.trim() || !draftText.trim()}
-                >
-                  {t("settings.postProcessing.prompts.createPrompt")}
-                </Button>
-                <Button
-                  onClick={handleCancelCreate}
-                  variant="secondary"
-                  size="default"
-                >
-                  {t("settings.postProcessing.prompts.cancel")}
-                </Button>
+              <PromptFields
+                name={draftName}
+                text={draftText}
+                onNameChange={setDraftName}
+                onTextChange={setDraftText}
+                autoFocus
+              />
+              <div className="space-y-2">
+                <div className="flex gap-2 pt-1">
+                  <Button
+                    onClick={handleCreatePrompt}
+                    variant="default"
+                    size="default"
+                    disabled={isSubmitting || !draftName.trim() || !draftText.trim()}
+                  >
+                    {t("settings.postProcessing.prompts.createPrompt")}
+                  </Button>
+                  <Button
+                    onClick={handleCancelCreate}
+                    variant="secondary"
+                    size="default"
+                  >
+                    {t("settings.postProcessing.prompts.cancel")}
+                  </Button>
+                </div>
+                {formError && (
+                  <Alert variant="destructive" contained>
+                    {formError}
+                  </Alert>
+                )}
               </div>
             </div>
           </SelectableCard>

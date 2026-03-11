@@ -483,13 +483,17 @@
         "promptLabelPlaceholder": "Zadejte název promptu",
         "promptInstructions": "Instrukce promptu",
         "promptInstructionsPlaceholder": "Napište instrukce, které se mají spustit po přepisu. Přepis je automaticky připojen.",
-        "promptTip": "Tip: Přepsaný text je automaticky poskytnut jako vstup promptu.",
+        "promptTip": "Tip: Focus on formatting and correction style. The transcript is always appended automatically.",
         "updatePrompt": "Aktualizovat prompt",
         "deletePrompt": "Smazat prompt",
         "createPrompt": "Vytvořit",
         "cancel": "Zrušit",
-        "createFirst": "Klikněte nahoře na 'Vytvořit nový prompt' a vytvořte svůj první prompt pro následné zpracování.",
-        "builtIn": "Built-in"
+        "createFirst": "Use the button below to create your first prompt.",
+        "builtIn": "Built-in",
+        "builtInReadOnly": "Built-in prompts are read-only.",
+        "errorCreate": "Failed to create prompt. Please try again.",
+        "errorUpdate": "Failed to update prompt. Please try again.",
+        "errorDelete": "Failed to delete prompt. Please try again."
       }
     },
     "stats": {
