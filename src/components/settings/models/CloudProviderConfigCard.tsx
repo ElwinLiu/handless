@@ -392,7 +392,7 @@ export const CloudProviderConfigCard: React.FC<
                   {t("settings.models.cloudProviders.realtimeTranscription")}
                 </span>
               </label>
-              <p className="text-[11px] text-text/50 mt-0.5 ml-6">
+              <p className="text-xs text-text/40 mt-0.5 ml-6">
                 {t("settings.models.cloudProviders.realtimeDescription")}
               </p>
             </div>

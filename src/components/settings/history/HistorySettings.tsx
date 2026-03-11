@@ -26,6 +26,7 @@ import { listen } from "@tauri-apps/api/event";
 import { readFile } from "@tauri-apps/plugin-fs";
 import { commands, type HistoryEntry } from "@/bindings";
 import { useOsType } from "@/hooks/useOsType";
+import { useTranscribeShortcut } from "@/hooks/useTranscribeShortcut";
 import { SimpleTooltip } from "../../ui/Tooltip";
 import { TabBar, type TabItem } from "../../ui/TabBar";
 import { RecordingRetentionPeriodSelector } from "../RecordingRetentionPeriod";
@@ -59,6 +60,7 @@ const OpenRecordingsButton: React.FC<OpenRecordingsButtonProps> = ({
 export const HistorySettings: React.FC = () => {
   const { t } = useTranslation();
   const osType = useOsType();
+  const shortcutDisplay = useTranscribeShortcut();
   const [activeTab, setActiveTab] = useState<HistoryTab>("recordings");
   const tabs: TabItem[] = useMemo(
     () => [
@@ -244,9 +246,14 @@ export const HistorySettings: React.FC = () => {
           <div className="w-10 h-10 rounded-full bg-muted/10 flex items-center justify-center">
             <Microphone className="w-5 h-5 text-muted/60" />
           </div>
-          <p className="text-sm text-muted text-center">
-            {t("settings.history.empty")}
-          </p>
+          <div className="flex flex-col items-center gap-1">
+            <p className="text-sm text-muted text-center">
+              {t("settings.history.empty", { shortcut: shortcutDisplay })}
+            </p>
+            <p className="text-xs text-muted/60 text-center">
+              {t("settings.history.emptyHint")}
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -305,7 +312,7 @@ export const HistorySettings: React.FC = () => {
                     {t("settings.history.title")}
                   </h2>
                   {!loading && totalCount > 0 && (
-                    <span className="text-[10px] text-muted/60 tabular-nums">
+                    <span className="text-xs text-muted/50 tabular-nums">
                       {totalCount}
                     </span>
                   )}
@@ -427,7 +434,7 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = memo(
         {hasPostProcessed && (
           <button
             onClick={() => setExpanded(!expanded)}
-            className="flex items-center gap-1 text-[11px] text-muted/60 hover:text-muted transition-colors cursor-pointer"
+            className="flex items-center gap-1 text-xs text-muted/60 hover:text-muted transition-colors cursor-pointer"
           >
             <Sparkle size={10} />
             <span>
@@ -451,7 +458,7 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = memo(
         {/* Audio player + timestamp */}
         <div className="flex items-center gap-2">
           <AudioPlayer onLoadRequest={handleLoadAudio} className="flex-1" />
-          <span className="text-[11px] text-muted whitespace-nowrap shrink-0 tabular-nums">
+          <span className="text-xs text-muted/80 whitespace-nowrap shrink-0 tabular-nums">
             {formattedTime}
           </span>
         </div>

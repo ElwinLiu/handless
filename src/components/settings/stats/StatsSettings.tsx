@@ -23,6 +23,7 @@ import {
   type StatsDateRange,
 } from "@/bindings";
 import { useSettingsStore } from "@/stores/settingsStore";
+import { useTranscribeShortcut } from "@/hooks/useTranscribeShortcut";
 
 function formatDuration(ms: number): string {
   const totalSeconds = Math.floor(ms / 1000);
@@ -63,12 +64,12 @@ function StatCard({
     <div className="bg-background-translucent border border-glass-border rounded px-3 py-2.5">
       <div className="flex items-center gap-1.5 mb-1">
         <IconComponent size={12} className="text-muted" />
-        <span className="text-[10px] text-muted uppercase tracking-wide">
+        <span className="text-[11px] text-muted uppercase tracking-wide">
           {label}
         </span>
       </div>
       <p className="text-lg font-semibold tabular-nums">{value}</p>
-      <p className="text-[10px] text-muted/70">{subLabel}</p>
+      <p className="text-xs text-muted/60">{subLabel}</p>
     </div>
   );
 }
@@ -86,6 +87,7 @@ const ACCENT_COLOR = "var(--color-accent)";
 
 export const StatsSettings: React.FC = () => {
   const { t, i18n } = useTranslation();
+  const shortcutDisplay = useTranscribeShortcut();
   const { getSetting, updateSetting } = useSettingsStore();
   const [stats, setStats] = useState<DailySpeakingStats[]>([]);
   const [loading, setLoading] = useState(true);
@@ -215,9 +217,14 @@ export const StatsSettings: React.FC = () => {
           <div className="w-10 h-10 rounded-full bg-muted/10 flex items-center justify-center">
             <Speedometer className="w-5 h-5 text-muted" />
           </div>
-          <p className="text-sm text-muted text-center">
-            {t("settings.stats.noData")}
-          </p>
+          <div className="flex flex-col items-center gap-1">
+            <p className="text-sm text-muted text-center">
+              {t("settings.stats.noData", { shortcut: shortcutDisplay })}
+            </p>
+            <p className="text-xs text-muted/60 text-center">
+              {t("settings.stats.noDataHint")}
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -255,7 +262,7 @@ export const StatsSettings: React.FC = () => {
         {/* Chart */}
         <div className="space-y-1.5">
           <div className="px-3">
-            <h3 className="text-[11px] font-medium text-muted uppercase tracking-wide">
+            <h3 className="text-xs font-medium text-muted uppercase tracking-wide">
               {t("settings.stats.wpmOverTime")}
             </h3>
           </div>
@@ -264,12 +271,12 @@ export const StatsSettings: React.FC = () => {
               <LineChart data={chartData}>
                 <XAxis
                   dataKey="date"
-                  tick={{ fontSize: 10, fill: "var(--color-muted)" }}
+                  tick={{ fontSize: 11, fill: "var(--color-muted)" }}
                   axisLine={false}
                   tickLine={false}
                 />
                 <YAxis
-                  tick={{ fontSize: 10, fill: "var(--color-muted)" }}
+                  tick={{ fontSize: 11, fill: "var(--color-muted)" }}
                   axisLine={false}
                   tickLine={false}
                   width={30}
@@ -303,7 +310,7 @@ export const StatsSettings: React.FC = () => {
           <button
             onClick={handleClear}
             onBlur={() => setConfirmClear(false)}
-            className="flex items-center gap-1.5 text-[11px] text-muted/70 hover:text-red-400 transition-colors"
+            className="flex items-center gap-1.5 text-xs text-muted/70 hover:text-red-400 transition-colors"
           >
             <Trash size={12} />
             {confirmClear
@@ -330,7 +337,7 @@ export const StatsSettings: React.FC = () => {
           <button
             key={key}
             onClick={() => setRange(key)}
-            className={`px-2.5 py-1 rounded-full text-[11px] font-medium transition-colors ${
+            className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
               range === key
                 ? "bg-accent text-white"
                 : "bg-background-translucent border border-glass-border text-muted hover:text-text hover:border-muted/40"
@@ -351,17 +358,17 @@ export const StatsSettings: React.FC = () => {
       {/* Custom date inputs */}
       {range === "custom" && (
         <div className="px-3 flex items-center gap-3">
-          <label className="flex items-center gap-1.5 text-[11px] text-muted">
+          <label className="flex items-center gap-1.5 text-xs text-muted">
             {t("settings.stats.range.from")}
             <input
               type="date"
               value={customFrom}
               max={customTo || todayDateStr}
               onChange={(e) => setCustomFrom(e.target.value)}
-              className="bg-background-translucent border border-glass-border rounded px-2 py-1 text-[11px] text-text focus:outline-none focus:border-accent/50"
+              className="bg-background-translucent border border-glass-border rounded px-2 py-1 text-xs text-text focus:outline-none focus:border-accent/50"
             />
           </label>
-          <label className="flex items-center gap-1.5 text-[11px] text-muted">
+          <label className="flex items-center gap-1.5 text-xs text-muted">
             {t("settings.stats.range.to")}
             <input
               type="date"
@@ -369,7 +376,7 @@ export const StatsSettings: React.FC = () => {
               min={customFrom}
               max={todayDateStr}
               onChange={(e) => setCustomTo(e.target.value)}
-              className="bg-background-translucent border border-glass-border rounded px-2 py-1 text-[11px] text-text focus:outline-none focus:border-accent/50"
+              className="bg-background-translucent border border-glass-border rounded px-2 py-1 text-xs text-text focus:outline-none focus:border-accent/50"
             />
           </label>
         </div>

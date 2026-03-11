@@ -422,7 +422,7 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
                     <Badge
                       key={s.id}
                       variant="outline"
-                      className="text-[10px] px-1.5 py-0 font-mono"
+                      className="text-[11px] px-1.5 py-0 font-mono"
                     >
                       {s.shortcut}
                     </Badge>
@@ -430,7 +430,7 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
                   {isBuiltIn && (
                     <Badge
                       variant="secondary"
-                      className="text-[10px] px-1.5 py-0"
+                      className="text-[11px] px-1.5 py-0"
                     >
                       {t("settings.postProcessing.prompts.builtIn")}
                     </Badge>
@@ -545,6 +545,9 @@ const PostProcessingSettingsPromptsComponent: React.FC = () => {
           <div className="p-3 bg-muted/5 rounded border border-muted/20">
             <p className="text-sm text-muted">
               {t("settings.postProcessing.prompts.createFirst")}
+            </p>
+            <p className="text-xs text-muted/60 mt-1">
+              {t("settings.postProcessing.prompts.createFirstHint")}
             </p>
           </div>
         )}

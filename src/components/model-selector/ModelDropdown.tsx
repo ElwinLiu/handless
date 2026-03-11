@@ -91,7 +91,7 @@ const ModelDropdown: React.FC<ModelDropdownProps> = ({
           {downloadedLocalProviders.length > 0 && (
             <div>
               {hasBothSections && (
-                <div className="px-3 pt-1.5 pb-1 text-[10px] font-medium text-text/30 uppercase tracking-widest">
+                <div className="px-3 pt-1.5 pb-1 text-[11px] font-medium text-text/30 uppercase tracking-widest">
                   {t("settings.models.localModels.title")}
                 </div>
               )}
@@ -105,12 +105,12 @@ const ModelDropdown: React.FC<ModelDropdownProps> = ({
                     {getTranslatedModelName(provider, t)}
                     {provider.backend.type === "Local" &&
                       provider.backend.is_custom && (
-                        <span className="ms-1.5 text-[9px] font-medium text-text/30 uppercase">
+                        <span className="ms-1.5 text-[10px] font-medium text-text/30 uppercase">
                           {t("modelSelector.custom")}
                         </span>
                       )}
                   </div>
-                  <div className="text-[11px] text-text/30 mt-0.5 leading-snug">
+                  <div className="text-xs text-text/30 mt-0.5 leading-snug">
                     {t(provider.description)}
                   </div>
                 </DropdownItem>
@@ -123,7 +123,7 @@ const ModelDropdown: React.FC<ModelDropdownProps> = ({
           {cloudProviders.length > 0 && (
             <div>
               {hasBothSections && (
-                <div className="px-3 pt-1.5 pb-1 text-[10px] font-medium text-text/30 uppercase tracking-widest">
+                <div className="px-3 pt-1.5 pb-1 text-[11px] font-medium text-text/30 uppercase tracking-widest">
                   {t("settings.models.cloudProviders.badge")}
                 </div>
               )}
@@ -137,7 +137,7 @@ const ModelDropdown: React.FC<ModelDropdownProps> = ({
                     {getTranslatedModelName(provider, t)}
                     <Cloud weight="fill" className="w-3 h-3 text-text/20" />
                   </div>
-                  <div className="text-[11px] text-text/30 mt-0.5 leading-snug">
+                  <div className="text-xs text-text/30 mt-0.5 leading-snug">
                     {t(provider.description)}
                   </div>
                 </DropdownItem>
