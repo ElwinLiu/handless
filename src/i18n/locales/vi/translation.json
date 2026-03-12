@@ -467,6 +467,7 @@
           "placeholderNoOptions": "Nhập tên mô hình",
           "refreshModels": "Làm mới mô hình"
         },
+        "tokensPerSecond": "{{value}} tok/s",
         "verified": "Đã xác minh"
       },
       "prompts": {

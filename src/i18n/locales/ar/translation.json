@@ -389,6 +389,7 @@
           "placeholderNoOptions": "اكتب اسم النموذج",
           "refreshModels": "تحديث النماذج"
         },
+        "tokensPerSecond": "{{value}} tok/s",
         "verified": "تم التحقق"
       },
       "prompts": {

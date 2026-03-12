@@ -467,6 +467,7 @@
           "placeholderNoOptions": "輸入模型名稱",
           "refreshModels": "重新整理模型"
         },
+        "tokensPerSecond": "{{value}} tok/s",
         "verified": "已驗證"
       },
       "prompts": {

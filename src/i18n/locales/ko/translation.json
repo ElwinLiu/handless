@@ -467,6 +467,7 @@
           "placeholderNoOptions": "모델 이름 입력",
           "refreshModels": "모델 새로고침"
         },
+        "tokensPerSecond": "{{value}} tok/s",
         "verified": "인증됨"
       },
       "prompts": {

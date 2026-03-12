@@ -467,6 +467,7 @@
           "placeholderNoOptions": "Digite o nome de um modelo",
           "refreshModels": "Atualizar modelos"
         },
+        "tokensPerSecond": "{{value}} tok/s",
         "verified": "Verificado"
       },
       "prompts": {

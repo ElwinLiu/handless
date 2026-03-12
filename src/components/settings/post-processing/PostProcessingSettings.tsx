@@ -97,7 +97,7 @@ const PostProcessingSettingsApiComponent: React.FC = () => {
   const hasModel = !state.isAppleProvider && !!state.model;
 
   const statsLine = stats
-    ? `${stats.model}${stats.tokens_per_second != null ? ` \u2014 ${stats.tokens_per_second.toFixed(1)} tok/s` : ""}`
+    ? `${stats.model}${stats.tokens_per_second != null ? ` \u2014 ${t("settings.postProcessing.api.tokensPerSecond", { value: stats.tokens_per_second.toFixed(1) })}` : ""}`
     : null;
 
   return (
@@ -138,7 +138,7 @@ const PostProcessingSettingsApiComponent: React.FC = () => {
           </span>
           {!expanded && stats?.tokens_per_second != null && (
             <span className="text-xs text-muted/50 truncate block">
-              {stats.tokens_per_second.toFixed(1)} tok/s
+              {t("settings.postProcessing.api.tokensPerSecond", { value: stats.tokens_per_second.toFixed(1) })}
             </span>
           )}
         </div>

@@ -467,6 +467,7 @@
           "placeholderNoOptions": "Wpisz nazwę modelu",
           "refreshModels": "Odśwież modele"
         },
+        "tokensPerSecond": "{{value}} tok/s",
         "verified": "Zweryfikowano"
       },
       "prompts": {

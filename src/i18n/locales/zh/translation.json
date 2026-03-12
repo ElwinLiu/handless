@@ -467,6 +467,7 @@
           "placeholderNoOptions": "输入模型名称",
           "refreshModels": "刷新模型"
         },
+        "tokensPerSecond": "{{value}} tok/s",
         "verified": "已验证"
       },
       "prompts": {

@@ -467,6 +467,7 @@
           "placeholderNoOptions": "Введите название модели",
           "refreshModels": "Обновить модели"
         },
+        "tokensPerSecond": "{{value}} tok/s",
         "verified": "Подтверждено"
       },
       "prompts": {

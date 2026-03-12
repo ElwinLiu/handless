@@ -467,6 +467,7 @@
           "placeholderNoOptions": "Model adı yazın",
           "refreshModels": "Modelleri Yenile"
         },
+        "tokensPerSecond": "{{value}} tok/s",
         "verified": "Doğrulandı"
       },
       "prompts": {

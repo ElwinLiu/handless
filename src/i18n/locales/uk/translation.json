@@ -467,6 +467,7 @@
           "placeholderNoOptions": "Введіть назву моделі",
           "refreshModels": "Оновити моделі"
         },
+        "tokensPerSecond": "{{value}} tok/s",
         "verified": "Перевірено"
       },
       "prompts": {

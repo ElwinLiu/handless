@@ -467,6 +467,7 @@
           "placeholderNoOptions": "Zadejte název modelu",
           "refreshModels": "Obnovit modely"
         },
+        "tokensPerSecond": "{{value}} tok/s",
         "verified": "Ověřeno"
       },
       "prompts": {

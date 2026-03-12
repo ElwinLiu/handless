@@ -467,6 +467,7 @@
           "placeholderNoOptions": "モデル名を入力",
           "refreshModels": "モデルを更新"
         },
+        "tokensPerSecond": "{{value}} tok/s",
         "verified": "確認済み"
       },
       "prompts": {
