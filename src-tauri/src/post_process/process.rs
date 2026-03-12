@@ -48,6 +48,18 @@ fn strip_invisible_chars(s: &str) -> String {
     s.replace(['\u{200B}', '\u{200C}', '\u{200D}', '\u{FEFF}'], "")
 }
 
+/// Extract content from <output>...</output> tags, trimming surrounding whitespace.
+/// Returns None if no valid tags are found.
+fn extract_output_tag(s: &str) -> Option<String> {
+    let start = s.find("<output>")?;
+    let end = s.find("</output>")?;
+    if end > start {
+        Some(s[start + "<output>".len()..end].trim().to_string())
+    } else {
+        None
+    }
+}
+
 pub async fn post_process_transcription(
     settings: &AppSettings,
     transcription: &str,
@@ -223,7 +235,8 @@ pub async fn post_process_transcription(
                     }
                 }
             } else {
-                strip_invisible_chars(&content)
+                let raw = strip_invisible_chars(&content);
+                extract_output_tag(&raw).unwrap_or(raw)
             };
 
             debug!(
