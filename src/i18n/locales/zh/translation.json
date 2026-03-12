@@ -468,6 +468,15 @@
           "refreshModels": "刷新模型"
         },
         "tokensPerSecond": "{{value}} tok/s",
+        "pricing": {
+          "title": "Pricing",
+          "description": "Enter your provider's pricing to see cost estimates.",
+          "inputPrice": "Input $/M",
+          "outputPrice": "Output $/M",
+          "inputPlaceholder": "e.g. 0.15",
+          "outputPlaceholder": "e.g. 0.60",
+          "autoFetched": "Auto-fetched from models.dev"
+        },
         "verified": "已验证"
       },
       "prompts": {
@@ -490,6 +499,8 @@
         "createFirstHint": "Create your first one below.",
         "builtIn": "Built-in",
         "builtInReadOnly": "Built-in prompts are read-only.",
+        "costEstimate": "~{{requests}} requests per $1",
+        "costTooltip": "System prompt: ~{{systemTokens}} tokens. Assumes avg 100-word transcript (~140 input tokens, ~120 output tokens). Total per request: ~{{totalInputTokens}} input + ~{{totalOutputTokens}} output tokens.",
         "errorCreate": "Failed to create prompt. Please try again.",
         "errorUpdate": "Failed to update prompt. Please try again.",
         "errorDelete": "Failed to delete prompt. Please try again."

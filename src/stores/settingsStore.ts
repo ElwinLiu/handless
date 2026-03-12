@@ -59,6 +59,11 @@ interface SettingsStore {
   fetchPostProcessModels: (providerId: string) => Promise<string[]>;
   setPostProcessModelOptions: (providerId: string, models: string[]) => void;
   clearPostProcessFetchError: (providerId: string) => void;
+  updatePostProcessPricing: (
+    providerId: string,
+    inputPrice: number,
+    outputPrice: number,
+  ) => Promise<void>;
 
   // STT provider helpers
   setSttProvider: (providerId: string) => Promise<void>;
@@ -632,6 +637,22 @@ export const useSettingsStore = create<SettingsStore>()(
         const { [providerId]: _, ...rest } = state.postProcessFetchErrors;
         return { postProcessFetchErrors: rest };
       }),
+
+    updatePostProcessPricing: async (providerId, inputPrice, outputPrice) => {
+      const { setUpdating, refreshSettings } = get();
+      const updateKey = `post_process_pricing:${providerId}`;
+
+      setUpdating(updateKey, true);
+
+      try {
+        await commands.setPostProcessPricing(providerId, inputPrice, outputPrice);
+        await refreshSettings();
+      } catch (error) {
+        console.error("Failed to update post-process pricing:", error);
+      } finally {
+        setUpdating(updateKey, false);
+      }
+    },
 
     setSttProvider: async (providerId) => {
       const { settings, setUpdating, refreshSettings } = get();

@@ -1,6 +1,6 @@
 import React, { useEffect, useId, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Check, ArrowsClockwise, X, CaretDown, Plus } from "@phosphor-icons/react";
+import { Check, ArrowsClockwise, X, CaretDown, Plus, Info } from "@phosphor-icons/react";
 import { motion } from "motion/react";
 import { commands } from "@/bindings";
 import type { ShortcutBinding } from "@/bindings";
@@ -14,6 +14,7 @@ import {
   SettingsGroup,
   Textarea,
 } from "@/components/ui";
+import { SimpleTooltip } from "@/components/ui/Tooltip";
 import { ResetButton } from "@/components/ui/ResetButton";
 import { ProviderSelect } from "@/components/settings/PostProcessingSettingsApi/ProviderSelect";
 import { BaseUrlField } from "@/components/settings/PostProcessingSettingsApi/BaseUrlField";
@@ -21,6 +22,7 @@ import { ApiKeyField } from "@/components/settings/PostProcessingSettingsApi/Api
 import { ModelSelect } from "@/components/settings/PostProcessingSettingsApi/ModelSelect";
 import { usePostProcessProviderState } from "@/components/settings/PostProcessingSettingsApi/usePostProcessProviderState";
 import { useSettings } from "@/hooks/useSettings";
+import { useModelPricing } from "@/hooks/useModelPricing";
 import { usePostProcessStats } from "@/hooks/usePostProcessStats";
 import { spring } from "@/lib/motion";
 import { formatKeyCombination, type OSType } from "@/lib/utils/keyboard";
@@ -28,6 +30,15 @@ import { useOsType } from "@/hooks/useOsType";
 
 const BUILTIN_PROMPT_PREFIX = "default_";
 const CREATING_ID = "__creating__";
+
+/** Rough token estimate: ~4 characters per token (works for English text). */
+const estimateTokens = (text: string): number =>
+  Math.ceil(text.length / 4);
+
+/** Average transcript assumptions (100-word dictation). */
+const AVG_TRANSCRIPT_INPUT_TOKENS = 140;
+const AVG_TRANSCRIPT_OUTPUT_TOKENS = 120;
+const USER_MESSAGE_OVERHEAD_TOKENS = 3; // "Transcript: " prefix
 const FIELD_WIDTH = "w-[260px]";
 
 /** Reusable clickable row with animated caret for expand/collapse sections. */
@@ -75,6 +86,113 @@ const FieldAlignmentSpacer = ({ children }: { children?: React.ReactNode }) => (
     {children}
   </div>
 );
+
+/** Inline pricing inputs with computed $/M requests estimate. */
+const PricingFields: React.FC<{
+  inputPrice: number;
+  outputPrice: number;
+  autoInputPrice: number | null;
+  autoOutputPrice: number | null;
+  onPricingChange: (inputPrice: number, outputPrice: number) => void;
+  disabled?: boolean;
+}> = ({
+  inputPrice,
+  outputPrice,
+  autoInputPrice,
+  autoOutputPrice,
+  onPricingChange,
+  disabled,
+}) => {
+  const { t } = useTranslation();
+  const [localInput, setLocalInput] = useState(
+    inputPrice > 0 ? String(inputPrice) : "",
+  );
+  const [localOutput, setLocalOutput] = useState(
+    outputPrice > 0 ? String(outputPrice) : "",
+  );
+
+  // Sync local state when external values change (e.g. provider switch)
+  useEffect(() => {
+    setLocalInput(inputPrice > 0 ? String(inputPrice) : "");
+    setLocalOutput(outputPrice > 0 ? String(outputPrice) : "");
+  }, [inputPrice, outputPrice]);
+
+  const commitPricing = (rawInput: string, rawOutput: string) => {
+    const ip = parseFloat(rawInput) || 0;
+    const op = parseFloat(rawOutput) || 0;
+    if (ip !== inputPrice || op !== outputPrice) {
+      onPricingChange(Math.max(0, ip), Math.max(0, op));
+    }
+  };
+
+  // Placeholders: show auto-fetched price if available, otherwise generic hint
+  const inputPlaceholder =
+    autoInputPrice != null && autoInputPrice > 0
+      ? String(autoInputPrice)
+      : t("settings.postProcessing.api.pricing.inputPlaceholder");
+  const outputPlaceholder =
+    autoOutputPrice != null && autoOutputPrice > 0
+      ? String(autoOutputPrice)
+      : t("settings.postProcessing.api.pricing.outputPlaceholder");
+
+  const isUsingAuto =
+    (autoInputPrice != null || autoOutputPrice != null) &&
+    !localInput &&
+    !localOutput;
+
+  return (
+    <SettingContainer
+      title={t("settings.postProcessing.api.pricing.title")}
+      description={t("settings.postProcessing.api.pricing.description")}
+      descriptionMode="tooltip"
+      layout="horizontal"
+      grouped={true}
+    >
+      <div className="flex items-center gap-2">
+        <div className={`flex items-center gap-2 ${FIELD_WIDTH}`}>
+          <div className="flex items-center gap-1.5 flex-1 min-w-0">
+            <label className="text-[11px] text-muted/50 whitespace-nowrap">
+              {t("settings.postProcessing.api.pricing.inputPrice")}
+            </label>
+            <Input
+              type="text"
+              inputMode="decimal"
+              value={localInput}
+              onChange={(e) => setLocalInput(e.target.value)}
+              onBlur={() => commitPricing(localInput, localOutput)}
+              placeholder={inputPlaceholder}
+              disabled={disabled}
+              className="flex-1 min-w-0 text-xs"
+              variant="compact"
+            />
+          </div>
+          <div className="flex items-center gap-1.5 flex-1 min-w-0">
+            <label className="text-[11px] text-muted/50 whitespace-nowrap">
+              {t("settings.postProcessing.api.pricing.outputPrice")}
+            </label>
+            <Input
+              type="text"
+              inputMode="decimal"
+              value={localOutput}
+              onChange={(e) => setLocalOutput(e.target.value)}
+              onBlur={() => commitPricing(localInput, localOutput)}
+              placeholder={outputPlaceholder}
+              disabled={disabled}
+              className="flex-1 min-w-0 text-xs"
+              variant="compact"
+            />
+          </div>
+        </div>
+        <FieldAlignmentSpacer />
+      </div>
+      {isUsingAuto && (
+        <p className="text-[11px] text-muted/40 mt-1">
+          {t("settings.postProcessing.api.pricing.autoFetched")}
+        </p>
+      )}
+    </SettingContainer>
+  );
+};
 
 const PostProcessingSettingsApiComponent: React.FC = () => {
   const { t } = useTranslation();
@@ -297,6 +415,17 @@ const PostProcessingSettingsApiComponent: React.FC = () => {
             </SettingContainer>
           )}
 
+          {!state.isAppleProvider && (
+            <PricingFields
+              inputPrice={state.inputPrice}
+              outputPrice={state.outputPrice}
+              autoInputPrice={state.autoPricing?.input ?? null}
+              autoOutputPrice={state.autoPricing?.output ?? null}
+              onPricingChange={state.handlePricingChange}
+              disabled={state.isPricingUpdating}
+            />
+          )}
+
           {statsLine && (
             <div className="px-3 py-2">
               <p className="text-xs text-muted/70">{statsLine}</p>
@@ -396,6 +525,60 @@ const PromptFields: React.FC<PromptFieldsProps> = ({
   );
 };
 
+/** Cost estimation badge for a prompt row, with tooltip showing assumptions. */
+const PromptCostEstimate: React.FC<{
+  promptText: string;
+  inputPrice: number;
+  outputPrice: number;
+}> = ({ promptText, inputPrice, outputPrice }) => {
+  const { t } = useTranslation();
+
+  const estimate = useMemo(() => {
+    const systemTokens = estimateTokens(promptText);
+    const totalInputTokens =
+      systemTokens + AVG_TRANSCRIPT_INPUT_TOKENS + USER_MESSAGE_OVERHEAD_TOKENS;
+    const totalOutputTokens = AVG_TRANSCRIPT_OUTPUT_TOKENS;
+
+    const costPerRequest =
+      (totalInputTokens * inputPrice + totalOutputTokens * outputPrice) /
+      1_000_000;
+    if (costPerRequest <= 0) return null;
+
+    const requestsPerDollar = Math.floor(1 / costPerRequest);
+
+    return {
+      count: requestsPerDollar,
+      systemTokens,
+      totalInputTokens,
+      totalOutputTokens,
+    };
+  }, [promptText, inputPrice, outputPrice]);
+
+  if (!estimate || estimate.count <= 0) return null;
+
+  return (
+    <SimpleTooltip
+      content={
+        <p className="max-w-[280px] text-left whitespace-pre-line">
+          {t("settings.postProcessing.prompts.costTooltip", {
+            systemTokens: estimate.systemTokens,
+            totalInputTokens: estimate.totalInputTokens,
+            totalOutputTokens: estimate.totalOutputTokens,
+          })}
+        </p>
+      }
+      side="bottom"
+    >
+      <span className="text-[11px] text-muted/40 truncate flex items-center gap-1 cursor-help">
+        <Info size={10} />
+        {t("settings.postProcessing.prompts.costEstimate", {
+          requests: estimate.count.toLocaleString(),
+        })}
+      </span>
+    </SimpleTooltip>
+  );
+};
+
 const PostProcessingSettingsPromptsComponent = React.forwardRef<{
   startCreate: () => void;
 }>(function PostProcessingSettingsPromptsComponent(_, ref) {
@@ -410,6 +593,17 @@ const PostProcessingSettingsPromptsComponent = React.forwardRef<{
   const [formError, setFormError] = useState<string | null>(null);
 
   const prompts = getSetting("post_process_prompts") || [];
+  const providerId = getSetting("post_process_provider_id") || "";
+  const modelId = getSetting("post_process_models")?.[providerId] ?? "";
+  const manualInput =
+    getSetting("post_process_input_prices")?.[providerId] ?? 0;
+  const manualOutput =
+    getSetting("post_process_output_prices")?.[providerId] ?? 0;
+  const { autoPricing } = useModelPricing(providerId, modelId);
+  const inputPrice = manualInput > 0 ? manualInput : (autoPricing?.input ?? 0);
+  const outputPrice =
+    manualOutput > 0 ? manualOutput : (autoPricing?.output ?? 0);
+  const hasPricing = inputPrice > 0 || outputPrice > 0;
   const bindings = (getSetting("bindings") || {}) as Record<
     string,
     ShortcutBinding
@@ -551,6 +745,13 @@ const PostProcessingSettingsPromptsComponent = React.forwardRef<{
                   <span className="text-xs text-muted/50 truncate block">
                     {prompt.prompt.split("\n")[0]}
                   </span>
+                )}
+                {!isExpanded && hasPricing && (
+                  <PromptCostEstimate
+                    promptText={prompt.prompt}
+                    inputPrice={inputPrice}
+                    outputPrice={outputPrice}
+                  />
                 )}
               </div>
             </CollapsibleRow>

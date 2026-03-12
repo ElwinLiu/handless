@@ -1,7 +1,8 @@
 import { useCallback, useMemo, useState } from "react";
 import { useSettings } from "../../../hooks/useSettings";
-import { commands, type PostProcessProvider } from "@/bindings";
+import { commands, type ModelPricing, type PostProcessProvider } from "@/bindings";
 import type { DropdownOption } from "../../ui/Dropdown";
+import { useModelPricing } from "@/hooks/useModelPricing";
 
 type PostProcessProviderState = {
   providerOptions: DropdownOption[];
@@ -26,6 +27,12 @@ type PostProcessProviderState = {
   handleProviderSelect: (providerId: string) => void;
   handleModelSelect: (value: string) => void;
   handleRefreshModels: () => void;
+  inputPrice: number;
+  outputPrice: number;
+  handlePricingChange: (inputPrice: number, outputPrice: number) => void;
+  isPricingUpdating: boolean;
+  autoPricing: ModelPricing | null;
+  isAutoLoading: boolean;
 };
 
 const APPLE_PROVIDER_ID = "apple_intelligence";
@@ -38,6 +45,7 @@ export const usePostProcessProviderState = (): PostProcessProviderState => {
     updatePostProcessBaseUrl,
     updatePostProcessApiKey,
     updatePostProcessModel,
+    updatePostProcessPricing,
     fetchPostProcessModels,
     postProcessModelOptions,
     postProcessFetchErrors,
@@ -211,6 +219,31 @@ export const usePostProcessProviderState = (): PostProcessProviderState => {
     [clearPostProcessFetchError, selectedProviderId],
   );
 
+  const inputPrice =
+    settings?.post_process_input_prices?.[selectedProviderId] ?? 0;
+  const outputPrice =
+    settings?.post_process_output_prices?.[selectedProviderId] ?? 0;
+
+  const handlePricingChange = useCallback(
+    (newInputPrice: number, newOutputPrice: number) => {
+      void updatePostProcessPricing(
+        selectedProviderId,
+        newInputPrice,
+        newOutputPrice,
+      );
+    },
+    [selectedProviderId, updatePostProcessPricing],
+  );
+
+  const isPricingUpdating = isUpdating(
+    `post_process_pricing:${selectedProviderId}`,
+  );
+
+  const { autoPricing, isLoading: isAutoLoading } = useModelPricing(
+    selectedProviderId,
+    model,
+  );
+
   // No automatic fetching - user must click refresh button
 
   return {
@@ -236,5 +269,11 @@ export const usePostProcessProviderState = (): PostProcessProviderState => {
     handleProviderSelect,
     handleModelSelect,
     handleRefreshModels,
+    inputPrice,
+    outputPrice,
+    handlePricingChange,
+    isPricingUpdating,
+    autoPricing,
+    isAutoLoading,
   };
 };

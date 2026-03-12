@@ -309,6 +309,8 @@ pub fn run(cli_args: CliArgs) {
         post_process::commands::add_post_process_prompt,
         post_process::commands::update_post_process_prompt,
         post_process::commands::delete_post_process_prompt,
+        post_process::commands::set_post_process_pricing,
+        post_process::commands::lookup_model_pricing,
         post_process::commands::set_post_process_selected_prompt,
         shortcut::update_custom_words,
         shortcut::suspend_binding,

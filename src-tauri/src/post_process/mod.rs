@@ -1,5 +1,6 @@
 pub mod client;
 pub mod commands;
+pub mod pricing;
 pub mod process;
 pub mod prompts;
 pub mod providers;

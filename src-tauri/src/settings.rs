@@ -388,6 +388,10 @@ pub struct AppSettings {
     pub stt_verified_providers: HashSet<String>,
     #[serde(default)]
     pub post_process_verified_providers: HashSet<String>,
+    #[serde(default)]
+    pub post_process_input_prices: HashMap<String, f64>,
+    #[serde(default)]
+    pub post_process_output_prices: HashMap<String, f64>,
     #[serde(default = "default_stt_cloud_options")]
     pub stt_cloud_options: HashMap<String, String>,
     #[serde(default)]
@@ -768,6 +772,8 @@ pub fn get_default_settings() -> AppSettings {
         app_theme: AppTheme::default(),
         stt_verified_providers: HashSet::new(),
         post_process_verified_providers: HashSet::new(),
+        post_process_input_prices: HashMap::new(),
+        post_process_output_prices: HashMap::new(),
         stt_cloud_options: default_stt_cloud_options(),
         stt_realtime_enabled: HashMap::new(),
         stats_date_range: StatsDateRange::default(),

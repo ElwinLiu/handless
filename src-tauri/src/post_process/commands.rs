@@ -1,3 +1,4 @@
+use crate::post_process::pricing::ModelPricing;
 use crate::post_process::prompts::{is_builtin_prompt, LLMPrompt};
 use crate::settings::{self, APPLE_INTELLIGENCE_DEFAULT_MODEL_ID, APPLE_INTELLIGENCE_PROVIDER_ID};
 use tauri::AppHandle;
@@ -231,6 +232,35 @@ pub fn delete_post_process_prompt(app: AppHandle, id: String) -> Result<(), Stri
 
     settings::write_settings(&app, settings);
     Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn set_post_process_pricing(
+    app: AppHandle,
+    provider_id: String,
+    input_price: f64,
+    output_price: f64,
+) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    validate_provider_exists(&settings, &provider_id)?;
+    settings
+        .post_process_input_prices
+        .insert(provider_id.clone(), input_price);
+    settings
+        .post_process_output_prices
+        .insert(provider_id, output_price);
+    settings::write_settings(&app, settings);
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn lookup_model_pricing(
+    provider_id: String,
+    model_id: String,
+) -> Result<Option<ModelPricing>, String> {
+    Ok(crate::post_process::pricing::lookup(&provider_id, &model_id).await)
 }
 
 #[tauri::command]
