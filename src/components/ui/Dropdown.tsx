@@ -138,7 +138,7 @@ const SearchableDropdown: React.FC<DropdownProps> = ({
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
         className={cn(
-          "px-2 py-1 text-sm font-semibold bg-glass-bg border border-glass-border rounded",
+          "px-2 py-1 text-sm font-semibold bg-glass-bg border border-glass-border rounded-md",
           "min-w-[160px] text-start flex items-center justify-between",
           "transition-all duration-150",
           disabled
@@ -279,7 +279,7 @@ const SimpleDropdown: React.FC<DropdownProps> = ({
     >
       <SelectPrimitive.Trigger
         className={cn(
-          "px-2 py-1 text-sm font-semibold bg-glass-bg border border-glass-border rounded",
+          "px-2 py-1 text-sm font-semibold bg-glass-bg border border-glass-border rounded-md",
           "min-w-[160px] text-start flex items-center justify-between",
           "transition-all duration-150",
           disabled
