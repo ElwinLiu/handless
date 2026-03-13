@@ -318,6 +318,10 @@ fn show_overlay_state(app_handle: &AppHandle, state: &str) {
     if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
         let _ = overlay_window.show();
 
+        // Make the overlay fully click-through so transparent regions don't block
+        // mouse events on the Dock or underlying windows (see #122).
+        let _ = overlay_window.set_ignore_cursor_events(true);
+
         // On macOS, also use the NSPanel's order_front_regardless to ensure
         // the overlay appears on fullscreen spaces. Must run on the main
         // thread because it calls AppKit APIs directly via objc2.
