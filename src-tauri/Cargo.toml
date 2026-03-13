@@ -102,6 +102,9 @@ windows = { version = "0.61", features = [
 [target.'cfg(target_os = "macos")'.dependencies]
 tauri-nspanel = { git = "https://github.com/ahkohd/tauri-nspanel", branch = "v2.1" }
 coreaudio-sys = "0.2"
+objc2 = "0.6.3"
+objc2-app-kit = { version = "0.3.2", features = ["NSScreen", "NSGraphics"] }
+objc2-foundation = { version = "0.3.2", features = ["NSGeometry"] }
 
 [target.'cfg(target_os = "linux")'.dependencies]
 gtk-layer-shell = { version = "0.8", features = ["v0_6"] }

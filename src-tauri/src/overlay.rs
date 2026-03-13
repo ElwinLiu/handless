@@ -17,6 +17,9 @@ use tauri_nspanel::{
     tauri_panel, CollectionBehavior, ManagerExt, PanelBuilder, PanelLevel, StyleMask,
 };
 
+#[cfg(target_os = "macos")]
+use objc2_app_kit::NSScreen;
+
 #[cfg(target_os = "linux")]
 use gtk_layer_shell::{Edge, KeyboardMode, Layer, LayerShell};
 #[cfg(target_os = "linux")]
@@ -32,7 +35,7 @@ tauri_panel! {
     })
 }
 
-const OVERLAY_WIDTH: f64 = 500.0;
+const OVERLAY_WIDTH: f64 = 320.0;
 const OVERLAY_HEIGHT: f64 = 120.0;
 
 #[cfg(target_os = "macos")]
@@ -41,7 +44,7 @@ const OVERLAY_TOP_OFFSET: f64 = 46.0;
 const OVERLAY_TOP_OFFSET: f64 = 4.0;
 
 #[cfg(target_os = "macos")]
-const OVERLAY_BOTTOM_OFFSET: f64 = 15.0;
+const OVERLAY_DOCK_GAP: f64 = 10.0;
 
 #[cfg(any(target_os = "windows", target_os = "linux"))]
 const OVERLAY_BOTTOM_OFFSET: f64 = 40.0;
@@ -156,6 +159,34 @@ fn logical_bounds(monitor: &tauri::Monitor) -> LogicalBounds {
     }
 }
 
+/// Returns the bottom Dock inset (in logical points) for the NSScreen whose
+/// frame best matches the given Tauri monitor bounds. Returns 0 when the Dock
+/// is hidden or not on the bottom edge.
+#[cfg(target_os = "macos")]
+fn get_dock_bottom_inset(b: &LogicalBounds) -> f64 {
+    // Find the NSScreen that matches this Tauri monitor by comparing frames.
+    // SAFETY: NSScreen.screens/frame/visibleFrame are read-only queries that are
+    // safe to call from any thread. MainThreadMarker is only required by the
+    // objc2 binding's conservative safety model.
+    let mtm = unsafe { objc2::MainThreadMarker::new_unchecked() };
+    let screens = NSScreen::screens(mtm);
+
+    let matched = screens.into_iter().find(|screen| {
+        let frame = screen.frame();
+        // NSScreen uses Cocoa coordinates (bottom-left origin) and logical points.
+        // Match by width/height since origins differ between coordinate systems.
+        (frame.size.width - b.width).abs() < 2.0 && (frame.size.height - b.height).abs() < 2.0
+    });
+
+    if let Some(screen) = matched {
+        // In Cocoa coords, visibleFrame.origin.y > frame.origin.y when Dock is at bottom.
+        let inset = screen.visibleFrame().origin.y - screen.frame().origin.y;
+        if inset > 1.0 { inset } else { 0.0 }
+    } else {
+        0.0
+    }
+}
+
 fn get_monitor_with_cursor(app_handle: &AppHandle) -> Option<tauri::Monitor> {
     if let Some(mouse_location) = input::get_cursor_position(app_handle) {
         if let Ok(monitors) = app_handle.available_monitors() {
@@ -175,20 +206,19 @@ fn get_monitor_with_cursor(app_handle: &AppHandle) -> Option<tauri::Monitor> {
 
 fn calculate_overlay_position(app_handle: &AppHandle) -> Option<(f64, f64)> {
     if let Some(monitor) = get_monitor_with_cursor(app_handle) {
-        // Use monitor bounds directly instead of work_area() to avoid a bug in
-        // tauri-runtime-wry's macOS work_area() implementation where the y-position
-        // is incorrect for non-primary monitors (it uses global Cocoa coordinates
-        // instead of relative offsets). The OVERLAY_TOP_OFFSET and OVERLAY_BOTTOM_OFFSET
-        // constants already account for menubar/dock insets.
         let b = logical_bounds(&monitor);
-
         let settings = settings::get_settings(app_handle);
 
         let x = b.x + (b.width - OVERLAY_WIDTH) / 2.0;
         let y = match settings.overlay_position {
             OverlayPosition::Top => b.y + OVERLAY_TOP_OFFSET,
             OverlayPosition::Bottom | OverlayPosition::None => {
-                b.y + b.height - OVERLAY_HEIGHT - OVERLAY_BOTTOM_OFFSET
+                #[cfg(target_os = "macos")]
+                let bottom_offset = get_dock_bottom_inset(&b) + OVERLAY_DOCK_GAP;
+                #[cfg(not(target_os = "macos"))]
+                let bottom_offset = OVERLAY_BOTTOM_OFFSET;
+
+                b.y + b.height - OVERLAY_HEIGHT - bottom_offset
             }
         };
 
