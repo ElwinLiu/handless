@@ -313,6 +313,10 @@ fn show_overlay_state(app_handle: &AppHandle, state: &str) {
     if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
         let _ = overlay_window.show();
 
+        // Make the overlay fully click-through so transparent regions don't block
+        // mouse events on the Dock or underlying windows (see #122).
+        let _ = overlay_window.set_ignore_cursor_events(true);
+
         // On Windows, aggressively re-assert "topmost" in the native Z-order after showing
         #[cfg(target_os = "windows")]
         force_overlay_topmost(&overlay_window);
