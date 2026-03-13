@@ -258,9 +258,14 @@
         "noResults": "No se encontraron idiomas",
         "auto": "Automático"
       },
-      "pushToTalk": {
-        "label": "Presionar para Hablar",
-        "description": "Mantén presionado para grabar, suelta para detener"
+      "activationMode": {
+        "label": "Activation Mode",
+        "description": "How the shortcut key controls recording",
+        "options": {
+          "toggle": "Toggle",
+          "hold": "Hold",
+          "holdOrToggle": "Hold or Toggle"
+        }
       },
       "shortcuts": {
         "title": "Atajos",

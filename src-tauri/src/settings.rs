@@ -6,6 +6,64 @@ use std::collections::{HashMap, HashSet};
 use tauri::AppHandle;
 use tauri_plugin_store::StoreExt;
 
+#[derive(Serialize, Debug, Clone, Copy, PartialEq, Eq, Type)]
+#[serde(rename_all = "snake_case")]
+pub enum ActivationMode {
+    Toggle,
+    Hold,
+    HoldOrToggle,
+}
+
+// TODO: Remove this custom Deserialize impl once all users have migrated from
+// the old push_to_talk boolean setting (added 2026-03-12). After removal,
+// derive Deserialize normally and also remove the `alias = "push_to_talk"`
+// on AppSettings.activation_mode.
+impl<'de> Deserialize<'de> for ActivationMode {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        struct ActivationModeVisitor;
+
+        impl<'de> Visitor<'de> for ActivationModeVisitor {
+            type Value = ActivationMode;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+                formatter.write_str("a string or boolean representing activation mode")
+            }
+
+            fn visit_str<E: de::Error>(self, value: &str) -> Result<ActivationMode, E> {
+                match value.to_lowercase().as_str() {
+                    "toggle" => Ok(ActivationMode::Toggle),
+                    "hold" => Ok(ActivationMode::Hold),
+                    "hold_or_toggle" => Ok(ActivationMode::HoldOrToggle),
+                    _ => Err(E::unknown_variant(
+                        value,
+                        &["toggle", "hold", "hold_or_toggle"],
+                    )),
+                }
+            }
+
+            fn visit_bool<E: de::Error>(self, value: bool) -> Result<ActivationMode, E> {
+                // Migrate old push_to_talk boolean: true → Hold, false → Toggle
+                Ok(if value {
+                    ActivationMode::Hold
+                } else {
+                    ActivationMode::Toggle
+                })
+            }
+        }
+
+        deserializer.deserialize_any(ActivationModeVisitor)
+    }
+}
+
+impl Default for ActivationMode {
+    fn default() -> Self {
+        ActivationMode::HoldOrToggle
+    }
+}
+
 pub use crate::post_process::prompts::LLMPrompt;
 pub use crate::post_process::providers::PostProcessProvider;
 
@@ -294,7 +352,8 @@ impl Default for TypingTool {
 #[derive(Serialize, Deserialize, Debug, Clone, Type)]
 pub struct AppSettings {
     pub bindings: HashMap<String, ShortcutBinding>,
-    pub push_to_talk: bool,
+    #[serde(default, alias = "push_to_talk")] // TODO: remove alias after migration period (see ActivationMode Deserialize impl)
+    pub activation_mode: ActivationMode,
     #[serde(default = "default_audio_feedback_volume")]
     pub audio_feedback_volume: f32,
     #[serde(default = "default_sound_theme")]
@@ -724,7 +783,7 @@ pub fn get_default_settings() -> AppSettings {
 
     AppSettings {
         bindings,
-        push_to_talk: true,
+        activation_mode: ActivationMode::HoldOrToggle,
         audio_feedback_volume: default_audio_feedback_volume(),
         sound_theme: default_sound_theme(),
         start_hidden: default_start_hidden(),

@@ -258,9 +258,14 @@
         "noResults": "言語が見つかりません",
         "auto": "自動"
       },
-      "pushToTalk": {
-        "label": "プッシュトゥトーク",
-        "description": "押し続けて録音、離して停止"
+      "activationMode": {
+        "label": "Activation Mode",
+        "description": "How the shortcut key controls recording",
+        "options": {
+          "toggle": "Toggle",
+          "hold": "Hold",
+          "holdOrToggle": "Hold or Toggle"
+        }
       },
       "shortcuts": {
         "title": "ショートカット",

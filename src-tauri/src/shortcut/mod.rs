@@ -20,8 +20,8 @@ use tauri::{AppHandle, Emitter, Manager};
 use tauri_plugin_autostart::ManagerExt;
 
 use crate::settings::{
-    self, get_settings, AppTheme, AutoSubmitKey, ClipboardHandling, KeyboardImplementation,
-    OverlayPosition, PasteMethod, ShortcutBinding, SoundTheme, TypingTool,
+    self, get_settings, ActivationMode, AppTheme, AutoSubmitKey, ClipboardHandling,
+    KeyboardImplementation, OverlayPosition, PasteMethod, ShortcutBinding, SoundTheme, TypingTool,
 };
 use crate::tray;
 
@@ -562,9 +562,12 @@ fn initialize_handy_keys_with_rollback(app: &AppHandle) -> Result<bool, String> 
 
 #[tauri::command]
 #[specta::specta]
-pub fn change_ptt_setting(app: AppHandle, enabled: bool) -> Result<(), String> {
+pub fn change_activation_mode_setting(
+    app: AppHandle,
+    mode: ActivationMode,
+) -> Result<(), String> {
     let mut settings = settings::get_settings(&app);
-    settings.push_to_talk = enabled;
+    settings.activation_mode = mode;
     settings::write_settings(&app, settings);
     Ok(())
 }

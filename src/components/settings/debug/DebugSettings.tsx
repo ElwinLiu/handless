@@ -15,7 +15,7 @@ import { useSettings } from "../../../hooks/useSettings";
 export const DebugSettings: React.FC = () => {
   const { t } = useTranslation();
   const { getSetting } = useSettings();
-  const pushToTalk = getSetting("push_to_talk");
+  const activationMode = getSetting("activation_mode");
   const isLinux = type() === "linux";
 
   return (
@@ -37,7 +37,7 @@ export const DebugSettings: React.FC = () => {
           <ShortcutInput
             shortcutId="cancel"
             grouped={true}
-            disabled={pushToTalk}
+            disabled={activationMode === "hold"}
           />
         )}
       </SettingsGroup>
