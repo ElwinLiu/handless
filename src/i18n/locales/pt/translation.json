@@ -184,9 +184,14 @@
         "noResults": "Nenhum idioma encontrado",
         "auto": "Automático"
       },
-      "pushToTalk": {
-        "label": "Pressionar para Falar",
-        "description": "Segure para gravar, solte para parar"
+      "activationMode": {
+        "label": "Activation Mode",
+        "description": "How the shortcut key controls recording",
+        "options": {
+          "toggle": "Toggle",
+          "hold": "Hold",
+          "holdOrToggle": "Hold or Toggle"
+        }
       },
       "shortcuts": {
         "title": "Atalhos",

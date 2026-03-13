@@ -258,9 +258,14 @@
         "noResults": "Языки не найдены",
         "auto": "Авто"
       },
-      "pushToTalk": {
-        "label": "Нажми и говори",
-        "description": "Удерживайте, чтобы записать, отпустите, чтобы остановить"
+      "activationMode": {
+        "label": "Activation Mode",
+        "description": "How the shortcut key controls recording",
+        "options": {
+          "toggle": "Toggle",
+          "hold": "Hold",
+          "holdOrToggle": "Hold or Toggle"
+        }
       },
       "shortcuts": {
         "title": "Горячие клавиши",

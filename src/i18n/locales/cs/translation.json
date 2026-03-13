@@ -258,9 +258,14 @@
         "noResults": "Žádné jazyky nenalezeny",
         "auto": "Automaticky"
       },
-      "pushToTalk": {
-        "label": "Stisk a mluv",
-        "description": "Podržte pro nahrávání, uvolněte pro zastavení"
+      "activationMode": {
+        "label": "Activation Mode",
+        "description": "How the shortcut key controls recording",
+        "options": {
+          "toggle": "Toggle",
+          "hold": "Hold",
+          "holdOrToggle": "Hold or Toggle"
+        }
       },
       "shortcuts": {
         "title": "Zkratky",

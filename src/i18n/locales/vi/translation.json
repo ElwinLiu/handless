@@ -258,9 +258,14 @@
         "noResults": "Không tìm thấy ngôn ngữ",
         "auto": "Tự động"
       },
-      "pushToTalk": {
-        "label": "Nhấn để nói",
-        "description": "Giữ để ghi âm, thả để dừng"
+      "activationMode": {
+        "label": "Activation Mode",
+        "description": "How the shortcut key controls recording",
+        "options": {
+          "toggle": "Toggle",
+          "hold": "Hold",
+          "holdOrToggle": "Hold or Toggle"
+        }
       },
       "shortcuts": {
         "title": "Phím tắt",

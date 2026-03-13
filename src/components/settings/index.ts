@@ -11,7 +11,7 @@ export { MicrophoneSelector } from "./MicrophoneSelector";
 export { ClamshellMicrophoneSelector } from "./ClamshellMicrophoneSelector";
 export { OutputDeviceSelector } from "./OutputDeviceSelector";
 export { AlwaysOnMicrophone } from "./AlwaysOnMicrophone";
-export { PushToTalk } from "./PushToTalk";
+export { ActivationModeSelector } from "./ActivationModeSelector";
 export { ShowOverlay } from "./ShowOverlay";
 export { GlobalShortcutInput } from "./GlobalShortcutInput";
 export { HandyKeysShortcutInput } from "./HandyKeysShortcutInput";

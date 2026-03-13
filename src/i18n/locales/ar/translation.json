@@ -180,9 +180,14 @@
         "noResults": "لم يتم العثور على لغات",
         "auto": "تلقائي"
       },
-      "pushToTalk": {
-        "label": "اضغط للتحدث",
-        "description": "استمر في الضغط للتسجيل، واترك للتوقف"
+      "activationMode": {
+        "label": "Activation Mode",
+        "description": "How the shortcut key controls recording",
+        "options": {
+          "toggle": "Toggle",
+          "hold": "Hold",
+          "holdOrToggle": "Hold or Toggle"
+        }
       },
       "shortcuts": {
         "title": "الاختصارات",
