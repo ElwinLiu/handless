@@ -15,5 +15,8 @@ jobs:
       - name: Check translation consistency
         run: bun run check:translations
 
+      - name: Type-check
+        run: npx tsc --noEmit
+
       - name: Run ESLint
         run: bun run lint
