@@ -19,12 +19,12 @@ export const SettingsGroup: React.FC<SettingsGroupProps> = ({
     <div className="space-y-2">
       {title && (
         <div className="px-3 flex items-center justify-between">
-          <div>
+          <div className="flex items-baseline gap-2">
             <h2 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
               {title}
             </h2>
             {description && (
-              <p className="text-xs text-muted mt-0.5">{description}</p>
+              <span className="text-[11px] text-text/30">{description}</span>
             )}
           </div>
           {action}
