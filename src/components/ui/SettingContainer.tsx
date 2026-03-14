@@ -47,25 +47,29 @@ export const SettingContainer: React.FC<SettingContainerProps> = ({
     if (descriptionMode === "tooltip") {
       return (
         <div className={containerClasses}>
-          <div className="flex items-center gap-2 mb-2">
-            <h3
-              className={`text-sm font-medium ${disabled ? "opacity-50" : ""}`}
-            >
-              {title}
-            </h3>
-            <SimpleTooltip
-              content={
-                <p className="text-sm text-center leading-relaxed">
-                  {description}
-                </p>
-              }
-              side="top"
-            >
-              <span>
-                <InfoIcon />
-              </span>
-            </SimpleTooltip>
-          </div>
+          {title && (
+            <div className="flex items-center gap-2 mb-2">
+              <h3
+                className={`text-sm font-medium ${disabled ? "opacity-50" : ""}`}
+              >
+                {title}
+              </h3>
+              {description && (
+                <SimpleTooltip
+                  content={
+                    <p className="text-sm text-center leading-relaxed">
+                      {description}
+                    </p>
+                  }
+                  side="top"
+                >
+                  <span>
+                    <InfoIcon />
+                  </span>
+                </SimpleTooltip>
+              )}
+            </div>
+          )}
           <div className="w-full">{children}</div>
         </div>
       );

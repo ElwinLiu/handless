@@ -648,13 +648,18 @@
   },
   "dictionary": {
     "title": "Dictionary",
+    "hints": {
+      "title": "Recognition Hints",
+      "description": "API providers only"
+    },
     "terms": {
       "title": "Terms",
       "description": "Words and phrases the speech engine should recognize accurately. These are sent to the provider before transcription to improve recognition of domain-specific vocabulary.",
-      "placeholder": "Add a term",
+      "placeholder": "Add a term\u2026",
       "add": "Add",
       "remove": "Remove {{term}}",
-      "duplicate": "\"{{term}}\" already exists"
+      "duplicate": "\"{{term}}\" already exists",
+      "empty": "No terms added. Type a term and press Enter."
     },
     "context": {
       "title": "Context Description",
@@ -663,14 +668,9 @@
     },
     "customWords": {
       "title": "Word Corrections",
-      "description": "Words that are often misheard or misspelled after transcription. The system will automatically correct similar-sounding words in the output to match your list. This is applied after transcription, unlike terms which guide the engine before transcription."
-    },
-    "providerSupport": {
-      "supportsBoth": "Your current provider ({{provider}}) supports both terms and context",
-      "supportsTermsOnly": "Your current provider ({{provider}}) supports terms only — context description will not be used",
-      "supportsContextOnly": "Your current provider ({{provider}}) supports context only — terms will not be used",
-      "supportsNeither": "Your current provider ({{provider}}) does not support dictionary features — only word corrections will be applied",
-      "localProvider": "Dictionary terms and context are used by cloud providers only. Word corrections work with all providers."
+      "subtitle": "Rule-based post-processing \u00b7 All providers",
+      "description": "Words that are often misheard or misspelled after transcription. The system will automatically correct similar-sounding words in the output to match your list. This is applied after transcription, unlike terms which guide the engine before transcription.",
+      "empty": "No corrections added. Type a word and press Enter."
     }
   },
   "footer": {

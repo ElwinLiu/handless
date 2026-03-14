@@ -1,19 +1,22 @@
 import React, { useState } from "react";
 import { toast } from "sonner";
+import { AnimatePresence, motion } from "motion/react";
 import { X } from "@phosphor-icons/react";
 import { useSettings } from "@/hooks/useSettings";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { SettingContainer } from "@/components/ui/SettingContainer";
+import { spring, tapScale } from "@/lib/motion";
 
 interface TagListInputProps {
   settingKey: "dictionary_terms" | "custom_words";
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   placeholder: string;
   addLabel: string;
   removeAriaLabel: (item: string) => string;
   duplicateMessage: (item: string) => string;
+  emptyMessage?: string;
   maxLength?: number;
   allowSpaces?: boolean;
   sanitize?: (value: string) => string;
@@ -28,6 +31,7 @@ export const TagListInput: React.FC<TagListInputProps> = ({
   addLabel,
   removeAriaLabel,
   duplicateMessage,
+  emptyMessage,
   maxLength = 100,
   allowSpaces = true,
   sanitize,
@@ -73,16 +77,18 @@ export const TagListInput: React.FC<TagListInputProps> = ({
     isUpdating(settingKey);
 
   return (
-    <>
-      <SettingContainer
-        title={title}
-        description={description}
-        descriptionMode="tooltip"
-        grouped
-      >
+    <SettingContainer
+      title={title}
+      description={description}
+      descriptionMode="tooltip"
+      grouped
+      layout="stacked"
+    >
+      <div className="space-y-3">
         <div className="flex items-center gap-2">
           <Input
             type="text"
+            name={settingKey}
             className={inputClassName}
             value={newItem}
             onChange={(e) => setNewItem(e.target.value)}
@@ -90,35 +96,48 @@ export const TagListInput: React.FC<TagListInputProps> = ({
             placeholder={placeholder}
             variant="compact"
             disabled={isUpdating(settingKey)}
+            autoComplete="off"
           />
           <Button
             onClick={handleAdd}
             disabled={isAddDisabled}
-            variant="default"
-            size="default"
+            variant="outline"
+            size="sm"
           >
             {addLabel}
           </Button>
         </div>
-      </SettingContainer>
-      {items.length > 0 && (
-        <div className="px-3 py-1.5 flex flex-wrap gap-1">
-          {items.map((item) => (
-            <Button
-              key={item}
-              onClick={() => handleRemove(item)}
-              disabled={isUpdating(settingKey)}
-              variant="secondary"
-              size="sm"
-              className="inline-flex items-center gap-1 cursor-pointer"
-              aria-label={removeAriaLabel(item)}
-            >
-              <span>{item}</span>
-              <X className="w-3 h-3" />
-            </Button>
-          ))}
-        </div>
-      )}
-    </>
+
+        {items.length > 0 ? (
+          <div className="flex flex-wrap gap-1.5">
+            <AnimatePresence mode="popLayout">
+              {items.map((item) => (
+                <motion.button
+                  key={item}
+                  layout
+                  initial={{ opacity: 0, scale: 0.85 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.85 }}
+                  transition={spring.snappy}
+                  whileTap={tapScale}
+                  onClick={() => handleRemove(item)}
+                  disabled={isUpdating(settingKey)}
+                  className="inline-flex items-center gap-1.5 max-w-[200px] px-2.5 py-1 rounded-md text-xs font-medium bg-glass-bg border border-glass-border text-text/70 transition-colors hover:bg-error/10 hover:border-error/30 hover:text-error focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-50 disabled:pointer-events-none"
+                  aria-label={removeAriaLabel(item)}
+                >
+                  <span className="truncate">{item}</span>
+                  <X
+                    className="w-3 h-3 shrink-0 opacity-40"
+                    aria-hidden="true"
+                  />
+                </motion.button>
+              ))}
+            </AnimatePresence>
+          </div>
+        ) : emptyMessage ? (
+          <p className="text-xs text-muted-foreground">{emptyMessage}</p>
+        ) : null}
+      </div>
+    </SettingContainer>
   );
 };
