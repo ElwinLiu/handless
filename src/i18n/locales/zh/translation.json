@@ -699,8 +699,6 @@
   },
   "overlay": {
     "transcribing": "正在转录...",
-    "processing": "处理中...",
-    "cancel": "Cancel",
-    "finish": "Finish"
+    "processing": "处理中..."
   }
 }

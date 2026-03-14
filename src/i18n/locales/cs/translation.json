@@ -699,8 +699,6 @@
   },
   "overlay": {
     "transcribing": "Přepisuji...",
-    "processing": "Zpracovávám...",
-    "cancel": "Cancel",
-    "finish": "Finish"
+    "processing": "Zpracovávám..."
   }
 }
