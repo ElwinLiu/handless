@@ -699,8 +699,6 @@
   },
   "overlay": {
     "transcribing": "文字起こし中...",
-    "processing": "処理中...",
-    "cancel": "Cancel",
-    "finish": "Finish"
+    "processing": "処理中..."
   }
 }

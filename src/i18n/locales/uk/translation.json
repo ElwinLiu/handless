@@ -699,8 +699,6 @@
   },
   "overlay": {
     "transcribing": "Обробка...",
-    "processing": "Постобробка...",
-    "cancel": "Cancel",
-    "finish": "Finish"
+    "processing": "Постобробка..."
   }
 }

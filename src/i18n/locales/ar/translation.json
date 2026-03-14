@@ -699,8 +699,6 @@
   },
   "overlay": {
     "transcribing": "...جاري التفريغ",
-    "processing": "...جاري المعالجة",
-    "cancel": "Cancel",
-    "finish": "Finish"
+    "processing": "...جاري المعالجة"
   }
 }
