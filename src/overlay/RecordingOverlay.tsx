@@ -15,7 +15,7 @@ import { X, Check } from "@phosphor-icons/react";
 
 type OverlayState = "recording" | "transcribing" | "processing";
 
-const DOT_COUNT = 11;
+const CHANNEL_COUNT =11;
 const THINKING_DOT_COUNT = 6;
 const ATTACK_SPEED = 0.22;
 const DECAY_SPEED = 0.07;
@@ -24,6 +24,19 @@ const STREAMING_LINE_HEIGHT = 18;
 const MAX_LINES = 5;
 const OVERLAY_PADDING = 12;
 const BUTTON_AREA_WIDTH = 20; // px per side for cancel/confirm buttons
+
+// Scrolling waveform: sticks move right-to-left, height follows audio energy
+const STICK_WIDTH = 1.5;
+const STICK_GAP = 1;
+const STICK_SPACING = STICK_WIDTH + STICK_GAP;
+const SCROLL_SPEED = 30; // px per second
+const MAX_STICKS = 80;
+const MIN_STICK_HALF = 1;
+const MAX_STICK_HALF = 10;
+
+// Non-harmonic durations & staggered delays so dots never sync
+const THINKING_DURATIONS = [1.3, 1.7, 1.1, 1.5, 1.9, 1.25];
+const THINKING_DELAYS = [0, 0.4, 0.15, 0.65, 0.3, 0.8];
 
 const RecordingOverlay: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -44,10 +57,14 @@ const RecordingOverlay: React.FC = () => {
       .trim();
   }, []);
 
-  // Dot animation via rAF — bypasses React rendering
-  const targetLevelsRef = useRef<number[]>(Array(DOT_COUNT).fill(0));
-  const currentLevelsRef = useRef<number[]>(Array(DOT_COUNT).fill(0));
-  const dotElementsRef = useRef<(HTMLDivElement | null)[]>([]);
+  // Audio level smoothing via rAF — bypasses React rendering
+  const targetLevelsRef = useRef<number[]>(Array(CHANNEL_COUNT).fill(0));
+  const currentLevelsRef = useRef<number[]>(Array(CHANNEL_COUNT).fill(0));
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const canvasCtxRef = useRef<CanvasRenderingContext2D | null>(null);
+  const sampleBufferRef = useRef<number[]>([]);
+  const scrollOffsetRef = useRef(0);
+  const lastFrameTimeRef = useRef(0);
   const rafIdRef = useRef<number>(0);
   const frameCountRef = useRef(0);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -113,60 +130,116 @@ const RecordingOverlay: React.FC = () => {
     }
   }, [streamingText]);
 
-  // rAF loop: lerp toward target with asymmetric attack/decay,
-  // layered sine-wave idle, per-dot glow, ambient overlay glow
-  const animateDots = useCallback(() => {
+  // rAF loop: canvas-based scrolling waveform, height driven by
+  // smoothed audio energy with right-to-left scroll
+  const animateWaveform = useCallback((timestamp: number) => {
+    const lastTime = lastFrameTimeRef.current;
+    const dt =
+      lastTime > 0 ? Math.min((timestamp - lastTime) / 1000, 0.05) : 1 / 60;
+    lastFrameTimeRef.current = timestamp;
+
     const current = currentLevelsRef.current;
     const target = targetLevelsRef.current;
     const frame = frameCountRef.current++;
-    let totalEnergy = 0;
 
-    for (let i = 0; i < DOT_COUNT; i++) {
-      // Asymmetric LERP: snappy attack, slow lingering decay
+    // Asymmetric LERP: snappy attack, slow lingering decay
+    for (let i = 0; i < CHANNEL_COUNT; i++) {
       const speed = target[i] > current[i] ? ATTACK_SPEED : DECAY_SPEED;
       current[i] += (target[i] - current[i]) * speed;
+    }
 
-      const el = dotElementsRef.current[i];
-      if (el) {
-        const v = current[i];
-        totalEnergy += v;
-        const idleStrength = Math.max(0, 1 - v * 4);
+    const avgEnergy = current.reduce((a, b) => a + b, 0) / current.length;
+    const rgb = accentRgbRef.current;
 
-        // Idle: layered sine waves create a rolling wave across the dot array
-        const wave1 = Math.sin(frame * 0.02 + i * 0.5) * 0.5 + 0.5;
-        const wave2 = Math.sin(frame * 0.035 + i * 1.1) * 0.3 + 0.5;
-        const idleH = (wave1 * 1.8 + wave2 * 1.0) * idleStrength;
+    // Draw layered waveform on canvas
+    const canvas = canvasRef.current;
+    if (canvas) {
+      if (!canvasCtxRef.current) {
+        canvasCtxRef.current = canvas.getContext("2d");
+      }
+      const ctx = canvasCtxRef.current;
+      if (ctx) {
+        const dpr = window.devicePixelRatio || 1;
+        const cssW = canvas.clientWidth;
+        const cssH = canvas.clientHeight;
 
-        // Active: subtle vibrato adds organic tremor to speaking dots
-        const vibrato =
-          v > 0.05 ? Math.sin(frame * 0.15 + i * 2.0) * v * 1.5 : 0;
+        if (cssW === 0 || cssH === 0) {
+          rafIdRef.current = requestAnimationFrame(animateWaveform);
+          return;
+        }
 
-        const audioH = Math.pow(v, 0.4) * 22;
-        const h = 3 + audioH + idleH + vibrato;
-        el.style.height = `${h}px`;
-        el.style.borderRadius = h > 4 ? "1px" : "50%";
+        // Resize canvas buffer for Retina sharpness
+        const bufW = Math.round(cssW * dpr);
+        const bufH = Math.round(cssH * dpr);
+        if (canvas.width !== bufW || canvas.height !== bufH) {
+          canvas.width = bufW;
+          canvas.height = bufH;
+        }
 
-        // Opacity: idle dots gently pulse with the primary wave
-        const baseOpacity = 0.4 + Math.min(0.6, v * 2);
-        const idleOpacityMod = idleStrength * (wave1 * 0.12 - 0.04);
-        el.style.opacity = `${baseOpacity + idleOpacityMod}`;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, cssW, cssH);
 
-        // Per-dot glow: breathes with idle wave, flares when speaking
-        const idleGlow = idleStrength * wave1 * 0.15;
-        const activeGlow = Math.min(1, v * 2) * 0.6;
-        const glow = Math.max(idleGlow, activeGlow);
-        const glowRadius = 2 + v * 8 + idleStrength * wave1 * 2;
-        el.style.boxShadow =
-          glow > 0.03
-            ? `0 0 ${glowRadius}px rgba(${accentRgbRef.current}, ${glow})`
-            : "none";
+        const centerY = cssH / 2;
+
+        // Advance scroll, push new sample when crossing a stick boundary
+        scrollOffsetRef.current += SCROLL_SPEED * dt;
+        if (scrollOffsetRef.current >= STICK_SPACING) {
+          scrollOffsetRef.current -= STICK_SPACING;
+          sampleBufferRef.current.push(Math.min(1, avgEnergy * 2));
+          if (sampleBufferRef.current.length > MAX_STICKS) {
+            sampleBufferRef.current.shift();
+          }
+        }
+
+        const samples = sampleBufferRef.current;
+        const scrollOff = scrollOffsetRef.current;
+
+        // Glow pass: batch all sticks into one path so shadow
+        // is computed once instead of per-rect
+        const glowIntensity = 0.08 + avgEnergy * 0.3;
+        if (glowIntensity > 0.05) {
+          ctx.shadowBlur = 3 + avgEnergy * 12;
+          ctx.shadowColor = `rgba(${rgb}, ${glowIntensity})`;
+          ctx.fillStyle = `rgba(${rgb}, 0.06)`;
+          ctx.beginPath();
+          for (let i = 0; i < samples.length; i++) {
+            const x = cssW - STICK_WIDTH - i * STICK_SPACING - scrollOff;
+            if (x + STICK_WIDTH < 0) break;
+            const energy = samples[samples.length - 1 - i];
+            const halfH =
+              MIN_STICK_HALF +
+              Math.pow(energy, 0.8) * (MAX_STICK_HALF - MIN_STICK_HALF);
+            ctx.rect(x, centerY - halfH, STICK_WIDTH, halfH * 2);
+          }
+          ctx.fill();
+          ctx.shadowBlur = 0;
+          ctx.shadowColor = "transparent";
+        }
+
+        // Sharp sticks with per-stick alpha
+        for (let i = 0; i < samples.length; i++) {
+          const x = cssW - STICK_WIDTH - i * STICK_SPACING - scrollOff;
+          if (x + STICK_WIDTH < 0) break;
+
+          const energy = samples[samples.length - 1 - i];
+          const halfH =
+            MIN_STICK_HALF +
+            Math.pow(energy, 0.8) * (MAX_STICK_HALF - MIN_STICK_HALF);
+          const stickH = halfH * 2;
+          const y = centerY - halfH;
+
+          const fade = Math.min(1, Math.max(0, (x + STICK_WIDTH) / 8));
+          const alpha = (0.45 + Math.min(0.45, energy * 1.2)) * fade;
+
+          ctx.fillStyle = `rgba(${rgb}, ${alpha})`;
+          ctx.fillRect(x, y, STICK_WIDTH, stickH);
+        }
       }
     }
 
     // Ambient overlay glow — breathes when idle, flares with voice
     const overlay = overlayRef.current;
     if (overlay) {
-      const avgEnergy = totalEnergy / DOT_COUNT;
       const breathe = Math.sin(frame * 0.02) * 0.5 + 0.5;
       const idleAmbient = avgEnergy < 0.05 ? breathe * 0.12 : 0;
       const e = Math.max(Math.min(1, avgEnergy * 3), idleAmbient);
@@ -174,32 +247,30 @@ const RecordingOverlay: React.FC = () => {
       const glowSpread = e * 4;
       const glowAlpha = e * 0.3;
       const innerAlpha = 0.03 + e * 0.06;
-      // Outer shadows via filter (renders after clip-path, follows pill shape).
-      // Inset shadows via box-shadow (inside the clip boundary, unaffected).
       overlay.style.filter = [
-        `drop-shadow(0 0 ${glowBlur + glowSpread}px rgba(${accentRgbRef.current}, ${glowAlpha}))`,
+        `drop-shadow(0 0 ${glowBlur + glowSpread}px rgba(${rgb}, ${glowAlpha}))`,
         "drop-shadow(0 4px 24px rgba(0, 0, 0, 0.45))",
         "drop-shadow(0 0 0.5px rgba(0, 0, 0, 0.5))",
       ].join(" ");
       overlay.style.boxShadow = [
-        `inset 0 1px 0 rgba(${accentRgbRef.current}, 0.04)`,
-        `inset 0 0 16px rgba(${accentRgbRef.current}, ${innerAlpha})`,
+        `inset 0 1px 0 rgba(${rgb}, 0.04)`,
+        `inset 0 0 16px rgba(${rgb}, ${innerAlpha})`,
       ].join(", ");
     }
 
-    rafIdRef.current = requestAnimationFrame(animateDots);
+    rafIdRef.current = requestAnimationFrame(animateWaveform);
   }, []);
 
   // Start/stop rAF loop based on visibility + recording state
   useEffect(() => {
     if (isVisible && state === "recording") {
-      rafIdRef.current = requestAnimationFrame(animateDots);
+      rafIdRef.current = requestAnimationFrame(animateWaveform);
     } else if (overlayRef.current) {
       overlayRef.current.style.filter = "";
       overlayRef.current.style.boxShadow = "";
     }
     return () => cancelAnimationFrame(rafIdRef.current);
-  }, [isVisible, state, animateDots]);
+  }, [isVisible, state, animateWaveform]);
 
   const clearProgressInterval = useCallback(() => {
     if (progressIntervalRef.current) {
@@ -256,9 +327,18 @@ const RecordingOverlay: React.FC = () => {
           setActivationMode(activation_mode);
           setStreamingText("");
           setProgress(0);
+          // Cancel any pending hide from a previous session
+          if (hideTimeoutRef.current) {
+            clearTimeout(hideTimeoutRef.current);
+            hideTimeoutRef.current = null;
+          }
           // Reset dot levels on new session
-          targetLevelsRef.current = Array(DOT_COUNT).fill(0);
-          currentLevelsRef.current = Array(DOT_COUNT).fill(0);
+          targetLevelsRef.current = Array(CHANNEL_COUNT).fill(0);
+          currentLevelsRef.current = Array(CHANNEL_COUNT).fill(0);
+          sampleBufferRef.current = [];
+          scrollOffsetRef.current = 0;
+          lastFrameTimeRef.current = 0;
+          canvasCtxRef.current = null;
           setIsVisible(true);
         }),
       );
@@ -275,7 +355,7 @@ const RecordingOverlay: React.FC = () => {
       unlisteners.push(
         await listen<number[]>("mic-level", (event) => {
           const newLevels = event.payload;
-          for (let i = 0; i < DOT_COUNT; i++) {
+          for (let i = 0; i < CHANNEL_COUNT; i++) {
             targetLevelsRef.current[i] = newLevels[i] || 0;
           }
         }),
@@ -344,23 +424,7 @@ const RecordingOverlay: React.FC = () => {
                 ))}
               </div>
             ) : (
-              <div className="dots-container">
-                {Array.from({ length: DOT_COUNT }, (_, i) => {
-                  const center = (DOT_COUNT - 1) / 2;
-                  const dist = Math.abs(i - center) / center;
-                  const w = 1.5 + (1 - dist * dist) * 1;
-                  return (
-                    <div
-                      key={i}
-                      className="dot"
-                      style={{ width: w }}
-                      ref={(el) => {
-                        dotElementsRef.current[i] = el;
-                      }}
-                    />
-                  );
-                })}
-              </div>
+              <canvas ref={canvasRef} className="waveform-canvas" />
             )}
             <button
               className={`overlay-btn overlay-btn-confirm ${showButtons ? "active" : ""}`}
@@ -383,7 +447,10 @@ const RecordingOverlay: React.FC = () => {
                 <div
                   key={i}
                   className="thinking-dot"
-                  style={{ animationDelay: `${i * 120}ms` }}
+                  style={{
+                    animationDuration: `${THINKING_DURATIONS[i]}s`,
+                    animationDelay: `${THINKING_DELAYS[i]}s`,
+                  }}
                 />
               ))}
             </div>

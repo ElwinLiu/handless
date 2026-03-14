@@ -150,23 +150,17 @@
   padding: 0 30px;
 }
 
-/* Audio dots — tapered cluster with per-dot glow */
-.dots-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.5px;
-  height: 24px;
-  overflow: visible;
+/* Canvas waveform — scrolling audio sticks */
+.waveform-canvas {
+  height: 20px;
+  display: block;
+  flex: 1;
+  min-width: 0;
+  margin: 0 4px;
 }
 
-.dot {
-  /* width overridden by inline style for tapered widths */
-  width: 2px;
-  height: 2px;
-  border-radius: 50%;
-  background: var(--color-accent);
-  will-change: height, opacity, box-shadow;
+.recording-overlay.has-buttons .waveform-canvas {
+  margin: 0 22px;
 }
 
 /* Streaming text — multi-line, up to 5 lines */
@@ -235,7 +229,7 @@
   filter: blur(4px);
 }
 
-/* Thinking dots — smooth sinusoidal wave */
+/* Thinking dots — organic fidget with non-harmonic timing */
 .thinking-dots {
   display: flex;
   align-items: center;
@@ -247,23 +241,56 @@
 }
 
 .thinking-dot {
-  width: 3px;
-  height: 3px;
+  width: 2px;
+  height: 2px;
   border-radius: 50%;
   background: var(--color-accent);
-  opacity: 0.35;
-  animation: thinking-wave 1.4s ease-in-out infinite;
-  will-change: transform, opacity;
+  opacity: 0.4;
+  box-shadow: 0 0 3px rgba(var(--color-accent-rgb), 0.6);
+  animation: thinking-fidget 1.4s ease-in-out infinite;
+  will-change: transform, opacity, box-shadow;
 }
 
-@keyframes thinking-wave {
+@keyframes thinking-fidget {
   0%,
   100% {
-    transform: translateY(1.5px);
+    transform: translate(0, 0.5px);
+    opacity: 0.4;
+    box-shadow: 0 0 3px rgba(var(--color-accent-rgb), 0.4);
+  }
+  12% {
+    transform: translate(0.8px, -4px);
+    opacity: 1;
+    box-shadow: 0 0 6px rgba(var(--color-accent-rgb), 0.9);
+  }
+  24% {
+    transform: translate(-0.3px, 0px);
     opacity: 0.35;
+    box-shadow: 0 0 2px rgba(var(--color-accent-rgb), 0.3);
+  }
+  38% {
+    transform: translate(-0.7px, -3px);
+    opacity: 0.95;
+    box-shadow: 0 0 5px rgba(var(--color-accent-rgb), 0.8);
   }
   50% {
-    transform: translateY(-3px);
+    transform: translate(0.4px, 0.5px);
+    opacity: 0.3;
+    box-shadow: 0 0 2px rgba(var(--color-accent-rgb), 0.3);
+  }
+  62% {
+    transform: translate(0.5px, -4.5px);
+    opacity: 1;
+    box-shadow: 0 0 7px rgba(var(--color-accent-rgb), 1);
+  }
+  74% {
+    transform: translate(-0.4px, -1px);
+    opacity: 0.4;
+    box-shadow: 0 0 3px rgba(var(--color-accent-rgb), 0.4);
+  }
+  88% {
+    transform: translate(0.2px, -3.5px);
     opacity: 0.9;
+    box-shadow: 0 0 5px rgba(var(--color-accent-rgb), 0.7);
   }
 }
