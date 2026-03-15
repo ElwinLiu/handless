@@ -316,12 +316,13 @@ const RecordingOverlay: React.FC = () => {
           position: "top" | "bottom";
           activation_mode: ActivationMode;
         }>("show-overlay", async (event) => {
-          await syncLanguageFromSettings();
           const {
             state: overlayState,
             position,
             activation_mode,
           } = event.payload;
+          // Reset all state BEFORE any async work so the overlay never
+          // renders stale content from the previous session.
           setState(overlayState);
           setOverlayPosition(position);
           setActivationMode(activation_mode);
@@ -340,6 +341,8 @@ const RecordingOverlay: React.FC = () => {
           lastFrameTimeRef.current = 0;
           canvasCtxRef.current = null;
           setIsVisible(true);
+          // Sync language in the background — doesn't need to block visibility
+          syncLanguageFromSettings();
         }),
       );
 

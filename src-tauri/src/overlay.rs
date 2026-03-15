@@ -1,7 +1,12 @@
 use crate::input;
 use crate::settings;
 use crate::settings::{ActivationMode, OverlayPosition};
+use std::sync::atomic::{AtomicU64, Ordering};
 use tauri::{AppHandle, Emitter, Manager};
+
+/// Monotonic counter incremented each time the overlay is shown.
+/// The hide thread checks this to avoid hiding a freshly-shown overlay.
+static OVERLAY_SHOW_GENERATION: AtomicU64 = AtomicU64::new(0);
 
 #[cfg(not(target_os = "macos"))]
 use log::debug;
@@ -347,6 +352,8 @@ fn show_overlay_state(app_handle: &AppHandle, state: &str) {
     update_overlay_position(app_handle);
 
     if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
+        // Bump generation so any pending hide thread becomes a no-op
+        OVERLAY_SHOW_GENERATION.fetch_add(1, Ordering::SeqCst);
         let _ = overlay_window.show();
 
         // In toggle mode during recording, the overlay shows clickable
@@ -429,11 +436,16 @@ pub fn hide_recording_overlay(app_handle: &AppHandle) {
     if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
         // Emit event to trigger fade-out animation
         let _ = overlay_window.emit("hide-overlay", ());
-        // Hide the window after a short delay to allow animation to complete
+        // Hide the window after a short delay to allow animation to complete.
+        // Capture the current generation so we skip the hide if a new show
+        // was requested while we were sleeping (prevents Bug #2 race).
+        let gen = OVERLAY_SHOW_GENERATION.load(Ordering::SeqCst);
         let window_clone = overlay_window.clone();
         std::thread::spawn(move || {
             std::thread::sleep(std::time::Duration::from_millis(300));
-            let _ = window_clone.hide();
+            if OVERLAY_SHOW_GENERATION.load(Ordering::SeqCst) == gen {
+                let _ = window_clone.hide();
+            }
         });
     }
 }
