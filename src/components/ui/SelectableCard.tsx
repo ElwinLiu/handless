@@ -1,6 +1,4 @@
 import React from "react";
-import { motion } from "motion/react";
-import { tapScale, hoverLift, spring } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 interface SelectableCardProps {
@@ -25,20 +23,20 @@ export const SelectableCard: React.FC<SelectableCardProps> = ({
   children,
 }) => {
   const baseClasses = compact
-    ? "flex flex-col rounded-xl px-3 py-2 gap-1 text-left transition-all duration-200"
-    : "flex flex-col rounded-xl px-4 py-3 gap-2 text-left transition-all duration-200";
+    ? "flex flex-col rounded-xl px-3 py-2 gap-1 text-left transition-colors duration-150"
+    : "flex flex-col rounded-xl px-4 py-3 gap-2 text-left transition-colors duration-150";
 
   const variantClasses = active
-    ? "border-2 border-accent/50 bg-accent/10"
+    ? "border border-accent/30 bg-accent/[0.06]"
     : featured
-      ? "border-2 border-accent/25 bg-glass-bg"
-      : "border-2 border-glass-border bg-glass-bg";
+      ? "border border-accent/20 bg-glass-bg"
+      : "border border-glass-border bg-glass-bg";
 
   const interactiveClasses = !clickable
     ? ""
     : disabled
       ? "opacity-50 cursor-not-allowed"
-      : "cursor-pointer hover:border-accent/50 hover:bg-accent/5 group [&_p]:cursor-text [&_h3]:cursor-text";
+      : "cursor-pointer hover:border-glass-border-hover hover:bg-glass-highlight active:bg-accent/[0.08] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring group [&_p]:cursor-text [&_h3]:cursor-text";
 
   const handleClick = () => {
     if (clickable && !disabled && onClick) {
@@ -49,16 +47,13 @@ export const SelectableCard: React.FC<SelectableCardProps> = ({
   };
 
   return (
-    <motion.div
+    <div
       onClick={handleClick}
       onKeyDown={(e) => {
         if (e.key === "Enter" && clickable && !disabled) handleClick();
       }}
       role={clickable ? "button" : undefined}
       tabIndex={clickable ? 0 : undefined}
-      whileHover={clickable && !disabled ? hoverLift : undefined}
-      whileTap={clickable && !disabled ? tapScale : undefined}
-      transition={spring.gentle}
       className={cn(
         baseClasses,
         variantClasses,
@@ -68,6 +63,6 @@ export const SelectableCard: React.FC<SelectableCardProps> = ({
       )}
     >
       {children}
-    </motion.div>
+    </div>
   );
 };

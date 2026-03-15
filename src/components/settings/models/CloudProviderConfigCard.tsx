@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
+  Book,
   CaretDown,
   Cloud,
   ArrowSquareOut,
@@ -8,7 +9,6 @@ import {
   Translate,
   CircleNotch,
 } from "@phosphor-icons/react";
-import { motion } from "motion/react";
 import { ApiKeyField } from "@/components/settings/PostProcessingSettingsApi/ApiKeyField";
 import { Input } from "@/components/ui/Input";
 import { NumberInput } from "@/components/ui/NumberInput";
@@ -23,6 +23,8 @@ import {
   getLanguageDisplayText,
   getTranslatedModelName,
 } from "@/lib/utils/modelTranslation";
+import { capabilityTagClasses } from "@/lib/styles";
+import { NAVIGATE_SECTION_EVENT } from "@/components/Sidebar";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { SimpleTooltip } from "@/components/ui/Tooltip";
 import { Checkbox } from "@/components/ui/Checkbox";
@@ -97,11 +99,6 @@ const CloudOptionControl: React.FC<{
               {t(option.description)}
             </span>
           )}
-          {dictionaryPreview && (
-            <div className="text-xs text-accent/70 bg-accent/5 border border-accent/10 rounded px-2 py-1 max-w-[400px] truncate">
-              {dictionaryPreview}
-            </div>
-          )}
           <Input
             type="text"
             value={(value as string) || ""}
@@ -109,6 +106,24 @@ const CloudOptionControl: React.FC<{
             variant="compact"
             className="max-w-[400px]"
           />
+          {dictionaryPreview && (
+            <SimpleTooltip content={t("dictionary.autoInjectedHint")}>
+              <button
+                type="button"
+                className="flex items-start gap-2 text-left text-xs italic text-text/40 bg-glass-bg rounded-md px-2.5 py-1.5 max-w-[400px] break-words leading-relaxed hover:text-text/60 hover:bg-glass-highlight transition-colors"
+                onClick={() =>
+                  window.dispatchEvent(
+                    new CustomEvent(NAVIGATE_SECTION_EVENT, {
+                      detail: "dictionary",
+                    }),
+                  )
+                }
+              >
+                <Book className="w-3.5 h-3.5 shrink-0 mt-px" />
+                <span>{dictionaryPreview}</span>
+              </button>
+            </SimpleTooltip>
+          )}
         </div>
       );
     }
@@ -269,7 +284,7 @@ export const CloudProviderConfigCard: React.FC<
       active={effectiveStatus === "active"}
       clickable={!expanded}
       compact={compact}
-      className={expanded && effectiveStatus === "active" ? "!bg-accent/5" : ""}
+      className={expanded && effectiveStatus === "active" ? "!bg-accent/[0.04]" : ""}
       onClick={() => {
         if (isClickable) {
           onSelect?.(provider.id);
@@ -321,12 +336,7 @@ export const CloudProviderConfigCard: React.FC<
 
       {/* Inline config fields */}
       {expanded && (
-        <motion.div
-          initial={{ opacity: 0, y: -4 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col gap-2"
-        >
+        <div className="flex flex-col gap-2 animate-in fade-in duration-150">
           {/* biome-ignore lint/a11y/useKeyWithClickEvents: stopPropagation wrapper for input focus */}
           <div onClick={stopPropagation}>
             <div className="flex flex-wrap gap-2 items-center">
@@ -466,7 +476,7 @@ export const CloudProviderConfigCard: React.FC<
                 ))}
               </div>
             )}
-        </motion.div>
+        </div>
       )}
 
       {/* Language/translation tags */}
@@ -479,13 +489,7 @@ export const CloudProviderConfigCard: React.FC<
                 : t("modelSelector.capabilities.languageSelection")
             }
           >
-            <div
-              className={`flex items-center gap-1 text-xs px-1.5 py-0.5 rounded ${
-                provider.supported_languages.length === 1
-                  ? "text-text/50 bg-muted/10"
-                  : "text-blue-400/80 bg-blue-400/10"
-              }`}
-            >
+            <div className={capabilityTagClasses}>
               <Globe className="w-3 h-3" />
               <span>
                 {getLanguageDisplayText(provider.supported_languages, t)}
@@ -495,7 +499,7 @@ export const CloudProviderConfigCard: React.FC<
         )}
         {provider.supports_translation && (
           <SimpleTooltip content={t("modelSelector.capabilities.translation")}>
-            <div className="flex items-center gap-1 text-xs text-purple-400/80 bg-purple-400/10 px-1.5 py-0.5 rounded">
+            <div className={capabilityTagClasses}>
               <Translate className="w-3 h-3" />
               <span>{t("modelSelector.capabilities.translate")}</span>
             </div>

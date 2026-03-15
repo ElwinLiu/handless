@@ -11,15 +11,14 @@ import {
   CircleNotch,
   Trash,
 } from "@phosphor-icons/react";
-import { motion } from "motion/react";
 import type { SttProviderInfo } from "@/bindings";
 import { cn } from "../../lib/utils";
-import { spring } from "../../lib/motion";
 import { formatModelSize } from "../../lib/utils/format";
 import {
   getLanguageDisplayText,
   getTranslatedModelName,
 } from "../../lib/utils/modelTranslation";
+import { capabilityTagClasses } from "../../lib/styles";
 import Badge from "../ui/Badge";
 import { Button } from "../ui/Button";
 import { Checkbox } from "../ui/Checkbox";
@@ -125,7 +124,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
       compact={compact}
       className={cn(
         className,
-        expanded && status === "active" && "bg-accent/5",
+        expanded && status === "active" && "bg-accent/[0.04]",
       )}
       onClick={handleClick}
     >
@@ -183,16 +182,13 @@ const ModelCard: React.FC<ModelCardProps> = ({
 
       {/* Expandable model settings */}
       {showSettings && expanded && (
-        <motion.div
-          initial={{ opacity: 0, y: -4 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={spring.snappy}
-          className="flex flex-col gap-3 pt-1"
+        <div
+          className="flex flex-col gap-3 pt-1 animate-in fade-in duration-150"
           onClick={(e) => e.stopPropagation()}
         >
           {supportedLanguages && supportedLanguages.length > 1 && (
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-text/60 font-medium">
+              <label className="text-xs text-text/70 font-medium">
                 {t("settings.general.language.title")}
               </label>
               <Dropdown
@@ -217,12 +213,12 @@ const ModelCard: React.FC<ModelCardProps> = ({
                   updateSetting("translate_to_english", enabled)
                 }
               />
-              <span className="text-xs text-text/60 font-medium">
+              <span className="text-xs text-text/70 font-medium">
                 {t("settings.advanced.translateToEnglish.label")}
               </span>
             </label>
           )}
-        </motion.div>
+        </div>
       )}
 
       {!compact && <hr className="w-full border-muted/20" />}
@@ -239,13 +235,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
                 : t("modelSelector.capabilities.languageSelection")
             }
           >
-            <div
-              className={`flex items-center gap-1 text-xs px-1.5 py-0.5 rounded ${
-                provider.supported_languages.length === 1
-                  ? "text-text/50 bg-muted/10"
-                  : "text-blue-400/80 bg-blue-400/10"
-              }`}
-            >
+            <div className={capabilityTagClasses}>
               <Globe className="w-3 h-3" />
               <span>
                 {getLanguageDisplayText(provider.supported_languages, t)}
@@ -255,7 +245,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
         )}
         {provider.supports_translation && (
           <SimpleTooltip content={t("modelSelector.capabilities.translation")}>
-            <div className="flex items-center gap-1 text-xs text-purple-400/80 bg-purple-400/10 px-1.5 py-0.5 rounded">
+            <div className={capabilityTagClasses}>
               <Translate className="w-3 h-3" />
               <span>{t("modelSelector.capabilities.translate")}</span>
             </div>
@@ -264,7 +254,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
         {provider.backend.type === "Local" &&
           provider.backend.accuracy_score > 0 && (
             <SimpleTooltip content={t("onboarding.modelCard.accuracy")}>
-              <div className="flex items-center gap-1 text-xs text-accent/70 bg-accent/8 px-1.5 py-0.5 rounded">
+              <div className={capabilityTagClasses}>
                 <Crosshair className="w-3 h-3" />
                 <span>
                   {Math.round(provider.backend.accuracy_score * 100)}%
@@ -275,7 +265,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
         {provider.backend.type === "Local" &&
           provider.backend.speed_score > 0 && (
             <SimpleTooltip content={t("onboarding.modelCard.speed")}>
-              <div className="flex items-center gap-1 text-xs text-emerald-400/70 bg-emerald-400/8 px-1.5 py-0.5 rounded">
+              <div className={capabilityTagClasses}>
                 <Lightning className="w-3 h-3" />
                 <span>{Math.round(provider.backend.speed_score * 100)}%</span>
               </div>
@@ -313,7 +303,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
         <div className={`w-full ${compact ? "mt-1" : "mt-3"}`}>
           <div className="w-full h-1.5 bg-muted/20 rounded-full overflow-hidden">
             <div
-              className="h-full bg-accent rounded-full transition-all duration-300"
+              className="h-full bg-accent rounded-full transition-[width] duration-300"
               style={{ width: `${downloadProgress}%` }}
             />
           </div>

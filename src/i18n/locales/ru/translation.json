@@ -666,6 +666,7 @@
       "description": "Freeform text that gives the speech engine background context about what you're dictating. Helps improve accuracy for domain-specific content.",
       "placeholder": "e.g. Technical discussion about React components and TypeScript interfaces"
     },
+    "autoInjectedHint": "Auto-filled from Dictionary. Click to edit.",
     "customWords": {
       "title": "Word Corrections",
       "subtitle": "Rule-based post-processing \u00b7 All providers",

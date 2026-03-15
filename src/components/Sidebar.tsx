@@ -24,6 +24,7 @@ import {
 import { spring, tapScale } from "@/lib/motion";
 
 export type SidebarSection = keyof typeof SECTIONS_CONFIG;
+export const NAVIGATE_SECTION_EVENT = "navigate-section";
 
 interface IconProps {
   size?: number | string;

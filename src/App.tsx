@@ -13,7 +13,7 @@ import "./App.css";
 import AccessibilityPermissions from "./components/AccessibilityPermissions";
 import Footer from "./components/footer";
 import { AccessibilityOnboarding } from "./components/onboarding";
-import { Sidebar, SidebarSection, SECTIONS_CONFIG } from "./components/Sidebar";
+import { Sidebar, SidebarSection, SECTIONS_CONFIG, NAVIGATE_SECTION_EVENT } from "./components/Sidebar";
 import { useSettings } from "./hooks/useSettings";
 import { useTheme } from "./hooks/useTheme";
 import { commands } from "@/bindings";
@@ -148,6 +148,16 @@ function App() {
     document.addEventListener("keydown", handleSectionNav);
     return () => document.removeEventListener("keydown", handleSectionNav);
   }, [settings, currentSection, handleSectionChange]);
+
+  // Allow any component to navigate via: window.dispatchEvent(new CustomEvent("navigate-section", { detail: "dictionary" }))
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const section = (e as CustomEvent<SidebarSection>).detail;
+      if (section in SECTIONS_CONFIG) handleSectionChange(section);
+    };
+    window.addEventListener(NAVIGATE_SECTION_EVENT, handler);
+    return () => window.removeEventListener(NAVIGATE_SECTION_EVENT, handler);
+  }, [handleSectionChange]);
 
   const checkOnboardingStatus = async () => {
     if (platform() === "macos") {
